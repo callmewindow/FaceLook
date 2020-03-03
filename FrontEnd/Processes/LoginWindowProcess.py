@@ -3,7 +3,6 @@ from FrontEnd.Elements.LoginWindow import LoginWindow
 from FrontEnd.Processes.WindowProcess import WindowProcess
 from BackEnd.BackEndThread import BackEndThread
 from BackEnd.BackEndStaticMethods import *
-pygame.init()
 class LoginWindowProcess(WindowProcess):
     def __init__(self,data):  
         WindowProcess.__init__(self,data,LoginWindow(self))      
