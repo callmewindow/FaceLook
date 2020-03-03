@@ -6,7 +6,7 @@ from BackEnd.BackEndStaticMethods import *
 class LoginWindowProcess(WindowProcess):
     def __init__(self,data):  
         WindowProcess.__init__(self,data,LoginWindow(self))      
-        self.bet = BackEndThread(self.messageQueue,self.data)   
+        self.bet = BackEndThread(self.requestQueue,self.messageQueue)   
 
 def main(data):
     lwp = LoginWindowProcess(data)

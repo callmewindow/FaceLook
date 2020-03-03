@@ -1,7 +1,9 @@
 from threading import Thread
+from queue import Queue
 class BackEndThread(Thread):
-    def __init__(self,messageQueue,data):
+    def __init__(self,requestQueue,messageQueue,data):
         Thread.__init__(self)
+        self.requestQueue = requestQueue
         self.messageQueue = messageQueue
         self.data = data
         self.go = True
