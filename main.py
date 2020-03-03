@@ -12,8 +12,7 @@ if __name__ == '__main__':
     p.start()
     p.join()
     data.login = True
-    #main
-    #p = Process(target=UWP.main,args=(data,))
-    #p.start()
-    #p.join()
-    #收尾...
+    p = Process(target=UWP.main,args=(data,))
+    p.start()
+    p.join()
+
