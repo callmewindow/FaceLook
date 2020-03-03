@@ -1,11 +1,10 @@
 from threading import Thread
 from queue import Queue
 class BackEndThread(Thread):
-    def __init__(self,requestQueue,messageQueue,data):
+    def __init__(self,requestQueue,messageQueue):
         Thread.__init__(self)
         self.requestQueue = requestQueue
         self.messageQueue = messageQueue
-        self.data = data
         self.go = True
     def run(self):
         #Create TCP socket
