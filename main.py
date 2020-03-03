@@ -4,6 +4,7 @@ from multiprocessing import Process
 from Common.DataObject import DataObject
 import pygame
 pygame.init()
+pygame.key.set_repeat()
 if __name__ == '__main__':
     data = DataObject()
     #login
@@ -12,7 +13,7 @@ if __name__ == '__main__':
     p.join()
     data.login = True
     #main
-    p = Process(target=UWP.main,args=(data,))
-    p.start()
-    p.join()
+    #p = Process(target=UWP.main,args=(data,))
+    #p.start()
+    #p.join()
     #收尾...

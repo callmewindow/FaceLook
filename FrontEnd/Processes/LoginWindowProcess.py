@@ -32,7 +32,7 @@ class LoginWindowProcess():
             self.window.FPSClock.tick(self.FPS)
     def addAction(self,action):
         self.actionList.append(action)
-    def getAction(self,action):
+    def doAction(self,action):
         pass
     def createSession(self):
         pass

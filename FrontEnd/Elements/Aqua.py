@@ -4,9 +4,10 @@ class Aqua(Element):
     images = []
     for _ in range(0,20):
         url = './resources/Aqua/aqua '+str(_)+'.png'
-        images.append(pygame.image.load(url))
-    def __init__(self,location):
-        Element.__init__(self)
+        img = pygame.image.load(url)
+        images.append(img)
+    def __init__(self,process,location):
+        Element.__init__(self,process)
         self.location = location
         self.surface = Aqua.images[0]
     def update(self):
