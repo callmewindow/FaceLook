@@ -21,7 +21,7 @@ class Element():
     def display(self):
         surface = pygame.Surface.copy(self.surface)
         for child in self.childs:
-            surface.blit(child.surface,child.location)
+            surface.blit(child.display(),child.location)
         return surface
     def switchState(self,state):
         self.state = state

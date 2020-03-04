@@ -7,7 +7,7 @@ class LoginWindowProcess(WindowProcess):
     def __init__(self,data):  
         WindowProcess.__init__(self,data,LoginWindow(self))      
         self.bet = BackEndThread(self.requestQueue,self.messageQueue)   
-
+        print(self.window.surface.get_rect())
 def main(data):
     lwp = LoginWindowProcess(data)
     lwp.run()

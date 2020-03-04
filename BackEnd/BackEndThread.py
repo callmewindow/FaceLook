@@ -8,7 +8,8 @@ class BackEndThread(Thread):
         self.go = True
     def run(self):
         #Create TCP socket
-        while self.go:            
+        while self.go:        
+            #self.requestQueue.get()    
             #self.messageQueue.push(message)
             pass
     def stop(self):

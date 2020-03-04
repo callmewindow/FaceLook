@@ -5,6 +5,7 @@ class Aqua(Element):
     for _ in range(0,20):
         url = './resources/Aqua/aqua '+str(_)+'.png'
         img = pygame.image.load(url)
+        img = pygame.transform.scale(img,(150,150))
         images.append(img)
     def __init__(self,process,location):
         Element.__init__(self,process)
