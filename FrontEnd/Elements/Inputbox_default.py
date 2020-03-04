@@ -2,7 +2,7 @@ from FrontEnd.Elements.Inputbox import Inputbox
 import pygame
 class Inputbox_default(Inputbox):
     image = pygame.transform.scale(pygame.image.load('./resources/inputbox.jpg'),(300,50))    
-    font = pygame.font.Font('./resources/deng.ttf',40)
+    font = pygame.font.SysFont('dengxian',40)
     def __init__(self,process,location):
         #Inputbox.__init__(self,process,location,Inputbox_default.image,Inputbox_default.font,(0,0))
         surface = pygame.Surface((300,50))
