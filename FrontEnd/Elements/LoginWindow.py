@@ -5,7 +5,7 @@ class LoginWindow(Window):
     def __init__(self,process):
         Window.__init__(self,process,'Login',(600,450),(255,255,255))
 
-        lwbb = self.createChild(lwb)
+        self.bg = self.createChild(lwb)
 
     def login(self):
         pass

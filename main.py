@@ -13,9 +13,10 @@ if __name__ == '__main__':
     RQ = Queue()
     MQ = Queue()    
     bet = BackEndThread(data,RQ,MQ)
+    bet.start()
     #login
     lwp = LWP(data,RQ,MQ,bet)
     lwp.run()
-
+    bet.stop()
     #uwp = uwp(data,RQ,MQ,bet)
    # uwp.run()

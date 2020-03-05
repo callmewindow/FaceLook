@@ -16,5 +16,4 @@ class logo(Element):
             self.state = 1
             return
         self.surface.set_alpha(self.counter)
-        print(self.counter)
 

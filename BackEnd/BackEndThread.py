@@ -1,5 +1,6 @@
 from threading import Thread
 from queue import Queue
+from time import sleep
 class BackEndThread(Thread):
     def __init__(self,data,requestQueue,messageQueue):
         Thread.__init__(self)
@@ -8,7 +9,7 @@ class BackEndThread(Thread):
         self.messageQueue = messageQueue
         self.go = True
     def run(self):
-        #Create TCP socket
+        
         while self.go:
             request = None
             try:
@@ -17,9 +18,9 @@ class BackEndThread(Thread):
                 pass
             if request != None:
                 self.doRequest(request)
+            sleep(1)
     def doRequest(self,request):
-        #createThread
-        pass
+        print(request.content)
     def stop(self):
         self.go = False
     
