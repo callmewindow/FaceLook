@@ -3,6 +3,7 @@ from FrontEnd.Elements.Element import Element
 from FrontEnd.Elements.logo import logo
 from FrontEnd.Elements.Aqua import Aqua
 from FrontEnd.Elements.Inputbox_default import Inputbox_default
+from FrontEnd.Elements.CandyButton import CandyButton
 class LoginWindowBackground(Element):
     '''
     images = []
@@ -19,6 +20,7 @@ class LoginWindowBackground(Element):
         logoo = self.createChild(logo,(100,50))
         usernameInputbox = self.createChild(Inputbox_default,(150,175))
         passwordInputbox = self.createChild(Inputbox_default,(150,250))
+        candy = self.createChild(CandyButton,(250,350))
     def update(self):
         for child in self.childs:
             child.update()
