@@ -8,11 +8,16 @@ class BackEndThread(Thread):
         self.go = True
     def run(self):
         #Create TCP socket
-        while self.go:        
-            #self.requestQueue.get()    
-            #self.messageQueue.push(message)
-            pass
+        while self.go:
+            request = None
+            try:
+                request = self.requestQueue.get(block=False)
+            except:
+                pass
+            if request != None:
+                self.doRequest(request)
+    def doRequest(self,request):
+        pass
     def stop(self):
         self.go = False
-    #@Static methods
-    #def saveFile()
+    
