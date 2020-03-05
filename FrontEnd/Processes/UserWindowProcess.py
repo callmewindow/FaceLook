@@ -4,13 +4,7 @@ from FrontEnd.Processes.WindowProcess import WindowProcess
 from BackEnd.BackEndThread import BackEndThread
 from BackEnd.BackEndStaticMethods import *
 class UserWindowProcess(WindowProcess):
-    def __init__(self,data): 
-        WindowProcess.__init__(self,data,UserWindow(self))       
-        self.bet = BackEndThread(self.requestQueue,self.messageQueue)
+    def __init__(self,data,RQ,MQ,bet): 
+        WindowProcess.__init__(self,data,RQ,MQ,bet,UserWindow(self))       
 
-def main(data):
-    print(data.login)
-    uwp = UserWindowProcess(data)
-    uwp.run()
-    return data
 

@@ -2,15 +2,15 @@ import pygame
 from queue import Queue
 pygame.init()
 class WindowProcess():
-    def __init__(self,data,window):        
+    def __init__(self,data,RQ,MQ,bet,window):        
         self.window = window
         self.FPS = 60 
         self.go = True    
         self.data = data
         self.actionList = []
-        self.requestQueue = Queue()
-        self.messageQueue = Queue()
-        self.bet = None
+        self.requestQueue = RQ
+        self.messageQueue = MQ
+        self.bet = bet
     def run(self):
         while self.go:
             for event in pygame.event.get():

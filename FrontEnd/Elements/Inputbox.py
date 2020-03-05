@@ -39,7 +39,7 @@ class Inputbox(Element):
             if self.counter == 120:
                 self.counter = 1
             if textValue != '':
-                self.textSurface = self.font.render(textValue,True,(128,128,128))
+                self.textSurface = self.font.render(textValue,True,(0,0,0))
             else:
                 self.textSurface = None
         else:
@@ -59,14 +59,14 @@ class Inputbox(Element):
                 self.changed = True
                 self.counter = 1
                 
-                if self.surface != None:
-                    self.surface.set_alpha(200)
+                #if self.surface != None:
+                #    self.surface.set_alpha(200)
             else:
                 self.changed = True
                 self.focused = False
                 
-                if self.surface != None:
-                    self.surface.set_alpha(150)
+                #if self.surface != None:
+                #    self.surface.set_alpha(150)
 
             return
 
