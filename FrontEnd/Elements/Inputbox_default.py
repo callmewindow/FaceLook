@@ -6,8 +6,9 @@ class Inputbox_default(Inputbox):
     def __init__(self,process,location):
         #Inputbox.__init__(self,process,location,Inputbox_default.image,Inputbox_default.font,(0,0))
         surface = pygame.Surface((300,50))
-        surface.fill((255,255,255))        
+        surface.fill((255,255,255))                
         Inputbox.__init__(self,process,location,surface,Inputbox_default.font,(0,0))
+        self.surface.set_alpha(150)
         pygame.key.set_text_input_rect(pygame.Rect(300,300,400,400))
     def posin(self,pos):
         x = pos[0]

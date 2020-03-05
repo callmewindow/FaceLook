@@ -1,6 +1,4 @@
 from FrontEnd.Elements.Window import Window
-from FrontEnd.Elements.Aqua import Aqua
-from FrontEnd.Elements.logo import logo
 from FrontEnd.Elements.LoginWindowBackgrond import LoginWindowBackground as lwb
 import pygame
 class LoginWindow(Window):

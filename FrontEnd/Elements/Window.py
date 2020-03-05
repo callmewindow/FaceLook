@@ -6,7 +6,7 @@ class Window(Element):
         self.color = color
         pygame.display.set_caption(caption)        
         self.FPSClock=pygame.time.Clock()
-        self.surface = pygame.display.set_mode(size)
+        self.surface = pygame.display.set_mode((600,450))
         self.surface.fill(color)
         #self.origin = pygame.Surface.copy(self.surface)
     def display(self):
