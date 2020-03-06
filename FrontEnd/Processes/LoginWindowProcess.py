@@ -12,6 +12,7 @@ class LoginWindowProcess(WindowProcess):
             username = bg.usernameInputbox.text
             password = bg.passwordInputbox.text
             self.login(username,password)
+            self.window.bg.set_loading()
             return
     def login(self,username,password):
         content = 'username: {},password: {}'.format(username,password)

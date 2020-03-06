@@ -12,8 +12,7 @@ class CandyButton(Element):
         self.smallSize = (100,50)
         self.smallLocation = location
         self.bigSize = (140,70)
-        self.bigLocation = (location[0]-10,location[1]-5)
-        
+        self.bigLocation = (location[0]-10,location[1]-5)        
         self.location = location
         self.size = self.smallSize
     def posin(self,pos):
@@ -32,6 +31,7 @@ class CandyButton(Element):
                 self.size = self.smallSize
                 self.location = self.smallLocation
                 self.surface = CandyButton.image
+            return
         if event.type == pygame.constants.MOUSEBUTTONDOWN:
             if self.posin(event.pos):
                 self.process.addAction(Action(ActionType.LOGIN,None))

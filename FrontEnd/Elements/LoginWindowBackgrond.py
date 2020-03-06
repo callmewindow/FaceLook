@@ -5,6 +5,8 @@ from FrontEnd.Elements.Aqua import Aqua
 from FrontEnd.Elements.Inputbox_default import Inputbox_default
 from FrontEnd.Elements.Inputbox_password import Inputbox_password
 from FrontEnd.Elements.CandyButton import CandyButton
+from FrontEnd.Elements.AquaLoading import AquaLoading
+from FrontEnd.Elements.text_default import text_default
 class LoginWindowBackground(Element):
     '''
     images = []
@@ -21,8 +23,20 @@ class LoginWindowBackground(Element):
         self.logo = self.createChild(logo,(100,50))
         self.usernameInputbox = self.createChild(Inputbox_default,(150,175))
         self.passwordInputbox = self.createChild(Inputbox_password,(150,250))
-        candy = self.createChild(CandyButton,(250,350))
-    def update(self):
-        for child in self.childs:
-            child.update()
+        self.candy = self.createChild(CandyButton,(250,350))
+        self.aqualoading = self.createChild(AquaLoading,(230,145))
+        self.loadingText = self.createChild(text_default,(263,325),'Loading...',(0,0,0))
+        self.aqualoading.active = False
+        self.loadingText.active = False
+    def set_loading(self):
+        self.state = 1
+        self.logo.active = False
+        self.usernameInputbox.active = False
+        self.passwordInputbox.active = False
+        self.candy.active = False
+        self.aqualoading.active = True
+        self.loadingText.active = True
+        
+        
+        
         

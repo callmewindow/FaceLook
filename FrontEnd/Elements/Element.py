@@ -8,20 +8,24 @@ class Element():
         self.counter = 0
         self.surface = None
         self.process = process
+        self.active = True
     def getEvent(self,event):
         for child in self.childs:
-            child.getEvent(event)
+            if child.active:
+                child.getEvent(event)
     def createChild(self,childType,*args,**kwargs):
         child = childType(self.process,*args,**kwargs)
         self.childs.append(child)
         return child
     def update(self):
         for child in self.childs:
-            child.update()
+            if child.active:
+                child.update()
     def display(self):
         surface = pygame.Surface.copy(self.surface)
         for child in self.childs:
-            surface.blit(child.display(),child.location)
+            if child.active:
+                surface.blit(child.display(),child.location)
         return surface
     def switchState(self,state):
         self.state = state
