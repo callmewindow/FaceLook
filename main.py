@@ -7,7 +7,6 @@ from queue import Queue
 import pygame
 pygame.init()
 pygame.key.set_repeat()
-pygame.key.set_text_input_rect(pygame.Rect(0,0,800,800))
 if __name__ == '__main__':
     data = DataCenter()
     RQ = Queue()
@@ -16,6 +15,8 @@ if __name__ == '__main__':
     bet.start()
     #login
     lwp = LWP(data,RQ,MQ,bet)
+    print(bet.messageQueue)
+    print(lwp.messageQueue)
     lwp.run()
     bet.stop()
     #uwp = uwp(data,RQ,MQ,bet)

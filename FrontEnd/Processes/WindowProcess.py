@@ -1,5 +1,5 @@
 import pygame
-from queue import Queue
+from queue import Empty
 pygame.init()
 class WindowProcess():
     def __init__(self,data,RQ,MQ,bet,window):        
@@ -22,7 +22,7 @@ class WindowProcess():
             try:
                 message = self.messageQueue.get(block=False)
                 self.window.getMessage(message)
-            except:
+            except Empty:
                 pass
             for action in self.actionList:
                 self.doAction(action)

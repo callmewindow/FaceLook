@@ -25,17 +25,18 @@ class LoginWindowBackground(Element):
         self.passwordInputbox = self.createChild(Inputbox_password,(150,250))
         self.candy = self.createChild(CandyButton,(250,350))
         self.aqualoading = self.createChild(AquaLoading,(230,145))
-        self.loadingText = self.createChild(text_default,(263,325),'Loading...',(0,0,0))
-        self.aqualoading.active = False
-        self.loadingText.active = False
+        self.loadingText = self.createChild(text_default,(263,325),'登录中...',(0,0,0))
+        self.loadingText.alignCenter((300,350))
+        self.aqualoading.disable()
+        self.loadingText.disable()
     def set_loading(self):
         self.state = 1
-        self.logo.active = False
-        self.usernameInputbox.active = False
-        self.passwordInputbox.active = False
-        self.candy.active = False
-        self.aqualoading.active = True
-        self.loadingText.active = True
+        self.logo.disable()
+        self.usernameInputbox.disable()
+        self.passwordInputbox.disable()
+        self.candy.disable()
+        self.aqualoading.enable()
+        self.loadingText.enable()
         
         
         

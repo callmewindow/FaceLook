@@ -1,6 +1,7 @@
 from threading import Thread
 from queue import Queue
 from time import sleep
+from Common.base import *
 class BackEndThread(Thread):
     def __init__(self,data,requestQueue,messageQueue):
         Thread.__init__(self)
@@ -20,7 +21,10 @@ class BackEndThread(Thread):
                 self.doRequest(request)
             sleep(1)
     def doRequest(self,request):
-        print(request.content)
+        sleep(1)
+        self.messageQueue.put(Message(MessageType.LOGIN,'Test'))
+        print('Message PUT')
+        print(self.messageQueue.empty())
     def stop(self):
         self.go = False
     

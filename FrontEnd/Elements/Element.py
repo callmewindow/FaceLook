@@ -30,3 +30,7 @@ class Element():
     def switchState(self,state):
         self.state = state
         self.counter = 0
+    def enable(self):
+        self.active = True
+    def disable(self):
+        self.active = False
