@@ -11,4 +11,4 @@ class LoginWindow(Window):
     def getMessage(self,message):
         if message.type != MessageType.LOGIN:
             return
-        self.bg.loadingText.active = False
+        self.bg.set_success()

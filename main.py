@@ -15,9 +15,9 @@ if __name__ == '__main__':
     bet.start()
     #login
     lwp = LWP(data,RQ,MQ,bet)
-    print(bet.messageQueue)
-    print(lwp.messageQueue)
+    #print(bet.messageQueue)
+    #print(lwp.messageQueue)
     lwp.run()
+    #uwp = UWP(data,RQ,MQ,bet)
+    #uwp.run()
     bet.stop()
-    #uwp = uwp(data,RQ,MQ,bet)
-   # uwp.run()

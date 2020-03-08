@@ -1,7 +1,7 @@
 from FrontEnd.Elements.Inputbox import Inputbox
 import pygame
 class Inputbox_default(Inputbox):
-    image = pygame.transform.scale(pygame.image.load('./resources/inputbox.png'),(300,50))  
+    image = pygame.transform.smoothscale(pygame.image.load('./resources/inputbox.png'),(300,50))  
     image.set_alpha(200)  
     font = pygame.font.SysFont('dengxian',30)
     def __init__(self,process,location):

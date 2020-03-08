@@ -18,7 +18,7 @@ class LoginWindowBackground(Element):
     def __init__(self,process):
         Element.__init__(self,process)
         self.location = (0,0)
-        self.surface = pygame.transform.scale(pygame.image.load('./resources/bg.png'),(800,450))
+        self.surface = pygame.transform.smoothscale(pygame.image.load('./resources/bg.png'),(800,450))
         #aqua = self.createChild(Aqua,(450,300))
         self.logo = self.createChild(logo,(100,50))
         self.usernameInputbox = self.createChild(Inputbox_default,(150,175))
@@ -37,6 +37,10 @@ class LoginWindowBackground(Element):
         self.candy.disable()
         self.aqualoading.enable()
         self.loadingText.enable()
+    def set_success(self):
+        print(self.loadingText.location)
+        self.loadingText.setText('登录成功！正在加载资源...')
+        print(self.loadingText.location)
         
         
         

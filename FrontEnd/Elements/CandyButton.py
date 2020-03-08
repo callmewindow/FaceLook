@@ -3,8 +3,8 @@ import pygame
 from Common.base import *
 class CandyButton(Element):
     source_img = pygame.image.load('./resources/candy.png')
-    image = pygame.transform.scale(source_img,(100,50))
-    bigImage = pygame.transform.scale(source_img,(120,60))
+    image = pygame.transform.smoothscale(source_img,(100,50))
+    bigImage = pygame.transform.smoothscale(source_img,(120,60))
     del source_img
     def __init__(self,process,location):
         Element.__init__(self,process)
