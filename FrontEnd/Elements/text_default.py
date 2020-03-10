@@ -5,7 +5,9 @@ class text_default(Element):
     def __init__(self,process,location,text,color):
         Element.__init__(self,process)
         self.location = location
+        print(text)
         self.surface = text_default.font.render(text,True,color)
+        print(text)
         self.text = text
         self.color = color
     def alignCenter(self,pos):

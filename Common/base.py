@@ -58,5 +58,8 @@ class DataCenter():
         self.user = None
         self.friendList = None
         self.sessions = None
-        
-    
+def FETEXT(data):
+    import pygame
+    avatar = pygame.transform.smoothscale(pygame.image.load('./resources/UserData/MinatoAqua/MinatoAqua.jpg'),(100,100))
+    data.user = User('MinatoAqua','MinatoAqua','MinatoAqua',avatar,UserStateType.ONLINE)
+
