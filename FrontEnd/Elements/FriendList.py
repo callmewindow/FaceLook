@@ -6,15 +6,19 @@ class FriendBlock(Element):
     image = pygame.Surface((350,150))
     image.fill((255,255,255))
     image_onHover = pygame.Surface((350,150))
-    image_onHover.fill((230,230,230))
-    def __init__(self,process,location,size,user):
+    image_onHover.fill((245,245,245))
+    image_onClick = pygame.Surface((350,150))
+    image_onClick.fill((240,240,240))
+
+    def __init__(self,process,location,user):
         Element.__init__(self,process)
-        self.location = location
-        self.size = size
         self.user = user
-        self.avatar = self.createChild(Avatar,(25,25),(100,100),self.user.avatar)
-        self.nicknameText = self.createChild(text_default,(200,75),self.user.nickname,(0,0,0))
+        self.avatar = self.createChild(Avatar,(25,25),self.user.avatar)
+        userStateText = ' (online)' if self.user.state == 1 else ' (offline)'
+        self.nicknameText = self.createChild(text_default,(150,75),self.user.nickname+userStateText,(0,0,0))
         self.surface = FriendBlock.image
+        self.location = location
+        self.size = (350,150)
     def posin(self,pos):
         x = pos[0]
         y = pos[1]
@@ -22,18 +26,55 @@ class FriendBlock(Element):
             return True
         return False
     def getEvent(self,event):
-        if event.type == pygame.constants.MOUSEMOTION:
+        if event.type == pygame.constants.MOUSEMOTION and self.state!=2:
             if self.posin(event.pos):
+                self.state = 1
                 self.surface = FriendBlock.image_onHover
             else:
+                self.state = 0
+                self.surface = FriendBlock.image
+            return
+        if event.type == pygame.constants.MOUSEBUTTONDOWN and event.button == pygame.constants.BUTTON_LEFT:
+            if self.posin(event.pos):
+                self.state = 2
+                self.surface = FriendBlock.image_onClick
+            else:
+                self.state = 0
                 self.surface = FriendBlock.image
 
 class FriendList(Element):
     def __init__(self,process,location,friendList):
         Element.__init__(self,process)
         self.location = location
+        self.surface = pygame.Surface((350,600))
         self.friendList = friendList
+        self.blocks = []
+        for i in range(0,len(self.friendList)):
+            user = self.friendList[i]
+            self.blocks.append(self.createChild(FriendBlock,(0,i*150),user)) 
+            print(self.blocks[i].location)       
+        self.surface.fill((220,220,220))
+        self.index = 0
+
     
-    def update(self):
-        if self.state == 0:
-            return
+    def getEvent(self,event):
+        if event.type == pygame.constants.MOUSEBUTTONDOWN or event.type == pygame.constants.MOUSEMOTION:
+            event.pos = (event.pos[0]-self.location[0],event.pos[1]-self.location[1])
+        for child in self.childs:
+            child.getEvent(event)
+
+
+        if event.type == pygame.constants.MOUSEBUTTONDOWN:
+            if event.button == pygame.constants.BUTTON_WHEELDOWN and self.index<=len(self.blocks)-5:
+                self.index += 1
+                for block in self.blocks:
+                    block.location = (block.location[0],block.location[1]-150)
+            if event.button == pygame.constants.BUTTON_WHEELUP and self.index>0:
+                self.index -= 1
+                for block in self.blocks:
+                    block.location = (block.location[0],block.location[1]+150)
+    
+            
+
+        
+

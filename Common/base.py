@@ -61,5 +61,15 @@ class DataCenter():
 def FETEXT(data):
     import pygame
     avatar = pygame.transform.smoothscale(pygame.image.load('./resources/UserData/MinatoAqua/MinatoAqua.jpg'),(100,100))
-    data.user = User('MinatoAqua','MinatoAqua','MinatoAqua',avatar,UserStateType.ONLINE)
-
+    meaAvatar = pygame.transform.smoothscale(pygame.image.load('./resources/UserData/MinatoAqua/cache/mea.jpg'),(100,100))
+    mikoAvatar = pygame.transform.smoothscale(pygame.image.load('./resources/UserData/MinatoAqua/cache/miko.jpg'),(100,100))
+    shionAvatar = pygame.transform.smoothscale(pygame.image.load('./resources/UserData/MinatoAqua/cache/shion.jpg'),(100,100))
+    maziliAvatar = pygame.transform.smoothscale(pygame.image.load('./resources/UserData/MinatoAqua/cache/mazili.jpg'),(100,100))
+    xiaohuliAvatar = pygame.transform.smoothscale(pygame.image.load('./resources/UserData/MinatoAqua/cache/xiaohuli.jpg'),(100,100))
+    data.user = User('MinatoAqua','MinatoAqua','Aqua',avatar,UserStateType.ONLINE)
+    mea = User('Mea','Mea','Mea',meaAvatar,UserStateType.ONLINE)
+    miko = User('Miko','Miko','Miko',mikoAvatar,UserStateType.ONLINE)
+    shion = User('Shion','Shion','Shion',shionAvatar,UserStateType.ONLINE)
+    mazili = User('Mazili','Mazili','Mazili',maziliAvatar,UserStateType.ONLINE)
+    xiaohuli = User('Xiaohuli','Xiaohuli','Xiaohuli',xiaohuliAvatar,UserStateType.ONLINE)
+    data.friendList = [data.user,mea,miko,shion,mazili,xiaohuli]

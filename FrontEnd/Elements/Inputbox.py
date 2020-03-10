@@ -52,7 +52,7 @@ class Inputbox(Element):
     def posin(self,pos):
         pass
     def getEvent(self,event):
-        if event.type == pygame.constants.MOUSEBUTTONDOWN:
+        if event.type == pygame.constants.MOUSEBUTTONDOWN and event.button == pygame.constants.BUTTON_LEFT:
             self.changed = True
             if self.posin(event.pos):
                 self.focused = True

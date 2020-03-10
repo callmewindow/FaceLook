@@ -32,7 +32,7 @@ class CandyButton(Element):
                 self.location = self.smallLocation
                 self.surface = CandyButton.image
             return
-        if event.type == pygame.constants.MOUSEBUTTONDOWN:
+        if event.type == pygame.constants.MOUSEBUTTONDOWN and event.button == pygame.constants.BUTTON_LEFT:
             if self.posin(event.pos):
                 self.process.addAction(Action(ActionType.LOGIN,None))
             

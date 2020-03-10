@@ -10,10 +10,6 @@ class UserWindowBackground(Element):
         self.location = (0,0)
 
     def init(self):
-        self.testBlock = self.createChild(FriendBlock,(0,0),(350,150),self.process.data.user)
-        self.testBlock2 = self.createChild(FriendBlock,(0,150),(350,150),self.process.data.user)
-        self.testBlock3 = self.createChild(FriendBlock,(0,300),(350,150),self.process.data.user)
-        self.testBlock4 = self.createChild(FriendBlock,(0,450),(350,150),self.process.data.user)
-        self.testBlock5 = self.createChild(FriendBlock,(0,600),(350,150),self.process.data.user)
+        self.friendList = self.createChild(FriendList,(0,100),self.process.data.friendList)
 
         
