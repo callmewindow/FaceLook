@@ -27,20 +27,34 @@ class LoginWindowBackground(Element):
         self.aqualoading = self.createChild(AquaLoading,(230,145))
         self.loadingText = self.createChild(text_default,(263,325),'登录中...',(0,0,0))
         self.loadingText.alignCenter((300,350))
+        self.messageText = self.createChild(text_default,(0,0),'登录失败！',(0,0,0))
+        self.messageText.alignCenter((300,325))
         self.aqualoading.disable()
         self.loadingText.disable()
+        self.messageText.disable()
     def set_loading(self):
         self.state = 1
         self.logo.disable()
         self.usernameInputbox.disable()
         self.passwordInputbox.disable()
         self.candy.disable()
+        self.messageText.disable()
         self.aqualoading.enable()
         self.loadingText.enable()
     def set_success(self):
-        print(self.loadingText.location)
+        self.state = 2
         self.loadingText.setText('登录成功！正在加载资源...')
-        print(self.loadingText.location)
+
+    def set_failure(self,failureMessage):
+        self.state = 3        
+        self.logo.enable()
+        self.usernameInputbox.enable()
+        self.passwordInputbox.enable()
+        self.candy.enable()
+        self.messageText.enable()
+        self.aqualoading.disable()
+        self.loadingText.disable()
+        self.messageText.setText(failureMessage)
         
         
         

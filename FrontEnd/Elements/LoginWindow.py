@@ -11,4 +11,4 @@ class LoginWindow(Window):
     def getMessage(self,message):
         if message.type != MessageType.LOGIN:
             return
-        self.bg.set_success()
+        self.bg.set_failure('后端还没做！')
