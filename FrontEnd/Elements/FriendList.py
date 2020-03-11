@@ -43,6 +43,8 @@ class FriendBlock(Element):
                 self.surface = FriendBlock.image
 
 class FriendList(Element):
+    listCover = pygame.image.load('./resources/listCover.png')
+    listCoverY = -200
     def __init__(self,process,location,friendList):
         Element.__init__(self,process)
         self.location = location
@@ -56,6 +58,15 @@ class FriendList(Element):
         self.surface.fill((220,220,220))
         self.index = 0
 
+    def display(self):
+        surface = pygame.Surface.copy(self.surface)
+        for child in self.childs:
+            if child.active:
+                surface.blit(child.display(), child.location)
+        if self.listCoverY < 600:
+            self.listCoverY = self.listCoverY + 8
+            surface.blit(self.listCover, (0, self.listCoverY))
+        return surface
     
     def getEvent(self,event):
         if event.type == pygame.constants.MOUSEBUTTONDOWN or event.type == pygame.constants.MOUSEMOTION:
