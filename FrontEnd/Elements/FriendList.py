@@ -44,13 +44,14 @@ class FriendBlock(Element):
 
 class FriendList(Element):
     listCover = pygame.image.load('./resources/listCover.png')
-    listCoverY = -200
     def __init__(self,process,location,friendList):
         Element.__init__(self,process)
         self.location = location
         self.surface = pygame.Surface((350,600))
         self.friendList = friendList
         self.blocks = []
+        self.listCoverY = -200
+        self.cover = FriendList.listCover
         for i in range(0,len(self.friendList)):
             user = self.friendList[i]
             self.blocks.append(self.createChild(FriendBlock,(0,i*150),user)) 
@@ -63,9 +64,7 @@ class FriendList(Element):
         for child in self.childs:
             if child.active:
                 surface.blit(child.display(), child.location)
-        if self.listCoverY < 600:
-            self.listCoverY = self.listCoverY + 8
-            surface.blit(self.listCover, (0, self.listCoverY))
+            surface.blit(self.cover, (0, self.listCoverY))
         return surface
     
     def getEvent(self,event):
@@ -84,7 +83,13 @@ class FriendList(Element):
                 self.index -= 1
                 for block in self.blocks:
                     block.location = (block.location[0],block.location[1]+150)
-    
+
+    def update(self):
+        if self.listCoverY < 600:
+            self.listCoverY = self.listCoverY + 8
+        for child in self.childs:
+            if child.active:
+                child.update()
             
 
         
