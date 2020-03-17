@@ -14,3 +14,5 @@ class Window(Element):
         self.update()
         for child in self.childs:
             self.surface.blit(child.display(),child.location)
+    def getMessage(self,message):
+        pass

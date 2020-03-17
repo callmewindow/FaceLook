@@ -3,6 +3,9 @@ from FrontEnd.Elements.Avatar import Avatar
 from FrontEnd.Elements.text_default import text_default
 import pygame
 class FriendBlock(Element):
+    #state==0 idle
+    #state==1 hover
+    #state==2 select
     image = pygame.Surface((350,150))
     image.fill((255,255,255))
     image_onHover = pygame.Surface((350,150))

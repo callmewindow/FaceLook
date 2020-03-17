@@ -34,3 +34,5 @@ class Element():
         self.active = True
     def disable(self):
         self.active = False
+    def getMessage(self,message):
+        pass
