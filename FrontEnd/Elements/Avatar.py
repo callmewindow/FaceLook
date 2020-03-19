@@ -1,9 +1,21 @@
 from FrontEnd.Elements.Element import Element
 import pygame
+
+
 class Avatar(Element):
-    def __init__(self,process,location,surface):
-        Element.__init__(self,process)
+    avatarBorder = pygame.image.load('./resources/avatarborder.png')
+
+    def __init__(self, process, location, surface):
+        Element.__init__(self, process)
         self.location = location
         self.surface = surface
+        self.border = Avatar.avatarBorder
+
+    def display(self):
+        surface = pygame.Surface.copy(self.surface)
+        surface.blit(self.border, (0, 0))
+        surface.set_colorkey((1, 1, 1))
+        return surface
+
     def update(self):
         pass

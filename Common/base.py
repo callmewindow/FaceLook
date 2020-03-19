@@ -60,16 +60,19 @@ class DataCenter():
         self.sessions = None
 def FETEXT(data):
     import pygame
-    avatar = pygame.transform.smoothscale(pygame.image.load('./resources/UserData/MinatoAqua/MinatoAqua.jpg'),(100,100))
-    meaAvatar = pygame.transform.smoothscale(pygame.image.load('./resources/UserData/MinatoAqua/cache/mea.jpg'),(100,100))
-    mikoAvatar = pygame.transform.smoothscale(pygame.image.load('./resources/UserData/MinatoAqua/cache/miko.jpg'),(100,100))
-    shionAvatar = pygame.transform.smoothscale(pygame.image.load('./resources/UserData/MinatoAqua/cache/shion.jpg'),(100,100))
-    maziliAvatar = pygame.transform.smoothscale(pygame.image.load('./resources/UserData/MinatoAqua/cache/mazili.jpg'),(100,100))
-    xiaohuliAvatar = pygame.transform.smoothscale(pygame.image.load('./resources/UserData/MinatoAqua/cache/xiaohuli.jpg'),(100,100))
+    avatar = pygame.transform.smoothscale(pygame.image.load('./resources/UserData/MinatoAqua/MinatoAqua.jpg'),(75,75))
+    meaAvatar = pygame.transform.smoothscale(pygame.image.load('./resources/UserData/MinatoAqua/cache/mea.jpg'),(75,75))
+    mikoAvatar = pygame.transform.smoothscale(pygame.image.load('./resources/UserData/MinatoAqua/cache/miko.jpg'),(75,75))
+    shionAvatar = pygame.transform.smoothscale(pygame.image.load('./resources/UserData/MinatoAqua/cache/shion.jpg'),(75,75))
+    maziliAvatar = pygame.transform.smoothscale(pygame.image.load('./resources/UserData/MinatoAqua/cache/mazili.jpg'),(75,75))
+    xiaohuliAvatar = pygame.transform.smoothscale(pygame.image.load('./resources/UserData/MinatoAqua/cache/xiaohuli.jpg'),(75,75))
     data.user = User('MinatoAqua','MinatoAqua','Aqua',avatar,UserStateType.ONLINE)
     mea = User('Mea','Mea','Mea',meaAvatar,UserStateType.ONLINE)
     miko = User('Miko','Miko','Miko',mikoAvatar,UserStateType.ONLINE)
     shion = User('Shion','Shion','Shion',shionAvatar,UserStateType.ONLINE)
     mazili = User('Mazili','Mazili','Mazili',maziliAvatar,UserStateType.ONLINE)
     xiaohuli = User('Xiaohuli','Xiaohuli','Xiaohuli',xiaohuliAvatar,UserStateType.ONLINE)
-    data.friendList = [data.user,mea,miko,shion,mazili,xiaohuli]
+    shion2 = User('Shion2','Shion2','Shion2',shionAvatar,UserStateType.ONLINE)
+    mazili2 = User('Mazili2','Mazili2','Mazili2',maziliAvatar,UserStateType.ONLINE)
+    xiaohuli2 = User('Xiaohuli2','Xiaohuli2','Xiaohuli2',xiaohuliAvatar,UserStateType.ONLINE)
+    data.friendList = [mea,miko,shion,mazili,xiaohuli,shion2,mazili2,xiaohuli2]
