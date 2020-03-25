@@ -1,8 +1,10 @@
 from socket import *
 import threading
+import json
+import pickle
 import time
 
-HOST = '127.0.0.1'
+HOST = '175.24.10.214'
 PORT = 9000
 BUFSIZE = 1024
 ADDRESS = (HOST, PORT)
@@ -16,8 +18,10 @@ class TcpClient(object):
         while (self.stopFlag == False):
             try:
                 #如果运行到此处isStop的值改变，能否退出循环，此处存疑
-                msg = self.tcpClientSocket.recv(BUFSIZE)
-                msglist.insert(0,msg)
+                self.datap = self.tcpClientSocket.recv(BUFSIZE)
+                self.dataj = pickle.loads(self.datap)
+                self.data = json.loads(self.dataj)
+                msglist.put(self.data)
             except error as e:
                 if(e.errno == 1):
                     time.sleep(0.5)
