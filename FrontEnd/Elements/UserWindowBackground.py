@@ -1,10 +1,10 @@
 from FrontEnd.Elements.Element import Element
 from FrontEnd.Elements.Avatar import Avatar
-from FrontEnd.Elements.FriendList import *
-from FrontEnd.Elements.text_default import *
-from FrontEnd.Elements.SelfInfo import *
-from FrontEnd.Elements.SearchBar import *
-from FrontEnd.Elements.MenuBar import *
+from FrontEnd.Elements.FriendList import FriendList
+from FrontEnd.Elements.text_default import text_default
+from FrontEnd.Elements.SelfInfo import SelfInfo
+from FrontEnd.Elements.SearchBar import SearchBar
+from FrontEnd.Elements.MenuBar import MenuBar
 import pygame
 
 
@@ -20,5 +20,6 @@ class UserWindowBackground(Element):
         self.searchBar = self.createChild(SearchBar, (0, 100))
         # self.logo = self.createChild(text_default, (0, 0), '0 Message(s), 0 Invitation(s)', (0, 0, 0))
         # self.logo.alignCenter((175, 50))
-        self.friendList = self.createChild(FriendList, (0, 155), self.process.data.friendList,
+        self.friendList = self.createChild(FriendList, (0, 200), self.process.data.friendList,
                                            self.process.data.groupList, self.process.data.messageList)
+        self.menubar = self.createChild(MenuBar, (0, 155), self.friendList)

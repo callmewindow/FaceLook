@@ -18,9 +18,10 @@ class MenuBar(Element):
     icon2 = pygame.transform.smoothscale(pygame.image.load('./resources/menuicon_2.png'), (30, 30))
     icon3 = pygame.transform.smoothscale(pygame.image.load('./resources/menuicon_3.png'), (30, 30))
 
-    def __init__(self, process, location):
+    def __init__(self, process, location, binding_list):
         Element.__init__(self, process)
         self.location = location
+        self.list = binding_list
         self.size = (350, 45)
         self.buttonSize = (117, 45)
         self.icon = [MenuBar.icon1, MenuBar.icon2, MenuBar.icon3]
@@ -28,7 +29,7 @@ class MenuBar(Element):
         self.buttonState = [2, 0, 0]
         self.buttonLocation = [(0, 0), (117, 0), (234, 0)]
 
-    def posin(self, pos, index):
+    def pos_in(self, pos, index):
         x = pos[0]
         y = pos[1]
         if self.buttonLocation[index][0] < x < self.buttonLocation[index][0] + self.buttonSize[0] and \
@@ -37,25 +38,26 @@ class MenuBar(Element):
         return False
 
     def getEvent(self, event):
-        if event.type == pygame.constants.MOUSEBUTTONDOWN or event.type == pygame.constants.MOUSEMOTION:
+        if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
             event.pos = (event.pos[0] - self.location[0], event.pos[1] - self.location[1])
-        if event.type == pygame.constants.MOUSEMOTION:
+        if event.type == pygame.MOUSEMOTION:
             for i in range(3):
                 if self.buttonState[i] != 2:
-                    if self.posin(event.pos, i):
+                    if self.pos_in(event.pos, i):
                         self.buttonState[i] = 1
                     else:
                         self.buttonState[i] = 0
-        if event.type == pygame.constants.MOUSEBUTTONDOWN and event.button == pygame.constants.BUTTON_LEFT:
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
             for i in range(3):
-                if self.posin(event.pos, i):
+                if self.pos_in(event.pos, i):
                     self.buttonState = [0, 0, 0]
                     self.buttonState[i] = 2
-        if event.type == pygame.constants.MOUSEBUTTONDOWN or event.type == pygame.constants.MOUSEMOTION:
+                    self.list.displayType = i
+        if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
             event.pos = (event.pos[0] + self.location[0], event.pos[1] + self.location[1])
 
     def display(self):
-        surface = pygame.Surface.copy(self.surface)
+        surface = self.surface.copy()
         for i in range(3):
             if self.buttonState[i] == 0:
                 surface.blit(MenuBar.image_idle, self.buttonLocation[i])
