@@ -18,7 +18,7 @@ class UserWindowBackground(Element):
     def init(self):
         self.selfInfo = self.createChild(SelfInfo, (0, 0), self.process.data.user)
         self.searchBar = self.createChild(SearchBar, (0, 100))
-        self.menuBar = self.createChild(MenuBar, (0, 155))
         # self.logo = self.createChild(text_default, (0, 0), '0 Message(s), 0 Invitation(s)', (0, 0, 0))
         # self.logo.alignCenter((175, 50))
-        self.friendList = self.createChild(FriendList, (0, 200), self.process.data.friendList)
+        self.friendList = self.createChild(FriendList, (0, 155), self.process.data.friendList,
+                                           self.process.data.groupList, self.process.data.messageList)
