@@ -70,7 +70,7 @@ class FriendList(Element):
     def __init__(self, process, location, friend_list, group_list, message_list):
         Element.__init__(self, process)
         self.location = location
-        self.surface = pygame.Surface((350, 600))
+        self.surface = pygame.Surface((350, 500))
         self.surface.fill((220, 220, 220))
         self.friendList = friend_list
         self.groupList = group_list
@@ -110,20 +110,27 @@ class FriendList(Element):
                 child.getEvent(event)
 
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == pygame.BUTTON_WHEELDOWN and self.index <= len(self.blocks) - 6:
+            blocks = []
+            if self.displayType == 0:
+                blocks = self.messageList
+            elif self.displayType == 1:
+                blocks = self.friendList
+            elif self.displayType == 2:
+                blocks = self.groupList
+            if event.button == pygame.BUTTON_WHEELDOWN and self.index <= len(blocks) - 5:
                 self.index += 1
-                for block in self.blocks:
+                for block in blocks:
                     block.location = (block.location[0], block.location[1] - 100)
             if event.button == pygame.BUTTON_WHEELUP and self.index > 0:
                 self.index -= 1
-                for block in self.blocks:
+                for block in blocks:
                     block.location = (block.location[0], block.location[1] + 100)
 
         if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
             event.pos = (event.pos[0] + self.location[0], event.pos[1] + self.location[1])
 
     def update(self):
-        if self.listCoverY < 600:
+        if self.listCoverY < 500:
             self.listCoverY = self.listCoverY + 8
         if self.rightClickMenu.active:
             for block in self.blocks:

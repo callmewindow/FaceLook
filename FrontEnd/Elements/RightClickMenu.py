@@ -17,9 +17,9 @@ class RightClickMenuBlock(Element):
         self.text = 'test'
         if block_type == 0:
             self.text = '发送消息'
-        if block_type == 1:
+        elif block_type == 1:
             self.text = '删除'
-        if block_type == 2:
+        elif block_type == 2:
             self.text = '修改备注'
         self.block_text = self.createChild(text_default, (20, 5), self.text, (0, 0, 0))
         self.surface = RightClickMenuBlock.image
@@ -89,7 +89,12 @@ class RightClickMenu(Element):
         return False
 
     def change_location(self, location):
-        self.location = location
+        x, y = location
+        if x > 150:
+            x = 150
+        if y > 380:
+            y = 380
+        self.location = (x, y)
 
     def set_user(self, user):
         for block in self.blocks:
