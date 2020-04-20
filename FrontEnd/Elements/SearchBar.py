@@ -18,7 +18,7 @@ class SearchBar(Element):
         self.searchInputbox.enable()
 
     def display(self):
-        surface = pygame.Surface.copy(self.surface)
+        surface = self.surface.copy()
         for child in self.childs:
             if child.active:
                 surface.blit(child.display(), child.location)
@@ -26,9 +26,9 @@ class SearchBar(Element):
         return surface
 
     def getEvent(self, event):
-        if event.type == pygame.constants.MOUSEBUTTONDOWN or event.type == pygame.constants.MOUSEMOTION:
+        if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
             event.pos = (event.pos[0] - self.location[0], event.pos[1] - self.location[1])
         for child in self.childs:
             child.getEvent(event)
-        if event.type == pygame.constants.MOUSEBUTTONDOWN or event.type == pygame.constants.MOUSEMOTION:
+        if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
             event.pos = (event.pos[0] + self.location[0], event.pos[1] + self.location[1])
