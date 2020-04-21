@@ -27,7 +27,7 @@ class TcpClient(object):
                     time.sleep(0.5)
 
     def run(self,msglist):
-        self.tcpClientSocket.connect(ADDRESS)
+        # self.tcpClientSocket.connect(ADDRESS)
         self.tcpClientSocket.setblocking(0)
         self.receiver = threading.Thread(target=TcpClient.receiverThread,args=(self,msglist))
         self.receiver.start()
