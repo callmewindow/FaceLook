@@ -49,6 +49,7 @@ class RightClickMenuBlock(Element):
                 print(self.text)
                 if (self.text=='发送消息'):
                     self.process.createSessionWindow(233)
+
                 # do something
 
     def set_user(self, user):
@@ -76,6 +77,9 @@ class RightClickMenu(Element):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if not self.pos_in(event.pos):
                 self.disable()
+            else:
+                if event.button == pygame.BUTTON_LEFT:
+                    self.disable()
         if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
             event.pos = (event.pos[0] - self.location[0], event.pos[1] - self.location[1])
         for child in self.childs:

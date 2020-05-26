@@ -52,9 +52,12 @@ class FriendBlock(Element):
                 return
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
                 if self.posin(event.pos):
-                    self.state = 2
-                    self.surface = FriendBlock.image_onClick
                     print(self.user.nickname)
+                    if self.state == 2:
+                        self.process.createSessionWindow(233)
+                    else:
+                        self.state = 2
+                        self.surface = FriendBlock.image_onClick
                 else:
                     self.state = 0
                     self.surface = FriendBlock.image
