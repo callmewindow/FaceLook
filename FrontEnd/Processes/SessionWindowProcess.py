@@ -8,9 +8,6 @@ class SessionWindowProcess():
         pygame.init()
         self.FPS = 60 
         self.go = True    
-        self.data = data
-        self.RQ = RQ
-        self.MQ = MQ
         self.sessionID = sessionID
         self.actionList = []
         self.window = SessionWindow(self)
