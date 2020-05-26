@@ -9,11 +9,9 @@ from FrontEnd.Processes.LoginWindowProcess import LoginWindowProcess as LWP
 from BackEnd.BackEndThread import BackEndThread
 from multiprocessing import Process
 from Common.base import *
-from queue import Queue
-
 
 if __name__ == '__main__':
-    data = DataCenter() 
+    
     bet = BackEndThread(data, RQ, MQ)
     bet.start()
     # login

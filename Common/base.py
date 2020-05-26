@@ -1,7 +1,8 @@
 from sys import exit
 from queue import Queue
-RQ = Queue()
-MQ = Queue()
+from Common.DataObject import DataObject
+
+
 
 def panic():
     raise Exception()
@@ -121,3 +122,7 @@ def FETEXT(data):
     data.messageList = [mea, miko, shion]
     data.friendList = [mazili, xiaohuli, miko2]
     data.groupList = [shion2, mazili2, xiaohuli2]
+
+RQ = Queue()
+MQ = Queue()
+data = DataCenter()
