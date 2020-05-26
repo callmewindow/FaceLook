@@ -23,7 +23,7 @@ class FriendBlock(Element):
         Element.__init__(self, process)
         self.user = user
         self.rightClickMenu = menu
-        self.avatar = self.createChild(Avatar, (25, 15), user.avatar)
+        self.avatar = self.createChild(Avatar, (25, 15), user.avatarURL)
         user_state_text = ' (online)' if user.state == 1 else ' (offline)'
         self.nicknameText = self.createChild(text_default, (120, 38), user.nickname + user_state_text, (0, 0, 0))
         self.surface = FriendBlock.image

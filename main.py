@@ -10,7 +10,6 @@ from BackEnd.BackEndThread import BackEndThread
 from multiprocessing import Process
 from Common.base import *
 def test_data(data):
-    import pygame
     avatar = "image::DEFAULT_AQUA"
     meaAvatar = "image::DEFUALT_MEA"
     mikoAvatar = "image::DEFAULT_MIKO"
