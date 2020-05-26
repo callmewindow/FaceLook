@@ -4,11 +4,16 @@ from FrontEnd.Processes.WindowProcess import WindowProcess
 from Common.base import *
 from queue import Empty
 class SessionWindowProcess():
-    def __init__(self,sessionID):        
+    def __init__(self,sessionID,data):        
         pygame.init()
         self.FPS = 60 
         self.go = True    
+        self.data = data
         self.sessionID = sessionID
+        self.session = self.data.getSessionByID(sessionID)
+        print(self.data)
+        for msg in self.session.userMessages:
+            print(msg.sender,msg.time,msg.content)
         self.actionList = []
         self.window = SessionWindow(self)
     def run(self):
@@ -31,6 +36,6 @@ class SessionWindowProcess():
         pass
     def stop(self):
         self.go = False
-def createSession(sessionID):
-    swp = SessionWindowProcess(sessionID)
+def createSession(sessionID,data):
+    swp = SessionWindowProcess(sessionID,data)
     swp.run()

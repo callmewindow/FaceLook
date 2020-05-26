@@ -10,5 +10,5 @@ class UserWindowProcess(WindowProcess):
         self.window.bg.init()
         self.sessions = []
     def createSessionWindow(self,sessionID):
-        proc = multiprocessing.Process(target=createSession,args=(sessionID,))
+        proc = multiprocessing.Process(target=createSession,args=(sessionID,self.data))
         proc.start()

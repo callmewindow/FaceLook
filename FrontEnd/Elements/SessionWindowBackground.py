@@ -6,7 +6,7 @@ class MessageList(Element):
         Element.__init__(self,process)
         
         
-
+        print(self.process.data)
         self.surface = pygame.Surface((500,300))
         self.surface.fill((77,77,0))
         self.location = (50,50)

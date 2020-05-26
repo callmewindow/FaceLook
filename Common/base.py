@@ -90,8 +90,14 @@ class DataCenter():
         self.friendList = []
         self.groupList = []
         self.messageList = []
-        self.sessions = []
+        self.sessions = None
+    def setSessions(self,ses):
+        self.sessions = ses
+    def getSessions(self):
+        print(6)
+        return self.sessions
     def getSessionByID(self,sid):
+        print(len(self.sessions))
         for session in self.sessions:
             if session.sessionID == sid:
                 return session

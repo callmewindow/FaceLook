@@ -9,6 +9,7 @@ from FrontEnd.Processes.LoginWindowProcess import LoginWindowProcess as LWP
 from BackEnd.BackEndThread import BackEndThread
 from multiprocessing import Process
 from Common.base import *
+from multiprocessing.managers import BaseManager
 def test_data(data):
     avatar = "image::DEFAULT_AQUA"
     meaAvatar = "image::DEFUALT_MEA"
@@ -50,13 +51,18 @@ def test_data(data):
     testUserMessage3 = UserMessage('Fubuki','2020-5-26 15:15','KONKONKON')
     testUserMessage4 = UserMessage('Fubuki','2020-5-26 15:16','KONKONKON')
     testUserMessage5 = UserMessage('Fubuki','2020-5-26 15:17','KONKONKON')
-    data.sessions = [Session(233,[testUserMessage1,testUserMessage2,testUserMessage3,testUserMessage4,testUserMessage5])]
-    print(data)
-    print([msg.time for msg in data.getSessionByID(233).userMessages])
+    data.setSessions([Session(233,[testUserMessage1,testUserMessage2,testUserMessage3,testUserMessage4,testUserMessage5])])
+    session = data.getSessionByID(233)
+    for msg in session.userMessages:
+        print(msg.sender,msg.time,msg.content)
+    
 if __name__ == '__main__':
+    manager = BaseManager()
+    manager.register('DataCenter',DataCenter)
+    manager.start()
+    data = manager.DataCenter()
     RQ = Queue()
     MQ = Queue()
-    data = DataCenter()
     bet = BackEndThread(data, RQ, MQ)
     bet.start()
     
@@ -68,6 +74,7 @@ if __name__ == '__main__':
     lwp.run()
     '''
     test_data(data)
+    
     uwp = UWP(data, RQ, MQ, bet)
     uwp.run()
     bet.stop()
