@@ -11,7 +11,7 @@ class BackEndThread(Thread):
         self.requestQueue = requestQueue
         self.messageQueue = messageQueue
         self.go = True
-        self.client = init(self.requestQueue)
+        #self.client = init(self.requestQueue)
     def run(self):
         while self.go:
             request = None

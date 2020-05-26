@@ -13,16 +13,16 @@ from queue import Queue
 
 
 if __name__ == '__main__':
-    data = DataCenter()
-    RQ = Queue()
-    MQ = Queue()
+    data = DataCenter() 
     bet = BackEndThread(data, RQ, MQ)
     bet.start()
     # login
+
     lwp = LWP(data, RQ, MQ, bet)
     # print(bet.messageQueue)
     # print(lwp.messageQueue)
     lwp.run()
+
     FETEXT(data)
     uwp = UWP(data, RQ, MQ, bet)
     uwp.run()

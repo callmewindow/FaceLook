@@ -47,6 +47,8 @@ class RightClickMenuBlock(Element):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
             if self.pos_in(event.pos):
                 print(self.text)
+                if (self.text=='发送消息'):
+                    self.process.createSessionWindow(233)
                 # do something
 
     def set_user(self, user):

@@ -1,5 +1,7 @@
 from sys import exit
-
+from queue import Queue
+RQ = Queue()
+MQ = Queue()
 
 def panic():
     raise Exception()

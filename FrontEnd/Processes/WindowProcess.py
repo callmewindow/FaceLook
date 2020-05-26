@@ -3,7 +3,7 @@ from queue import Empty
 pygame.init()
 class WindowProcess():
     def __init__(self,data,RQ,MQ,bet,window):        
-        
+        pygame.init()
         self.FPS = 60 
         self.go = True    
         self.data = data
