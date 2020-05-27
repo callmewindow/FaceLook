@@ -32,6 +32,13 @@ class UserWindowBackground(Element):
                                    [User('Mea', 'Mea', '群搜索结果1', "image::DEFUALT_MEA", UserStateType.ONLINE),
                                     User('Mea', 'Mea', '群搜索结果2', "image::DEFUALT_MEA", UserStateType.ONLINE),
                                     User('Mea', 'Mea', '群搜索结果3', "image::DEFUALT_MEA", UserStateType.ONLINE)])
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if 0 <= event.pos[0] <= 350 and 0 <= event.pos[1] <= 100:
+                self.menubar.enable()
+                self.friendList.enable()
+                self.searchBar.searchInputbox.text = ''
+                self.searchResult.disable()
+
         for child in self.childs:
             if child.active:
                 child.getEvent(event)
@@ -40,11 +47,6 @@ class UserWindowBackground(Element):
         if self.searchBar.searchInputbox.focused:
             self.menubar.disable()
             self.friendList.disable()
-        else:
-            self.menubar.enable()
-            self.friendList.enable()
-            self.searchResult.disable()
-
         for child in self.childs:
             if child.active:
                 child.update()

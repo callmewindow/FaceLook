@@ -10,7 +10,7 @@ class SearchRightClick(Element):
         self.location = (0, 0)
         self.blocks = []
         self.blocks.append(self.createChild(RightClickMenuBlock, (1, 1), 2))
-        self.blocks.append(self.createChild(RightClickMenuBlock, (1, 1), 4))
+        self.blocks.append(self.createChild(RightClickMenuBlock, (1, 41), 4))
         self.surface = pygame.image.load('./resources/UserWindowUI/search_right_menu.png')
         self.size = (122, 82)
 
