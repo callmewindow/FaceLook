@@ -14,9 +14,9 @@ class MenuBar(Element):
     image_hover.fill((245, 245, 245))
     image_select = pygame.Surface((117, 45))
     image_select.fill((240, 240, 240))
-    icon1 = pygame.transform.smoothscale(pygame.image.load('./resources/menuicon_1.png'), (30, 30))
-    icon2 = pygame.transform.smoothscale(pygame.image.load('./resources/menuicon_2.png'), (30, 30))
-    icon3 = pygame.transform.smoothscale(pygame.image.load('./resources/menuicon_3.png'), (30, 30))
+    icon1 = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/message.png'), (30, 30))
+    icon2 = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/people.png'), (30, 30))
+    icon3 = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/group.png'), (30, 30))
 
     def __init__(self, process, location, binding_list):
         Element.__init__(self, process)

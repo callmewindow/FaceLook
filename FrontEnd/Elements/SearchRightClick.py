@@ -3,16 +3,16 @@ from FrontEnd.Elements.RightClickMenuBlock import RightClickMenuBlock
 import pygame
 
 
-class RightClickMenu(Element):
+class SearchRightClick(Element):
     def __init__(self, process):
         Element.__init__(self, process)
         self.disable()
         self.location = (0, 0)
         self.blocks = []
-        for i in range(4):
-            self.blocks.append(self.createChild(RightClickMenuBlock, (1, 1 + i * 40), i))
-        self.surface = pygame.image.load('./resources/UserWindowUI/friend_right_menu.png')
-        self.size = (122, 162)
+        self.blocks.append(self.createChild(RightClickMenuBlock, (1, 1), 2))
+        self.blocks.append(self.createChild(RightClickMenuBlock, (1, 1), 4))
+        self.surface = pygame.image.load('./resources/UserWindowUI/search_right_menu.png')
+        self.size = (122, 82)
 
     def display(self):
         surface = self.surface.copy()
@@ -45,8 +45,8 @@ class RightClickMenu(Element):
         x, y = location
         if x > 228:
             x = 228
-        if y > 338:
-            y = 338
+        if y > 418:
+            y = 418
         self.location = (x, y)
 
     def set_user(self, user):

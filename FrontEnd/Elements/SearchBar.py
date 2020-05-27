@@ -1,10 +1,10 @@
 import pygame
 from FrontEnd.Elements.Element import Element
-from FrontEnd.Elements.Inputbox_default import Inputbox_default
+from FrontEnd.Elements.Inputbox_blank import Inputbox_blank
 
 
 class SearchBar(Element):
-    searchIcon = pygame.image.load('./resources/searchicon.png')
+    searchIcon = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/search.png'), (32, 32))
     image = pygame.Surface((350, 55))
     image.fill((255, 255, 255))
 
@@ -12,7 +12,7 @@ class SearchBar(Element):
         Element.__init__(self, process)
         self.location = location
         self.size = (350, 55)
-        self.searchInputbox = self.createChild(Inputbox_default, (50, 0))
+        self.searchInputbox = self.createChild(Inputbox_blank, (50, 8))
         self.icon = SearchBar.searchIcon
         self.surface = SearchBar.image
         self.searchInputbox.enable()

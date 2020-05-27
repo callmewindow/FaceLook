@@ -23,3 +23,21 @@ class UserWindowBackground(Element):
         self.friendList = self.createChild(FriendList, (0, 200), self.process.data.friendList,
                                            self.process.data.groupList, self.process.data.messageList)
         self.menubar = self.createChild(MenuBar, (0, 155), self.friendList)
+
+    def getEvent(self, event):
+        if self.searchBar.searchInputbox.focused and event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+            pass
+        for child in self.childs:
+            if child.active:
+                child.getEvent(event)
+
+    def update(self):
+        if self.searchBar.searchInputbox.focused:
+            self.menubar.disable()
+            self.friendList.disable()
+        else:
+            self.menubar.enable()
+            self.friendList.enable()
+        for child in self.childs:
+            if child.active:
+                child.update()
