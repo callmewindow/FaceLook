@@ -6,8 +6,8 @@ import pygame
 
 
 class Title(Element):
-    image_friend = pygame.image.load('/resources/UserWindowUI/search_friend.png')
-    image_group = pygame.image.load('/resources/UserWindowUI/search_group.png')
+    image_friend = pygame.image.load('./resources/UserWindowUI/search_friend.png')
+    image_group = pygame.image.load('./resources/UserWindowUI/search_group.png')
 
     def __init__(self, process, location, title_type):
         Element.__init__(self, process)
@@ -82,32 +82,34 @@ class ResultBlock(Element):
 class SearchResult(Element):
     def __init__(self, process, location):
         Element.__init__(self, process)
+        self.disable()
         self.location = location
-        self.surface = pygame.Surface((350, 500))
+        self.surface = pygame.Surface((350, 550))
         self.surface.fill((220, 220, 220))
-        self.friendList = []
-        self.groupList = []
         self.blocks = []
         self.rightClickMenu = self.createChild(SearchRightClick)
 
+        self.index = 0
+
+    def init(self, friend_list, group_list):
+        self.blocks.clear()
         self.blocks.append(self.createChild(Title, (0, 0), 0))
-        for i in range(0, len(self.friendList)):
-            user = self.friendList[i]
+        for i in range(0, len(friend_list)):
+            user = friend_list[i]
             self.blocks.append(self.createChild(ResultBlock, (0, i * 100 + 50), user, 1, self.rightClickMenu))
-        if len(self.friendList) != 0:
-            offset = len(self.friendList) * 100 + 50
+        if len(friend_list) != 0:
+            offset = len(friend_list) * 100 + 50
             self.blocks.append(self.createChild(Title, (0, offset), 1))
-            for i in range(0, len(self.groupList)):
-                user = self.groupList[i]
+            for i in range(0, len(group_list)):
+                user = group_list[i]
                 self.blocks.append(
                     self.createChild(ResultBlock, (0, offset + 50 + i * 100), user, 2, self.rightClickMenu))
         else:
             self.blocks.append(self.createChild(Title, (0, 100), 1))
-            for i in range(0, len(self.groupList)):
-                user = self.groupList[i]
+            for i in range(0, len(group_list)):
+                user = group_list[i]
                 self.blocks.append(
                     self.createChild(ResultBlock, (0, 150 + i * 100), user, 2, self.rightClickMenu))
-        self.index = 0
 
     def display(self):
         surface = self.surface.copy()
@@ -119,22 +121,21 @@ class SearchResult(Element):
         return surface
 
     def getEvent(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == pygame.BUTTON_WHEELDOWN and self.index <= len(self.blocks) - 7:
+                self.index += 1
+                for block in self.blocks:
+                    block.location = (block.location[0], block.location[1] - 100)
+            if event.button == pygame.BUTTON_WHEELUP and self.index > 0:
+                self.index -= 1
+                for block in self.blocks:
+                    block.location = (block.location[0], block.location[1] + 100)
+
         if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
             event.pos = (event.pos[0] - self.location[0], event.pos[1] - self.location[1])
         for child in self.childs:
             if child.active:
                 child.getEvent(event)
-
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == pygame.BUTTON_WHEELDOWN and self.index <= len(blocks) - 5:
-                self.index += 1
-                for block in blocks:
-                    block.location = (block.location[0], block.location[1] - 100)
-            if event.button == pygame.BUTTON_WHEELUP and self.index > 0:
-                self.index -= 1
-                for block in blocks:
-                    block.location = (block.location[0], block.location[1] + 100)
-
         if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
             event.pos = (event.pos[0] + self.location[0], event.pos[1] + self.location[1])
 
@@ -144,11 +145,7 @@ class SearchResult(Element):
                 block.frozen = True
         else:
             for block in self.blocks:
-                if block.type != self.displayType:
-                    block.disable()
-                else:
-                    block.enable()
-                    block.frozen = False
+                block.frozen = False
         for child in self.childs:
             if child.active:
                 child.update()
