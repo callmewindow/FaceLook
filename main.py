@@ -77,5 +77,6 @@ if __name__ == '__main__':
     
     uwp = UWP(data, RQ, MQ, bet)
     uwp.run()
-    bet.join()
     bet.stop()
+    bet.join()
+    
