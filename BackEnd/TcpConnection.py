@@ -5,37 +5,51 @@ import pickle
 import time
 
 HOST = '175.24.10.214'
-PORT = 9000
+PORT = 21915
 BUFSIZE = 1024
 ADDRESS = (HOST, PORT)
+
 
 class TcpClient(object):
     def __init__(self):
         self.tcpClientSocket = socket(AF_INET, SOCK_STREAM)
-        self.stopFlag = False
+        self.stopFlag = threading.Event()
+        self.receiver = None
 
-    def receiverThread(self,msglist):
-        while (self.stopFlag == False):
+    def receiverThread(self, rq, event):
+        while not event.isSet():
             try:
-                #如果运行到此处isStop的值改变，能否退出循环，此处存疑
-                self.datap = self.tcpClientSocket.recv(BUFSIZE)
-                self.dataj = pickle.loads(self.datap)
-                self.data = json.loads(self.dataj)
-                msglist.put(self.data)
+                # 如果运行到此处stopFlag的值改变，能否退出循环，此处存疑
+                dataj = self.tcpClientSocket.recv(BUFSIZE).decode("utf-8")
+                if len(dataj)>0:
+                    data = json.loads(dataj)
+                    print(data)
+                else:
+                    continue
+                rq.put(data)
             except error as e:
-                if(e.errno == 1):
-                    time.sleep(0.5)
+                print(e)
 
-    def run(self,msglist):
-        # self.tcpClientSocket.connect(ADDRESS)
-        self.tcpClientSocket.setblocking(0)
-        self.receiver = threading.Thread(target=TcpClient.receiverThread,args=(self,msglist))
-        self.receiver.start()
+    def runTcp(self, rq):
+        try:
+            self.tcpClientSocket.connect(ADDRESS)
+            self.receiver = threading.Thread(target=TcpClient.receiverThread, args=(self, rq,self.stopFlag))
+            self.receiver.start()
+        except error as e:
+            print(e)
 
-    def sendMessage(self,msg):
-        self.tcpClientSocket.send(msg)
-    
+    def sendMessage(self, data):
+        # data为dict即可
+        try:
+            dataj = json.dumps(data)
+            self.tcpClientSocket.send(dataj.encode("utf-8"))
+        except error as e:
+            print(e)
+
     def closeServer(self):
-        self.stopFlag = True
-        self.receiver.join()
-        self.tcpClientSocket.close()
+        self.stopFlag.set()
+        if self.receiver is not None:
+            self.tcpClientSocket.close()
+            self.receiver.join()
+        
+        
