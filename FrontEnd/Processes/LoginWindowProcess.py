@@ -15,6 +15,12 @@ class LoginWindowProcess(WindowProcess):
             self.window.bg.set_loading()
             return
     def login(self,username,password):
-        content = 'username: {},password: {}'.format(username,password)
-        self.requestQueue.put(Request(RequestType.LOGIN,content))
+        request = {            
+            'messageNumber':'2',
+            'username':username,
+            'password':password,
+            }
+        self.requestQueue.put(request)
+
+        
         

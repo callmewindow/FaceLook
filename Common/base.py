@@ -86,7 +86,7 @@ class FriendList():
 
 class DataCenter():
     def __init__(self):
-        self.user = []
+        self.user = User(None,None,None,None,None)
         self.friendList = []
         self.groupList = []
         self.messageList = []

@@ -7,17 +7,18 @@ from FrontEnd.Elements.Inputbox_password import Inputbox_password
 from FrontEnd.Elements.CandyButton import CandyButton
 from FrontEnd.Elements.AquaLoading import AquaLoading
 from FrontEnd.Elements.text_default import text_default
+class login_state():
+    login=0
+    loading=1
+    success=2
+    failure=3
 class LoginWindowBackground(Element):
-    '''
-    images = []
-    for _ in range(0,8):
-        url = './resources/Train/train {}.png'.format(str(_))
-        img = pygame.transform.scale(pygame.image.load(url),(600,450))
-        images.append(img)
-    '''
+
     def __init__(self,process):
         Element.__init__(self,process)
         self.location = (0,0)
+        self.state = 0
+        self.counter = 0
         self.surface = pygame.transform.smoothscale(pygame.image.load('./resources/bg.png'),(800,450))
         #aqua = self.createChild(Aqua,(450,300))
         self.logo = self.createChild(logo,(100,50))
@@ -34,6 +35,7 @@ class LoginWindowBackground(Element):
         self.messageText.disable()
     def set_loading(self):
         self.state = 1
+        self.counter = 0
         self.logo.disable()
         self.usernameInputbox.disable()
         self.passwordInputbox.disable()
@@ -43,10 +45,11 @@ class LoginWindowBackground(Element):
         self.loadingText.enable()
     def set_success(self):
         self.state = 2
+        self.counter = 0
         self.loadingText.setText('登录成功！正在加载资源...')
-
     def set_failure(self,failureMessage):
-        self.state = 3        
+        self.state = 3     
+        self.counter = 0   
         self.logo.enable()
         self.usernameInputbox.enable()
         self.passwordInputbox.enable()
@@ -55,6 +58,23 @@ class LoginWindowBackground(Element):
         self.aqualoading.disable()
         self.loadingText.disable()
         self.messageText.setText(failureMessage)
+    def getMessage(self, message):
+        messageNumber = message.get('messageNumber',None)
+        if self.state == login_state.loading and messageNumber=='2':
+            self.set_success()
+            self.process.data.user.username = message('username',None)
+            self.process.data.user.password = message('password',None)
+            return        
+        print('[Warning]Message',message,'abandoned.')
+    def update(self):        
+        if self.state == login_state.loading:
+            self.counter += 1
+            loading_time = self.counter//60
+            self.loadingText.setText('登录中...耗时{}秒'.format(loading_time))
+            self.loadingText.alignCenter((300,350))
+            if loading_time >= 30:
+                self.set_failure('登录超时！请检查网络状况。')
+        Element.update(self)
         
         
         

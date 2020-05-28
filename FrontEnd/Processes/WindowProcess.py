@@ -23,6 +23,7 @@ class WindowProcess():
             try:
                 message = self.messageQueue.get(block=False)
                 self.window.getMessage(message)
+                print('[New Message]',message)
             except Empty:
                 pass
             for action in self.actionList:
