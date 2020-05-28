@@ -7,6 +7,7 @@ from FrontEnd.Elements.Inputbox_password import Inputbox_password
 from FrontEnd.Elements.CandyButton import CandyButton
 from FrontEnd.Elements.AquaLoading import AquaLoading
 from FrontEnd.Elements.text_default import text_default
+from Common.base import *
 class login_state():
     login=0
     loading=1
@@ -59,11 +60,16 @@ class LoginWindowBackground(Element):
         self.loadingText.disable()
         self.messageText.setText(failureMessage)
     def getMessage(self, message):
-        messageNumber = message.get('messageNumber',None)
-        if self.state == login_state.loading and messageNumber=='2':
-            self.set_success()
-            self.process.data.user.username = message('username',None)
-            self.process.data.user.password = message('password',None)
+        result = message.get('result',None)
+        info = message.get('information',None)
+        print(result,info)
+        if self.state == login_state.loading:
+            if result == '1':
+                self.set_success()
+                self.process.data.getUser().state = UserStateType.ONLINE
+                self.process.stop()
+            elif result == '0':
+                self.set_failure(info)
             return        
         print('[Warning]Message',message,'abandoned.')
     def update(self):        
@@ -76,6 +82,6 @@ class LoginWindowBackground(Element):
                 self.set_failure('登录超时！请检查网络状况。')
         Element.update(self)
         
-        
+          
         
         

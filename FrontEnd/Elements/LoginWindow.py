@@ -8,6 +8,4 @@ class LoginWindow(Window):
         self.bg = self.createChild(lwb)
 
     def getMessage(self,message):
-        if message.type != MessageType.LOGIN:
-            return
-        self.bg.set_failure('后端还没做！')
+        self.bg.getMessage(message)

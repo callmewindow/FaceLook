@@ -91,6 +91,8 @@ class DataCenter():
         self.groupList = []
         self.messageList = []
         self.sessions = None
+    def getUser(self):
+        return self.user
     def setSessions(self,ses):
         self.sessions = ses
     def getSessions(self):

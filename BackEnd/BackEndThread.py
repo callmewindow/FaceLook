@@ -2,7 +2,7 @@ import threading
 import queue
 from queue import Queue
 from time import sleep
-from SolverThreads import *
+from BackEnd.SolverThreads import *
 
 
 def init(rq):

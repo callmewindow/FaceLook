@@ -63,7 +63,7 @@ if __name__ == '__main__':
     data = manager.DataCenter()
     RQ = Queue()
     MQ = Queue()
-    bet = BackEndThread(data, RQ, MQ)
+    bet = BackEndThread(RQ, MQ)
     bet.start()
     
     # login
@@ -73,8 +73,9 @@ if __name__ == '__main__':
     # print(lwp.messageQueue)
     lwp.run()
 
-    test_data(data)
+    #test_data(data)
     
     uwp = UWP(data, RQ, MQ, bet)
     uwp.run()
+    bet.join()
     bet.stop()
