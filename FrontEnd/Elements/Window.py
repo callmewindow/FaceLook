@@ -5,8 +5,6 @@ import win32con
 import win32api
 import windnd
 class Window(Element):
-    def onDragFiles(self,msg):
-        print(msg) #Notice: msg is the files' name in form of BYTES ARRAY, not string.
     def __init__(self,process,caption,size,color):
         Element.__init__(self,process)
         self.color = color
@@ -18,7 +16,8 @@ class Window(Element):
         self.alpha = 255
         #self.origin = pygame.Surface.copy(self.surface)
         self.hwnd = pygame.display.get_wm_info()['window']
-        windnd.hook_dropfiles(self.hwnd,self.onDragFiles)
+    def setDragFilesCallback(self,func):
+        windnd.hook_dropfiles(self.hwnd,func)
 
     def display(self):
         #self.surface.fill(self.color)

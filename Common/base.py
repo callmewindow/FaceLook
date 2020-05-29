@@ -97,10 +97,16 @@ class DataCenter():
         self.user = user
     def getFriendList(self):
         return self.friendList
+    def setFriendList(self,friendList):
+        self.friendList = friendList
     def getGroupList(self):
         return self.groupList
+    def setGroupList(self,groupList):
+        self.groupList = groupList
     def getMessageList(self):
         return self.messageList
+    def setMessageList(self,messageList):
+        self.messageList = messageList
     def setSessions(self,ses):
         self.sessions = ses
     def getSessions(self):

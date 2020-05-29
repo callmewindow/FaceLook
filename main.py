@@ -30,7 +30,7 @@ def test_data(data):
     xiaohuliAvatar = pygame.transform.smoothscale(
         pygame.image.load('./resources/UserData/MinatoAqua/cache/xiaohuli.jpg'), (75, 75))
     '''
-    data.user = User('MinatoAqua', 'MinatoAqua', 'Aqua', avatar, UserStateType.ONLINE)
+    data.setUser(User('MinatoAqua', 'MinatoAqua', 'Aqua', avatar, UserStateType.ONLINE))
 
     mea = User('Mea', 'Mea', '消息列表1', meaAvatar, UserStateType.ONLINE)
     miko = User('Miko', 'Miko', '消息列表2', mikoAvatar, UserStateType.ONLINE)
@@ -42,9 +42,9 @@ def test_data(data):
     mazili2 = User('Mazili2', 'Mazili2', '群组列表2', matsuriAvatar, UserStateType.ONLINE)
     xiaohuli2 = User('Xiaohuli2', 'Xiaohuli2', '群组列表3', fubukiAvatar, UserStateType.ONLINE)
 
-    data.messageList = [mea, miko, shion]
-    data.friendList = [mazili, xiaohuli, miko2]
-    data.groupList = [shion2, mazili2, xiaohuli2]
+    data.setMessageList([mea, miko, shion,mea, miko, shion,mea, miko, shion])
+    data.setFriendList([mazili, xiaohuli, miko2])
+    data.setGroupList([shion2, mazili2, xiaohuli2])
     
     testUserMessage1 = UserMessage('Fubuki','2020-5-26 15:13','KONKONKON')
     testUserMessage2 = UserMessage('Fubuki','2020-5-26 15:14','KONKONKON')
@@ -74,7 +74,7 @@ if __name__ == '__main__':
     lwp.run()
     
 
-    #test_data(data)
+    test_data(data)
     
     uwp = UWP(data, RQ, MQ, bet)
     uwp.run()
