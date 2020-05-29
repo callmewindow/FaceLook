@@ -35,5 +35,7 @@ class CandyButton(Element):
         if event.type == pygame.constants.MOUSEBUTTONDOWN and event.button == pygame.constants.BUTTON_LEFT:
             if self.posin(event.pos):
                 self.process.addAction(Action(ActionType.LOGIN,None))
+        if event.type == pygame.constants.MOUSEBUTTONDOWN and event.button == pygame.constants.BUTTON_RIGHT:
+            self.process.window.set_alpha(self.process.window.alpha-10)
             
         

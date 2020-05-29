@@ -72,6 +72,7 @@ if __name__ == '__main__':
     # print(bet.messageQueue)
     # print(lwp.messageQueue)
     lwp.run()
+    
 
     #test_data(data)
     
