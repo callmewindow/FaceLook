@@ -23,7 +23,7 @@ class UserWindowBackground(Element):
         self.searchBar = self.createChild(SearchBar, (0, 100))
         self.friendList = self.createChild(FriendList, (0, 200), self.process.data.getFriendList(),
                                            self.process.data.getGroupList(), self.process.data.getMessageList())
-        self.switchListBar = self.createChild(SwitchListBar, (0, 155), self.friendList)
+        self.switchListBar = self.createChild(SwitchListBar, (0, 155))
         self.searchResult = self.createChild(SearchResult, (0, 155))
         self.mainMenu = self.createChild(MainMenu, (0, 700 - 80), self.process.data.getUser())
         self.mainMenubar = self.createChild(MainMenubar, (0, 700))
@@ -47,15 +47,18 @@ class UserWindowBackground(Element):
                 child.getEvent(event)
 
     def update(self):
+        self.friendList.change_to = self.switchListBar.change_to
+        self.friendList.has_changed = self.switchListBar.has_changed
+        self.switchListBar.has_changed = False
         if self.searchBar.searchInputbox.focused:
             self.switchListBar.disable()
             self.friendList.disable()
             self.mainMenu.disable()
         if self.mainMenubar.get_state() == 2:
-            self.friendList.freeze()
+            self.friendList.frozen = True
             self.mainMenu.enable()
         else:
-            self.friendList.unfreeze()
+            self.friendList.frozen = False
             self.mainMenu.disable()
 
         for child in self.childs:

@@ -4,9 +4,9 @@ class Button_three(Element):
     # 0 == idle
     # 1 == hover
     # 2 == select
-    # icon = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/apps.png'), (30, 30))
-    # icon_hover = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/apps_hover.png'), (30, 30))
-    # icon_select = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/apps_select.png'), (30, 30))
+    icon = None #pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/apps.png'), (30, 30))
+    icon_hover = None #pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/apps_hover.png'), (30, 30))
+    icon_select = None #pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/apps_select.png'), (30, 30))
 
     def __init__(self, process, location, defaultURL, hoverURL, selectURL, size):
         Element.__init__(self, process)
@@ -21,8 +21,8 @@ class Button_three(Element):
     def pos_in(self, pos):
         x = pos[0]
         y = pos[1]
-        if self.location[0] < x < self.location[0] + self.size[0] and self.location[1] < y < self.location[1] + \
-                self.size[1]:
+        if self.location[0] <= x <= self.location[0] + self.size[0] \
+                and self.location[1] <= y <= self.location[1] + self.size[1]:
             return True
         return False
 

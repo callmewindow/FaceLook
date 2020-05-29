@@ -44,18 +44,18 @@ class ResultBlock(Element):
         self.type = block_type
         self.frozen = False
 
-    def posin(self, pos):
+    def pos_in(self, pos):
         x = pos[0]
         y = pos[1]
-        if self.location[0] < x < self.location[0] + self.size[0] and self.location[1] < y < self.location[1] + \
-                self.size[1]:
+        if self.location[0] <= x <= self.location[0] + self.size[0] \
+                and self.location[1] <= y <= self.location[1] + self.size[1]:
             return True
         return False
 
     def getEvent(self, event):
         if not self.frozen:
             if event.type == pygame.MOUSEMOTION and self.state != 2:
-                if self.posin(event.pos):
+                if self.pos_in(event.pos):
                     self.state = 1
                     self.surface = ResultBlock.image_onHover
                 else:
@@ -63,7 +63,7 @@ class ResultBlock(Element):
                     self.surface = ResultBlock.image
                 return
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
-                if self.posin(event.pos):
+                if self.pos_in(event.pos):
                     print(self.user.nickname)
                     if self.state == 2:
                         self.process.createSessionWindow(233)
@@ -73,7 +73,7 @@ class ResultBlock(Element):
                 else:
                     self.state = 0
                     self.surface = ResultBlock.image
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_RIGHT and self.posin(event.pos):
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_RIGHT and self.pos_in(event.pos):
                 self.rightClickMenu.change_location(event.pos)
                 self.rightClickMenu.set_user(self.user)
                 self.rightClickMenu.enable()
@@ -88,7 +88,6 @@ class SearchResult(Element):
         self.surface.fill((220, 220, 220))
         self.blocks = []
         self.rightClickMenu = self.createChild(SearchRightClick)
-
         self.index = 0
 
     def init(self, friend_list, group_list):

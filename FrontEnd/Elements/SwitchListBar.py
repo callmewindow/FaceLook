@@ -18,22 +18,23 @@ class SwitchListBar(Element):
     icon2 = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/people.png'), (30, 30))
     icon3 = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/group.png'), (30, 30))
 
-    def __init__(self, process, location, binding_list):
+    def __init__(self, process, location):
         Element.__init__(self, process)
         self.location = location
-        self.list = binding_list
         self.size = (350, 45)
         self.buttonSize = (117, 45)
         self.icon = [SwitchListBar.icon1, SwitchListBar.icon2, SwitchListBar.icon3]
         self.surface = SwitchListBar.image
         self.buttonState = [2, 0, 0]
         self.buttonLocation = [(0, 0), (117, 0), (234, 0)]
+        self.has_changed = True
+        self.change_to = 0
 
     def pos_in(self, pos, index):
         x = pos[0]
         y = pos[1]
-        if self.buttonLocation[index][0] < x < self.buttonLocation[index][0] + self.buttonSize[0] and \
-                self.buttonLocation[index][1] < y < self.buttonLocation[index][1] + self.buttonSize[1]:
+        if self.buttonLocation[index][0] <= x <= self.buttonLocation[index][0] + self.buttonSize[0] and \
+                self.buttonLocation[index][1] <= y <= self.buttonLocation[index][1] + self.buttonSize[1]:
             return True
         return False
 
@@ -52,7 +53,8 @@ class SwitchListBar(Element):
                 if self.pos_in(event.pos, i):
                     self.buttonState = [0, 0, 0]
                     self.buttonState[i] = 2
-                    self.list.displayType = i
+                    self.has_changed = True
+                    self.change_to = i
         if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
             event.pos = (event.pos[0] + self.location[0], event.pos[1] + self.location[1])
 
