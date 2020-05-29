@@ -2,7 +2,7 @@ from FrontEnd.Elements.Element import Element
 import pygame
 
 
-class MenuBar(Element):
+class SwitchListBar(Element):
     # state==0 idle
     # state==1 hover
     # state==2 select
@@ -13,7 +13,7 @@ class MenuBar(Element):
     image_hover = pygame.Surface((117, 45))
     image_hover.fill((245, 245, 245))
     image_select = pygame.Surface((117, 45))
-    image_select.fill((240, 240, 240))
+    image_select.fill((235, 235, 235))
     icon1 = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/message.png'), (30, 30))
     icon2 = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/people.png'), (30, 30))
     icon3 = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/group.png'), (30, 30))
@@ -24,8 +24,8 @@ class MenuBar(Element):
         self.list = binding_list
         self.size = (350, 45)
         self.buttonSize = (117, 45)
-        self.icon = [MenuBar.icon1, MenuBar.icon2, MenuBar.icon3]
-        self.surface = MenuBar.image
+        self.icon = [SwitchListBar.icon1, SwitchListBar.icon2, SwitchListBar.icon3]
+        self.surface = SwitchListBar.image
         self.buttonState = [2, 0, 0]
         self.buttonLocation = [(0, 0), (117, 0), (234, 0)]
 
@@ -60,13 +60,14 @@ class MenuBar(Element):
         surface = self.surface.copy()
         for i in range(3):
             if self.buttonState[i] == 0:
-                surface.blit(MenuBar.image_idle, self.buttonLocation[i])
+                surface.blit(SwitchListBar.image_idle, self.buttonLocation[i])
             elif self.buttonState[i] == 1:
-                surface.blit(MenuBar.image_hover, self.buttonLocation[i])
+                surface.blit(SwitchListBar.image_hover, self.buttonLocation[i])
             else:
-                surface.blit(MenuBar.image_select, self.buttonLocation[i])
+                surface.blit(SwitchListBar.image_select, self.buttonLocation[i])
             surface.blit(self.icon[i], (self.buttonLocation[i][0] + 43, self.buttonLocation[i][1] + 7))
         for child in self.childs:
             if child.active:
                 surface.blit(child.display(), child.location)
         return surface
+

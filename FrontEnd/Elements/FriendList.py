@@ -136,8 +136,7 @@ class FriendList(Element):
         if self.listCoverY < 500:
             self.listCoverY = self.listCoverY + 8
         if self.rightClickMenu.active:
-            for block in self.blocks:
-                block.frozen = True
+            self.freeze()
         else:
             for block in self.blocks:
                 if block.type != self.displayType:
@@ -148,3 +147,11 @@ class FriendList(Element):
         for child in self.childs:
             if child.active:
                 child.update()
+
+    def freeze(self):
+        for block in self.blocks:
+            block.frozen = True
+
+    def unfreeze(self):
+        for block in self.blocks:
+            block.frozen = False
