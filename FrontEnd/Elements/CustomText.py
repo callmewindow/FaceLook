@@ -24,12 +24,12 @@ class CustomText(Element):
 
     def set_text(self, text):
         self.text = text
-        rect = self.surface.get_rect()
+        # rect = self.surface.get_rect()
         self.surface = self.font.render(text, True, self.color)
-        rect_x = rect[2]
-        rect_y = rect[3]
-        center = (self.location[0] + rect_x // 2, self.location[1] + rect_y // 2)
-        self.align_center(center)
+        # rect_x = rect[2]
+        # rect_y = rect[3]
+        # center = (self.location[0] + rect_x // 2, self.location[1] + rect_y // 2)
+        # self.align_center(center)
 
     def set_color(self, color: Tuple[int, int, int]):
         self.color = color
