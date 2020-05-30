@@ -2,7 +2,7 @@ from Common.base import *
 from FrontEnd.Elements.Element import Element
 from FrontEnd.Elements.SelfInfo import SelfInfo
 from FrontEnd.Elements.InforBar import InforBar
-from FrontEnd.Elements.Button_three import Button_three
+from FrontEnd.Elements.TripleStateButton import TripleStateButton
 import pygame
 
 class UserInforWindowBackground(Element):
@@ -21,7 +21,7 @@ class UserInforWindowBackground(Element):
         self.surface.blit(self.topbg, (0, 0))
         self.avatar = pygame.transform.smoothscale(pygame.image.load('./resources/UserData/MinatoAqua/MinatoAqua.jpg'), (100, 100))
         self.surface.blit(self.avatar, (40, 25))
-        self.editButton = self.createChild(Button_three, (160,100), './resources/UserInforWinUI/edit.png', \
+        self.editButton = self.createChild(TripleStateButton, (160, 100), './resources/UserInforWinUI/edit.png', \
             './resources/UserInforWinUI/edit_hover.png', './resources/UserInforWinUI/edit_select.png', (30, 30))
 
         # 添加具体信息

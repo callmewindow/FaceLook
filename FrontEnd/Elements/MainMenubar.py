@@ -1,5 +1,5 @@
 from FrontEnd.Elements.Element import Element
-from FrontEnd.Elements.Button_three import Button_three
+from FrontEnd.Elements.TripleStateButton import TripleStateButton
 import pygame
 
 
@@ -12,8 +12,7 @@ class MainMenubar(Element):
         self.location = location
         self.size = (350, 40)
         self.surface = MainMenubar.image
-        self.button = self.createChild(Button_three, (5,5), './resources/UserWindowUI/apps.png', \
-            './resources/UserWindowUI/apps_hover.png', './resources/UserWindowUI/apps_select.png', (30, 30))
+        self.button = self.createChild(TripleStateButton, (5, 5), './resources/UserWindowUI/apps.png', (30, 30))
 
     def getEvent(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:

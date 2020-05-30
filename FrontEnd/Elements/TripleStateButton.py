@@ -1,21 +1,26 @@
 from FrontEnd.Elements.Element import Element
 import pygame
-class Button_three(Element):
+
+
+class TripleStateButton(Element):
     # 0 == idle
     # 1 == hover
     # 2 == select
-    icon = None #pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/apps.png'), (30, 30))
-    icon_hover = None #pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/apps_hover.png'), (30, 30))
-    icon_select = None #pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/apps_select.png'), (30, 30))
+    image = pygame.Surface((100, 100))
+    image_hover = pygame.Surface((100, 100))
+    image_select = pygame.Surface((100, 100))
+    image.fill((255, 255, 255))
+    image_hover.fill((245, 245, 245))
+    image_select.fill((235, 235, 235))
 
-    def __init__(self, process, location, defaultURL, hoverURL, selectURL, size):
+    def __init__(self, process, location, image, size):
         Element.__init__(self, process)
-        Button_three.icon = pygame.transform.smoothscale(pygame.image.load(defaultURL), size)
-        Button_three.icon_hover = pygame.transform.smoothscale(pygame.image.load(hoverURL), size)
-        Button_three.icon_select = pygame.transform.smoothscale(pygame.image.load(selectURL), size)
-        self.surface = Button_three.icon
+        self.icon = pygame.transform.smoothscale(pygame.image.load(image), size)
+        self.image = pygame.transform.smoothscale(self.image, size)
+        self.image_hover = pygame.transform.smoothscale(self.image_hover, size)
+        self.image_select = pygame.transform.smoothscale(self.image_select, size)
         self.location = location
-        self.size = (30, 30)
+        self.size = size
         self.state = 0
 
     def pos_in(self, pos):
@@ -42,10 +47,13 @@ class Button_three(Element):
             else:
                 self.state = 0
 
-    def update(self):
+    def display(self):
         if self.state == 0:
-            self.surface = Button_three.icon
+            self.surface = self.image
         elif self.state == 1:
-            self.surface = Button_three.icon_hover
+            self.surface = self.image_hover
         else:
-            self.surface = Button_three.icon_select
+            self.surface = self.image_select
+        surface = self.surface.copy()
+        surface.blit(self.icon, (0, 0))
+        return surface
