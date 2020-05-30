@@ -24,22 +24,19 @@ class UserWindowBackground(Element):
         self.friendList = self.createChild(FriendList, (0, 200), self.process.data.getFriendList(),
                                            self.process.data.getGroupList(), self.process.data.getMessageList())
         self.switchListBar = self.createChild(SwitchListBar, (0, 155))
-        self.searchResult = self.createChild(SearchResult, (0, 155))
+        self.searchResult = self.createChild(SearchResult, (0, 155), self.process.data.getFriendList(),
+                                             self.process.data.getGroupList())
         self.mainMenu = self.createChild(MainMenu, (0, 700 - 80), self.process.data.getUser())
         self.mainMenubar = self.createChild(MainMenubar, (0, 700))
 
     def getEvent(self, event):
-        if self.searchBar.searchInputbox.focused and event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-            self.searchResult.enable()
-            self.searchResult.init([],
-                                   [User('Mea', 'Mea', '群搜索结果1', "image::DEFUALT_MEA", UserStateType.ONLINE),
-                                    User('Mea', 'Mea', '群搜索结果2', "image::DEFUALT_MEA", UserStateType.ONLINE),
-                                    User('Mea', 'Mea', '群搜索结果3', "image::DEFUALT_MEA", UserStateType.ONLINE)])
+        if self.searchBar.input_box.focused and event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+            self.searchResult.init(self.searchBar.get_text())
         if event.type == pygame.MOUSEBUTTONDOWN:
             if 0 <= event.pos[0] <= 350 and 0 <= event.pos[1] <= 100:
                 self.switchListBar.enable()
                 self.friendList.enable()
-                self.searchBar.searchInputbox.text = ''
+                self.searchBar.input_box.text = ''
                 self.searchResult.disable()
 
         for child in self.childs:
@@ -50,10 +47,10 @@ class UserWindowBackground(Element):
         self.friendList.change_to = self.switchListBar.change_to
         self.friendList.has_changed = self.switchListBar.has_changed
         self.switchListBar.has_changed = False
-        if self.searchBar.searchInputbox.focused:
+        if self.searchBar.input_box.focused:
             self.switchListBar.disable()
             self.friendList.disable()
-            self.mainMenu.disable()
+            self.searchResult.enable()
         if self.mainMenubar.get_state() == 2:
             self.friendList.frozen = True
             self.mainMenu.enable()

@@ -35,7 +35,7 @@ class ResultBlock(Element):
         Element.__init__(self, process)
         self.user = user
         self.rightClickMenu = menu
-        self.avatar = self.createChild(Avatar, (25, 15), user.avatarURL)
+        self.avatar = self.createChild(Avatar, (25, 15), user.get_avatarURL())
         user_state_text = ' (online)' if user.state == 1 else ' (offline)'
         self.nicknameText = self.createChild(text_default, (120, 38), user.nickname + user_state_text, (0, 0, 0))
         self.surface = ResultBlock.image
@@ -80,41 +80,57 @@ class ResultBlock(Element):
 
 
 class SearchResult(Element):
-    def __init__(self, process, location):
+    stupid_hint = pygame.image.load('./resources/UserWindowUI/support_to_search.png')
+
+    def __init__(self, process, location, friend_list, group_list):
         Element.__init__(self, process)
         self.disable()
         self.location = location
         self.surface = pygame.Surface((350, 550))
         self.surface.fill((220, 220, 220))
         self.blocks = []
+        self.friend_list = friend_list
+        self.group_list = group_list
         self.rightClickMenu = self.createChild(SearchRightClick)
         self.index = 0
 
-    def init(self, friend_list, group_list):
+    def init(self, keyword):
         self.blocks.clear()
+        if keyword == '':
+            return
         self.blocks.append(self.createChild(Title, (0, 0), 0))
-        for i in range(0, len(friend_list)):
-            user = friend_list[i]
-            self.blocks.append(self.createChild(ResultBlock, (0, i * 100 + 50), user, 1, self.rightClickMenu))
-        if len(friend_list) != 0:
-            offset = len(friend_list) * 100 + 50
-            self.blocks.append(self.createChild(Title, (0, offset), 1))
-            for i in range(0, len(group_list)):
-                user = group_list[i]
-                self.blocks.append(
-                    self.createChild(ResultBlock, (0, offset + 50 + i * 100), user, 2, self.rightClickMenu))
+        index_ = 0
+        for i in range(len(self.friend_list)):
+            user = self.friend_list[i]
+            if keyword in user.get_nickname() or keyword in user.get_username():
+                self.blocks.append(self.createChild(ResultBlock, (0, index_ * 100 + 50), user, 1, self.rightClickMenu))
+                index_ += 1
+        if index_ != 0:
+            self.blocks.append(self.createChild(Title, (0, index_ * 100 + 50), 1))
+            for i in range(len(self.group_list)):
+                user = self.group_list[i]
+                if keyword in user.get_nickname() or keyword in user.get_username():
+                    self.blocks.append(
+                        self.createChild(ResultBlock, (0, index_ * 100 + 100), user, 2, self.rightClickMenu))
+                    index_ += 1
         else:
             self.blocks.append(self.createChild(Title, (0, 100), 1))
-            for i in range(0, len(group_list)):
-                user = group_list[i]
-                self.blocks.append(
-                    self.createChild(ResultBlock, (0, 150 + i * 100), user, 2, self.rightClickMenu))
+            for i in range(len(self.group_list)):
+                user = self.group_list[i]
+                if keyword in user.get_nickname() or keyword in user.get_username():
+                    self.blocks.append(
+                        self.createChild(ResultBlock, (0, index_ * 100 + 150), user, 2, self.rightClickMenu))
+                    index_ += 1
 
     def display(self):
         surface = self.surface.copy()
+        blank = True
         for block in self.blocks:
             if block.active:
+                blank = False
                 surface.blit(block.display(), block.location)
+        if blank:
+            surface.blit(SearchResult.stupid_hint, (0, 0))
         if self.rightClickMenu.active:
             surface.blit(self.rightClickMenu.display(), self.rightClickMenu.location)
         return surface

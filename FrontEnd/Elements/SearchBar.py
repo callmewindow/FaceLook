@@ -12,10 +12,10 @@ class SearchBar(Element):
         Element.__init__(self, process)
         self.location = location
         self.size = (350, 55)
-        self.searchInputbox = self.createChild(Inputbox_blank, (50, 8))
+        self.input_box = self.createChild(Inputbox_blank, (50, 8))
         self.icon = SearchBar.searchIcon
         self.surface = SearchBar.image
-        self.searchInputbox.enable()
+        self.input_box.enable()
 
     def display(self):
         surface = self.surface.copy()
@@ -32,3 +32,6 @@ class SearchBar(Element):
             child.getEvent(event)
         if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
             event.pos = (event.pos[0] + self.location[0], event.pos[1] + self.location[1])
+
+    def get_text(self):
+        return self.input_box.text
