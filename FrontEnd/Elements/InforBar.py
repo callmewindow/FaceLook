@@ -1,5 +1,4 @@
 from FrontEnd.Elements.Element import Element
-from FrontEnd.Elements.text_default import text_default
 import pygame
 
 class InforBar(Element):
@@ -13,20 +12,14 @@ class InforBar(Element):
         self.location = location
         self.surface = InforBar.bg
         self.font = pygame.font.SysFont('simhei', fontsize)
-        self.haveTitle = True
-        if title == "" :
-            self.haveTitle = False
         self.title = self.font.render(title+":", True, (112, 112, 112))
-        self.content = self.font.render(content, True, (0, 0, 0))
+        if content == None:
+            self.content = self.font.render("无", True, (0, 0, 0))
+        else:
+            self.content = self.font.render(content, True, (0, 0, 0))
 
     def display(self):
         surface = self.surface.copy()
-        # 上边距为10时20字号恰好居中
-        if self.haveTitle:
-            surface.blit(self.title, (0, 10))
+        surface.blit(self.title, (0, 10))
         surface.blit(self.content, (80, 10))
         return surface
-
-
-    
-    

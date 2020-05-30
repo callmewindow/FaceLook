@@ -15,12 +15,13 @@ class TripleStateButton(Element):
 
     def __init__(self, process, location, image, size):
         Element.__init__(self, process)
-        self.icon = pygame.transform.smoothscale(pygame.image.load(image), size)
+        self.size = size
+        self.iconsize = (size[1],size[1])
+        self.icon = pygame.transform.smoothscale(pygame.image.load(image), self.iconsize)
         self.image = pygame.transform.smoothscale(self.image, size)
         self.image_hover = pygame.transform.smoothscale(self.image_hover, size)
         self.image_select = pygame.transform.smoothscale(self.image_select, size)
         self.location = location
-        self.size = size
         self.state = 0
 
     def pos_in(self, pos):
@@ -55,5 +56,5 @@ class TripleStateButton(Element):
         else:
             self.surface = self.image_select
         surface = self.surface.copy()
-        surface.blit(self.icon, (0, 0))
+        surface.blit(self.icon, ((self.size[0]-self.iconsize[0])/2, 0))
         return surface
