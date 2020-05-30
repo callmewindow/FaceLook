@@ -1,28 +1,16 @@
 import pygame
 from FrontEnd.Elements.Element import Element
 from Common.base import Session
+from FrontEnd.Elements.TextArea import TextArea
 class MessageList(Element):
-    def __init__(self,process):
-        Element.__init__(self,process)
-        
-        
-        print(self.process.data)
-        self.surface = pygame.Surface((500,300))
-        self.surface.fill((77,77,0))
-        self.location = (50,50)
-
-        self.index = 0
-        
-        
-    def heartBeat(self):
-        pass
+    pass
 class SessionWindowBackground(Element):
     def __init__(self,process):
         Element.__init__(self,process)
         self.location = (0,0)
-        self.surface = pygame.Surface((780,480))
-        self.surface.fill((128,0,128))
-        self.createChild(MessageList)
+        self.surface = pygame.Surface((800,500))
+        self.surface.fill((255,255,255))
+        self.createChild(TextArea,(100,100),'窗外的麻雀在电线杆上多嘴你说这一句很有夏天的感觉手中的铅笔在纸上来来回回我用几行字形容你是我的谁',(0,0,0))
         #aqua = self.createChild(Aqua,(450,300))
     
         
