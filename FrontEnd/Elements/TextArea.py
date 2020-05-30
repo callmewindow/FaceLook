@@ -47,7 +47,7 @@ class TextArea(Element):
                 sentence += char
         if sentence:
             lines.append(sentence)
-            text_height += sentence_size[1] + TextArea.line_spacing
+            text_height += sentence_size[1]
             sentence = ''
         bubble_width = int(TextArea.bubble_width)
         bubble_height = int(text_height/TextArea.text_height_rate)
