@@ -5,6 +5,6 @@ import pygame
 
 class SessionWindow(Window):
     def __init__(self,process):
-        Window.__init__(self,process,'Untitled',(800,500),(255,255,255))
+        Window.__init__(self,process,'Untitled',(670,520),(255,255,255))
         pygame.display.set_caption('Session:'+str(self.process.sessionID))
         self.bg = self.createChild(SessionWindowBackground)

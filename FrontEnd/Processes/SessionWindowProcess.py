@@ -17,6 +17,7 @@ class SessionWindowProcess():
         #     print(msg.sender,msg.time,msg.content)
         self.actionList = []
         self.window = SessionWindow(self)
+        
     def run(self):
         while self.go:
             for event in pygame.event.get():

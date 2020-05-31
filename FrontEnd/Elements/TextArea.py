@@ -29,6 +29,7 @@ class TextArea(Element):
         rectX = rect[2]
         rectY = rect[3]
         self.location = (x-rectX//2,y-rectY//2)
+
     def setText(self,text):
         lines = []
         sentence = ''
