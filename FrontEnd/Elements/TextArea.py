@@ -60,6 +60,8 @@ class TextArea(Element):
         drawX = TextArea.text_width_left_rate*bubble_width
         drawY = TextArea.text_height_top_rate*bubble_height
         for line in lines:
+            if line == '':
+                line = ' '
             self.surface.blit(TextArea.font.render(line,True,self.color),(drawX,drawY))
             drawY += TextArea.line_spacing + line_height
             
