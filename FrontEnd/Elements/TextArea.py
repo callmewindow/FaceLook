@@ -43,7 +43,10 @@ class TextArea(Element):
                 lines.append(sentence)
                 print(sentence_size[0],sentence)
                 text_height += sentence_size[1] + TextArea.line_spacing
-                sentence = char
+                if char == '\n':
+                    sentence = ''
+                else:
+                    sentence = char
             else:
                 sentence += char
         if sentence:
