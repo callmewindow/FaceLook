@@ -19,7 +19,7 @@ try:
     print('[Unit Test Message]',message)
 except Exception as e:
     print('[Unit Test Error]:')
-    print(e)    
+    print(traceback.print_exc())    
 finally:
     sleep(5)
     bet.stop()
