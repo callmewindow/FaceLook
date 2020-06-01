@@ -1,8 +1,7 @@
 import pygame
 
 pygame.init()
-pygame.font.init()
-pygame.key.set_repeat()
+pygame.key.set_repeat(500, 40)
 
 from FrontEnd.Processes.UserWindowProcess import UserWindowProcess as UWP
 from FrontEnd.Processes.LoginWindowProcess import LoginWindowProcess as LWP

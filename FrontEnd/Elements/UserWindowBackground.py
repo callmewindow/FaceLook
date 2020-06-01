@@ -7,6 +7,7 @@ from FrontEnd.Elements.SwitchListBar import SwitchListBar
 from FrontEnd.Elements.SearchResult import SearchResult
 from FrontEnd.Elements.MainMenubar import MainMenubar
 from FrontEnd.Elements.MainMenu import MainMenu
+from FrontEnd.Elements.InputArea import InputArea
 import pygame
 
 
@@ -28,6 +29,7 @@ class UserWindowBackground(Element):
                                              self.process.data.getGroupList())
         self.mainMenu = self.createChild(MainMenu, (0, 700 - 80), self.process.data.getUser())
         self.mainMenubar = self.createChild(MainMenubar, (0, 700))
+        # self.test = self.createChild(InputArea, (50, 50),(250,200),pygame.font.SysFont('DENGXIAN',20))
 
     def getEvent(self, event):
         if self.searchBar.input_box.focused and event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
