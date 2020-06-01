@@ -10,8 +10,8 @@ try:
     bet.start()
     request = {
         'messageNumber':'2',
-        'messageField1':'hcz',
-        'messageField2':'123456'
+        'username':'hcz',
+        'password':'123456'
         }
     RQ.put(request)
     print('[Unit Test] Request put.')
