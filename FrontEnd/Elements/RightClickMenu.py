@@ -10,11 +10,12 @@ class RightClickMenu(Element):
         self.disable()
         self.location = (0, 0)
         self.blocks = []
-        for i in range(4):
-            self.blocks.append(self.createChild(RightClickMenuBlock, (5, 5 + i * 40), i))
+        self.blocks.append(self.createChild(RightClickMenuBlock, (5, 5), 0))
+        self.blocks.append(self.createChild(RightClickMenuBlock, (5, 45), 1))
+        self.blocks.append(self.createChild(RightClickMenuBlock, (5, 85), 2))
         self.surface = pygame.image.load('./resources/UserWindowUI/friend_right_menu.png')
         # self.surface.set_alpha(230)
-        self.size = (130, 170)
+        self.size = (130, 130)
         self.has_closed = False
 
     def display(self):
@@ -50,8 +51,8 @@ class RightClickMenu(Element):
         x, y = location
         if x > 220:
             x = 220
-        if y > 330:
-            y = 330
+        if y > 370:
+            y = 370
         self.location = (x, y)
 
     def set_user(self, user):
