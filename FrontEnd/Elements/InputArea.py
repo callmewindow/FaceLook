@@ -6,8 +6,8 @@ import pygame
 class InputArea(Element):
     cursor_image = pygame.image.load('./resources/input_cursor.png')
 
-    # 位置，宽高，字体，字色，背景色。高度最好是(字号*1.05后向上取整)的整数倍
-    def __init__(self, process, location, size: Tuple[int, int], font_type: pygame.font.Font,
+    # 位置，宽高，字体，字号，字色，背景色。高度最好是(字号*1.05后向上取整)的整数倍
+    def __init__(self, process, location, size: Tuple[int, int], font_type: str, font_size: int,
                  font_color: Tuple[int, int, int], background_color: Tuple[int, int, int]):
         Element.__init__(self, process)
         self.text = ''
@@ -15,10 +15,10 @@ class InputArea(Element):
         self.focused = False
         self.changed = False
         self.location = location
-        self.font = font_type
+        self.font = pygame.font.SysFont(font_type, font_size)
         self.font_color = font_color
         self.size = size
-        self.line_height = font_type.size('a')[1]
+        self.line_height = self.font.size('a')[1]
         self.cursor_index = 0
         self.cursor_pos = (0, 0)
         self.cursor_count = 0

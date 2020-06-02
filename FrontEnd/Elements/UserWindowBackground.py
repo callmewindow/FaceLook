@@ -32,7 +32,8 @@ class UserWindowBackground(Element):
         #self.test = self.createChild(InputArea, (50, 50),(250,130),pygame.font.SysFont('DENGXIAN',24),(0,0,0),(255,255,255))
 
     def getEvent(self, event):
-        if self.searchBar.input_box.focused and event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+        if self.searchBar.input_box.focused and event.type == pygame.KEYDOWN and (
+                event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER):
             self.searchResult.init(self.searchBar.get_text())
         if event.type == pygame.MOUSEBUTTONDOWN:
             if 0 <= event.pos[0] <= 350 and 0 <= event.pos[1] <= 100:
