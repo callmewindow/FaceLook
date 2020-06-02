@@ -1,21 +1,24 @@
 from FrontEnd.Elements.Element import Element
+from typing import Tuple
 import pygame
 
 
 class InputArea(Element):
     cursor_image = pygame.image.load('./resources/input_cursor.png')
 
-    #
-    def __init__(self, process, location, size, font):
+    # 位置，宽高，字体，字色，背景色。高度最好是(字号*1.05后向上取整)的整数倍
+    def __init__(self, process, location, size: Tuple[int, int], font_type: pygame.font.Font,
+                 font_color: Tuple[int, int, int], background_color: Tuple[int, int, int]):
         Element.__init__(self, process)
         self.text = ''
         self.text_group = ['']
         self.focused = False
         self.changed = False
         self.location = location
-        self.font = font
+        self.font = font_type
+        self.font_color = font_color
         self.size = size
-        self.line_height = font.size('a')[1]
+        self.line_height = font_type.size('a')[1]
         self.cursor_index = 0
         self.cursor_pos = (0, 0)
         self.cursor_count = 0
@@ -23,7 +26,7 @@ class InputArea(Element):
         self.index = 0
         self.max_line = size[1] // self.line_height
         self.surface = pygame.Surface(size)
-        self.surface.fill((220, 220, 220))
+        self.surface.fill(background_color)
 
     def add_char(self, ch):
         self.text = self.text[0:self.cursor_index] + ch + self.text[self.cursor_index:]
@@ -80,7 +83,7 @@ class InputArea(Element):
         surface = self.surface.copy()
         for i in range(len(self.text_group)):
             if self.text_group[i] != '':
-                surface.blit(self.font.render(self.text_group[i], True, (0, 0, 0)),
+                surface.blit(self.font.render(self.text_group[i], True, self.font_color),
                              (0, (i - self.index) * self.line_height))
             if self.focused and i == self.cursor_pos[0] and self.cursor_count < 30:
                 surface.blit(self.cursor_image, (
@@ -116,18 +119,6 @@ class InputArea(Element):
             if event.key == pygame.K_RIGHT and self.cursor_index < len(self.text):
                 self.cursor_index += 1
                 self.changed = True
-            '''if event.key == pygame.K_UP and self.cursor_pos[0] > 0:
-                self.cursor_origin = self.font.size(self.text_group[self.cursor_pos[0]][0:self.cursor_pos[1]])[0]
-                self.cursor_pos = (
-                    self.cursor_pos[0] - 1, len(self.text_group[self.cursor_pos[0] - 1].replace('\n', '')))
-                self.changed = True
-                self.cursor_check = True
-            if event.key == pygame.K_DOWN and self.cursor_pos[0] < len(self.text_group) - 1:
-                self.cursor_origin = self.font.size(self.text_group[self.cursor_pos[0]][0:self.cursor_pos[1]])[0]
-                self.cursor_pos = (
-                    self.cursor_pos[0] + 1, len(self.text_group[self.cursor_pos[0] + 1].replace('\n', '')))
-                self.changed = True
-                self.cursor_check = True'''
         if event.type == pygame.TEXTINPUT and self.focused:
             self.add_char(event.text)
 
