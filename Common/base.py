@@ -71,6 +71,14 @@ class User():
         self.avatarURL = avatarURL
         self.state = state
 
+    def get_username(self):
+        return self.username
+
+    def get_nickname(self):
+        return self.nickname
+
+    def get_avatarURL(self):
+        return self.avatarURL
 
 class Friend():
     def __init__(self, nickname, avatarURL, state):

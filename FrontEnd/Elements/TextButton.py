@@ -1,23 +1,28 @@
 from FrontEnd.Elements.Element import Element
+from FrontEnd.Elements.text_variable import text_variable
 import pygame
 
-
-class TripleStateButton(Element):
+class TextButton(Element):
     # 0 == idle
     # 1 == hover
     # 2 == select
     image = pygame.Surface((100, 100))
     image_hover = pygame.Surface((100, 100))
     image_select = pygame.Surface((100, 100))
-    image.fill((255, 255, 255))
-    image_hover.fill((245, 245, 245))
-    image_select.fill((235, 235, 235))
+    image.fill((85, 165, 255))
+    image_hover.fill((105, 185, 255))
+    image_select.fill((65, 145, 255))
 
-    def __init__(self, process, location, image, size):
+    def __init__(self, process, location, text, fontsize, size):
         Element.__init__(self, process)
+        self.font = pygame.font.SysFont('simhei',fontsize)
+        self.content = self.font.render(text,True,(255,255,255))
+        # 一般情况下字号对应的宽度为字号的一半，高度为字号原本大小
+        self.textWidth = len(text.encode("gbk"))*fontsize/2
+        self.textHeight = fontsize
         self.size = size
-        self.iconsize = (int(size[1]*0.8),int(size[1]*0.8))
-        self.icon = pygame.transform.smoothscale(pygame.image.load(image), self.iconsize)
+        self.conPosition = ((size[0]-self.textWidth)/2,(size[1]-self.textHeight)/2)
+
         self.image = pygame.transform.smoothscale(self.image, size)
         self.image_hover = pygame.transform.smoothscale(self.image_hover, size)
         self.image_select = pygame.transform.smoothscale(self.image_select, size)
@@ -56,5 +61,5 @@ class TripleStateButton(Element):
         else:
             self.surface = self.image_select
         surface = self.surface.copy()
-        surface.blit(self.icon, ((self.size[0]-self.iconsize[0])/2, (self.size[1]-self.iconsize[1])/2))
+        surface.blit(self.content,self.conPosition)
         return surface

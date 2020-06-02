@@ -13,6 +13,6 @@ class SelfInfo(Element):
         self.location = location
         self.user = user
         self.size = (350, 100)
-        self.avatar = self.createChild(Avatar, (15, 15), self.user.avatarURL)
+        self.avatar = self.createChild(Avatar, (15, 15), user.get_avatarURL())
         self.nicknameText = self.createChild(text_default, (100, 36), self.user.nickname, (0, 0, 0))
         self.surface = SelfInfo.image

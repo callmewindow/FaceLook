@@ -2,22 +2,23 @@ from FrontEnd.Elements.Element import Element
 import pygame
 
 
-class TripleStateButton(Element):
+class IconChangeButton(Element):
     # 0 == idle
     # 1 == hover
     # 2 == select
-    image = pygame.Surface((100, 100))
+    image = pygame.transform.smoothscale(pygame.image.load('./resources/SessionWinUI/bg/transparent_bg.png'), (100, 100))
     image_hover = pygame.Surface((100, 100))
     image_select = pygame.Surface((100, 100))
-    image.fill((255, 255, 255))
-    image_hover.fill((245, 245, 245))
-    image_select.fill((235, 235, 235))
+    # image.fill((255, 255, 255))
+    image_hover.fill((151, 186, 221))
+    image_select.fill((102, 153, 204))
 
-    def __init__(self, process, location, image, size):
+    def __init__(self, process, location, image, image_select, size):
         Element.__init__(self, process)
         self.size = size
-        self.iconsize = (int(size[1]*0.8),int(size[1]*0.8))
+        self.iconsize = (int(size[1]*0.7),int(size[1]*0.7))
         self.icon = pygame.transform.smoothscale(pygame.image.load(image), self.iconsize)
+        self.icon_select = pygame.transform.smoothscale(pygame.image.load(image_select), self.iconsize)
         self.image = pygame.transform.smoothscale(self.image, size)
         self.image_hover = pygame.transform.smoothscale(self.image_hover, size)
         self.image_select = pygame.transform.smoothscale(self.image_select, size)
@@ -51,10 +52,14 @@ class TripleStateButton(Element):
     def display(self):
         if self.state == 0:
             self.surface = self.image
+            iconShow = self.icon
         elif self.state == 1:
             self.surface = self.image_hover
+            iconShow = self.icon_select
         else:
             self.surface = self.image_select
+            iconShow = self.icon_select
+        
         surface = self.surface.copy()
-        surface.blit(self.icon, ((self.size[0]-self.iconsize[0])/2, (self.size[1]-self.iconsize[1])/2))
+        surface.blit(iconShow, ((self.size[0]-self.iconsize[0])/2, (self.size[1]-self.iconsize[1])/2))
         return surface

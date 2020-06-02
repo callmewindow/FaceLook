@@ -29,6 +29,7 @@ class TextArea(Element):
         rectX = rect[2]
         rectY = rect[3]
         self.location = (x-rectX//2,y-rectY//2)
+
     def setText(self,text):
         lines = []
         sentence = ''
@@ -42,7 +43,10 @@ class TextArea(Element):
                 lines.append(sentence)
                 print(sentence_size[0],sentence)
                 text_height += sentence_size[1] + TextArea.line_spacing
-                sentence = char
+                if char == '\n':
+                    sentence = ''
+                else:
+                    sentence = char
             else:
                 sentence += char
         if sentence:
@@ -56,6 +60,8 @@ class TextArea(Element):
         drawX = TextArea.text_width_left_rate*bubble_width
         drawY = TextArea.text_height_top_rate*bubble_height
         for line in lines:
+            if line == '':
+                line = ' '
             self.surface.blit(TextArea.font.render(line,True,self.color),(drawX,drawY))
             drawY += TextArea.line_spacing + line_height
             

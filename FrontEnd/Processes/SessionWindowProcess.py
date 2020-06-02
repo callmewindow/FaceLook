@@ -10,12 +10,14 @@ class SessionWindowProcess():
         self.go = True    
         self.data = data
         self.sessionID = sessionID
-        self.session = self.data.getSessionByID(sessionID)
-        print(self.data)
-        for msg in self.session.userMessages:
-            print(msg.sender,msg.time,msg.content)
+        # 先完成窗口内容
+        # self.session = self.data.getSessionByID(sessionID)
+        # print(self.data)
+        # for msg in self.session.userMessages:
+        #     print(msg.sender,msg.time,msg.content)
         self.actionList = []
         self.window = SessionWindow(self)
+        
     def run(self):
         while self.go:
             for event in pygame.event.get():
