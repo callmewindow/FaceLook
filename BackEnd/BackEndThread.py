@@ -2,8 +2,8 @@ import threading
 import queue
 from queue import Queue
 from time import sleep
-#from BackEnd.SolverThreads import *
-from SolverThreads import *
+from BackEnd.SolverThreads import *
+#from SolverThreads import *
 
 def init(rq):
     # 初始化，创建TCP连接
@@ -201,10 +201,10 @@ class BackEndThread(threading.Thread):
             print("尚未建立连接")
         self.go = False
 
-requestQueue = queue.Queue()
-messageQueue = queue.Queue()
-backend = BackEndThread(requestQueue,messageQueue)
-backend.start()
-sleep(5)
-backend.stop()
-backend.join()
+# requestQueue = queue.Queue()
+# messageQueue = queue.Queue()
+# backend = BackEndThread(requestQueue,messageQueue)
+# backend.start()
+# sleep(5)
+# backend.stop()
+# backend.join()
