@@ -5,8 +5,7 @@ import pygame
 
 
 class SelfInfo(Element):
-    image = pygame.Surface((350, 100))
-    image.fill((240, 240, 240))
+    image = pygame.image.load('./resources/UserWindowUI/user_info.png')
 
     def __init__(self, process, location, user):
         Element.__init__(self, process)
