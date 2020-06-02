@@ -2,8 +2,8 @@ import threading
 import queue
 from queue import Queue
 from time import sleep
-from BackEnd.SolverThreads import *
-
+#from BackEnd.SolverThreads import *
+from SolverThreads import *
 
 def init(rq):
     # 初始化，创建TCP连接
@@ -18,11 +18,41 @@ class RequestType():
     LOGINRET = '2r'
     REGISTER = '3'
     REGISTERRET = '3r'
+    GETFRIENDLIST = '4'
+    GETFRIENDLISTRET = '4r'
+    GETHISTORY = '5'
+    GETHISTORYRET = '5r'
+
+    CREATEGROUP = '6'
+    CREATEGROUPRET = '6r'
+    JOINCHAT = '7'
+    JOINCHATRET = '7r'
+    REFRESHRECORD = '8'
+    REFRESHRECORDRET = '8r'
+    SENDMESSAGE = '9'
+
+    FRIENDREGISTER = '10'
+    FRIENDREGISTERRET = '10r'
+    RECEIVEFRIENDREGISTERRET = '11r'
+    RESPONDFRIENDREGISTER = '12'
+    RESPONDFRIENDREGISTERRET = '12r'
+    DELETEFRIEND = '13'
+    DELETEFRIENDRET = '13r'
+
 
 
 class MessageType():
     LOGINRET = '2r'
     REGISTERRET = '3r'
+
+    CREATEGROUPRET = '6r'
+    JOINCHATRET = '7r'
+    REFRESHRECORDRET = '8r'
+
+    FRIENDREGISTERRET = '10r'
+    RECEIVEFRIENDREGISTERRET = '11r'
+    RESPONDFRIENDREGISTERRET = '12r'
+    DELETEFRIENDRET = '13r'
 
 
 class BackEndThread(threading.Thread):
@@ -44,6 +74,7 @@ class BackEndThread(threading.Thread):
             request = None
             try:
                 request = self.requestQueue.get(block=False)
+                print('this request:'+request)
             except:
                 pass
             if request is not None:
@@ -51,7 +82,7 @@ class BackEndThread(threading.Thread):
             sleep(0.1)
 
     def handleRequest(self, request):
-        messageNumber = request['messageNumber']
+        messageNumber = request.get('messageNumber',None)
         if messageNumber == RequestType.INIT:
             print("连接已建立")
         elif messageNumber == RequestType.LOGIN:
@@ -62,8 +93,8 @@ class BackEndThread(threading.Thread):
         elif messageNumber == RequestType.LOGINRET:
             message = {
                 'messageNumber':MessageType.LOGINRET,
-                'result':request['messageField1'],
-                'information':request['messageField2']
+                'result':request.get('messageField1',None),
+                'information':request.get('messageField2',None)
             }
             self.messageQueue.put(message)
         elif messageNumber == RequestType.REGISTER:
@@ -74,8 +105,88 @@ class BackEndThread(threading.Thread):
         elif messageNumber == RequestType.REGISTERRET:
             message = {
                 'messageNumber':MessageType.REGISTERRET,
-                'result':request['messageField1'],
-                'information':request['messageField2']
+                'result':request.get('messageField1',None),
+                'information':request.get('messageField2',None)
+            }
+            self.messageQueue.put(message)
+        elif messageNumber == RequestType.CREATEGROUP:
+            thread = CreateGroup(self.client, request)
+            thread.setDaemon(True)
+            thread.start()
+            self.task.append(thread)
+        elif messageNumber == RequestType.CREATEGROUPRET:
+            message = {
+                'messageNumber': MessageType.CREATEGROUPRET,
+                'result': request.get('messageField1', None),
+                'information':request.get('messageField2', None)
+            }
+        elif messageNumber == RequestType.JOINCHAT:
+            thread = JoinChat(self.client, request)
+            thread.setDaemon(True)
+            thread.start()
+            self.task.append(thread)
+        elif messageNumber == RequestType.JOINCHATRET:
+            message = {
+                'messageNumber': MessageType.JOINCHATRET,
+                'result':request.get('messageField1', None),
+                'information':request.get('messageField2', None)
+            }
+        elif messageNumber == RequestType.REFRESHRECORD:
+            thread = RefreshRecord(self.client, request)
+            thread.setDaemon(True)
+            thread.start()
+            self.task.append(thread)
+        elif messageNumber == RequestType.REFRESHRECORDRET:
+            message = {
+                'messageNumber': MessageType.REFRESHRECORDRET,
+                'messages':request.get('messageField1', None)
+            }
+        elif messageNumber == RequestType.SENDMESSAGE:
+            thread = SendMessage(self.client, request)
+            thread.setDaemon(True)
+            thread.start()
+            self.task.append(thread)
+        elif messageNumber == RequestType.FRIENDREGISTER:
+            thread = FriendRegister(self.client, request)
+            thread.setDaemon(True)
+            thread.start()
+            self.task.append(thread)
+        elif messageNumber == RequestType.FRIENDREGISTERRET:
+            message = {
+                'messageNumber': MessageType.FRIENDREGISTERRET,
+                'result': request.get('messageField1',None),
+                'information': request.get('messageField2',None)
+            }
+            self.messageQueue.put(message)
+        elif messageNumber == RequestType.RECEIVEFRIENDREGISTERRET:
+            message = {
+                'messageNumber': MessageType.RECEIVEFRIENDREGISTERRET,
+                'fromUsername': request.get('messageField1',None),
+                'message': request.get('messageField2',None)
+            }
+            self.messageQueue.put(message)
+        elif messageNumber == RequestType.RESPONDFRIENDREGISTER:
+            thread = RespondFriendRegister(self.client, request)
+            thread.setDaemon(True)
+            thread.start()
+            self.task.append(thread)
+        elif messageNumber == RequestType.RESPONDFRIENDREGISTERRET:
+            message = {
+                'messageNumber': MessageType.RESPONDFRIENDREGISTERRET,
+                'result': request.get('messageField1',None),
+                'information': request.get('messageField2',None)
+            }
+            self.messageQueue.put(message)
+        elif messageNumber == RequestType.DELETEFRIEND:
+            thread = DeleteFriend(self.client, request)
+            thread.setDaemon(True)
+            thread.start()
+            self.task.append(thread)
+        elif messageNumber == RequestType.DELETEFRIENDRET:
+            message = {
+                'messageNumber': MessageType.DELETEFRIENDRET,
+                'result': request.get('messageField1',None),
+                'information': request.get('messageField2',None)
             }
             self.messageQueue.put(message)
         else:
@@ -89,3 +200,11 @@ class BackEndThread(threading.Thread):
         else:
             print("尚未建立连接")
         self.go = False
+
+requestQueue = queue.Queue()
+messageQueue = queue.Queue()
+backend = BackEndThread(requestQueue,messageQueue)
+backend.start()
+sleep(5)
+backend.stop()
+backend.join()
