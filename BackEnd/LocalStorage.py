@@ -9,14 +9,28 @@ class LocalStorage(object):
         self.username = username
         self.messageRecords = None
         new = False
-        if not os.path.exists("../"+username):
-            os.mkdir("../"+self.username)
+        if not os.path.exists("./"+username):
+            os.mkdir("./"+self.username)
             new = True
-        os.chdir("../"+username)
+        os.chdir("./"+username)
         self.messageRecords = shelve.open("messageRecords",writeback=True)
         self.sessionTable = shelve.open("sessionTable",writeback=True)
         if new:
             self.sessionTable['num_of_session'] = 0
+
+
+    def addSession(self,sessionID):
+        #在存储中新建会话
+        tableItem = self.sessionTable.get(sessionID,None)
+        if tableItem == None:
+            self.messageRecords[sessionID] = []
+            addNum = {'num_of_session':self.sessionTable['num_of_session']+1}
+            self.sessionTable.update(addNum)
+            self.sessionTable[sessionID] = {
+                'num_of_message' : 0,
+                'last_time' : None,
+                'last_message' : None
+            }
 
 
     def addRecordsDict(self,sessionID,records):
@@ -99,15 +113,15 @@ class LocalStorage(object):
         #self.messageRecords[self.username] = [[datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '消息1']]
         #self.messageRecords[self.username] += [[datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '消息2']]
 
-        record1 = {'from':'5477','to':None,'time':datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),'content':'hello'}
-        self.addRecordsDict("1",record1)
-        record2 = {'from':'8145','to':None,'time':datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),'content':'nice'}
-        self.addRecordsDict("1",record2)
-        record3 = {'from':'5477','to':None,'time':datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),'content':'hello'}
-        self.addRecordsDict("2",record3)
-        record4 = {'from':'8145','to':None,'time':datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),'content':'nice'}
-        self.addRecordsDict("2",record4)
-        self.addRecordsDict("2",record4)
+        # record1 = {'from':'5477','to':None,'time':datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),'content':'hello'}
+        # self.addRecordsDict("1",record1)
+        # record2 = {'from':'8145','to':None,'time':datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),'content':'nice'}
+        # self.addRecordsDict("1",record2)
+        # record3 = {'from':'5477','to':None,'time':datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),'content':'hello'}
+        # self.addRecordsDict("2",record3)
+        # record4 = {'from':'8145','to':None,'time':datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),'content':'nice'}
+        # self.addRecordsDict("2",record4)
+        # self.addRecordsDict("2",record4)
 
         # records = []
         # records.append(record1)
@@ -118,8 +132,8 @@ class LocalStorage(object):
         print("会话2有：",self.getRecordNum("2"),"条消息")
         print("会话2最后消息时间：",self.getLastTime("2"))
         print("会话2最后消息：",self.getLastMessage("2"))
-        print("输出会话1所有消息")
-        histories = self.getRecords("1",self.getRecordNum("1"))
+        print("输出会话2所有消息")
+        histories = self.getRecords("2",self.getRecordNum("2"))
         for history in histories:
             print(history)
         print("输出会话2最后5条消息")
@@ -131,7 +145,7 @@ class LocalStorage(object):
         self.messageRecords.close()
         
 
-local = LocalStorage("zym")
-local.test()
-local.close()
+# local = LocalStorage("hcz")
+# local.test()
+# local.close()
 

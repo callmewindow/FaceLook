@@ -66,7 +66,13 @@ class FriendRegister(threading.Thread):
 
 class GetFriendList(threading.Thread):
     # 获取好友列表
-    pass
+    def __init__(self, client):
+        threading.Thread.__init__(self)
+        self.client = client
+
+    def run(self):
+        data = {'messageNumber': '4'}
+        self.client.sendMessage(data)
 
 
 class SendMessage(threading.Thread):
@@ -77,6 +83,8 @@ class SendMessage(threading.Thread):
         self.sessionId = request.get('messageField1', None)
         if self.sessionId == None:
             self.sessionId = request.get('sessionId',None)
+            if self.sessionId == None:
+                self.sessionId == request.get('sessionID')
         self.message = request.get('messageField2', None)
         if self.message == None:
             self.message = request.get('message',None)
@@ -88,12 +96,18 @@ class SendMessage(threading.Thread):
 
 class GetHistory(threading.Thread):
     # 获取历史记录
-    pass
+    def __init__(self, client):
+        threading.Thread.__init__(self)
+        self.client = client
+
+    def run(self):
+        data = {'messageNumber': '5'}
+        self.client.sendMessage(data)
 
 
-class CreateGroup(threading.Thread):
+class CreateSession(threading.Thread):
     # 创建群聊
-    def __init__(self, client, request):
+    def __init__(self, client):
         threading.Thread.__init__(self)
         self.client = client 
 
@@ -101,7 +115,7 @@ class CreateGroup(threading.Thread):
         data = {'messageNumber':'6'}
         self.client.sendMessage(data)
 
-class JoinChat(threading.Thread):
+class JoinSession(threading.Thread):
     # 加入群聊
     def __init__(self, client, request):
         threading.Thread.__init__(self)
@@ -112,6 +126,8 @@ class JoinChat(threading.Thread):
         self.sessionId = request.get('messageField2', None)
         if self.sessionId == None:
             self.sessionId == request.get('sessionId')
+            if self.sessionId == None:
+                self.sessionId == request.get('sessionID')
     
     def run(self):
         data = {'messageField1':self.username, 'messageField2':self.sessionId, 'messageNumber':'7'}
@@ -125,6 +141,8 @@ class RefreshRecord(threading.Thread):
         self.sessionId = request.get('messageField1', None)
         if self.sessionId == None:
             self.sessionId = request.get('sessionId',None)
+            if self.sessionId == None:
+                self.sessionId == request.get('sessionID')
 
     def run(self):
         data = {'messageField1':self.sessionId, 'messageNumber': '8'}
@@ -167,3 +185,13 @@ class DeleteFriend(threading.Thread):
         data = {'messageField1': self.username, 'messageField2': self.deleteUsername,
                 'messageNumber': '13'}
         self.client.sendMessage(data)
+
+class Close(threading.Thread):
+    #退出登录
+    def __init__(self, client):
+        threading.Thread.__init__(self)
+        self.client = client
+
+    def run(self):
+        data = {'messageNumber': '0'}
+        self.client.sendMessage(data)   

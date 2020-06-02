@@ -6,7 +6,7 @@ import time
 
 HOST = '175.24.10.214'
 PORT = 21915
-BUFSIZE = 1024
+BUFSIZE = 8192
 ADDRESS = (HOST, PORT)
 
 
@@ -23,7 +23,13 @@ class TcpClient(object):
                 dataj = self.tcpClientSocket.recv(BUFSIZE).decode("utf-8")
                 if len(dataj)>0:
                     data = json.loads(dataj)
-                    #print(data)
+                    if type(data) is list:
+                        messageNum = data[0].get('messageNumber',None)
+                        if messageNum != None:
+                            datad = {}
+                            datad['messageNumber'] = messageNum
+                            datad['content'] = data
+                            data = datad
                 else:
                     continue
                 rq.put(data)
