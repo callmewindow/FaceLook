@@ -34,36 +34,40 @@ class FriendBlock(Element):
     def pos_in(self, pos):
         x = pos[0]
         y = pos[1]
-        if self.location[0] <= x <= self.location[0] + self.size[0] \
-                and self.location[1] <= y <= self.location[1] + self.size[1]:
+        if self.location[0] < x < self.location[0] + self.size[0] and self.location[1] < y < self.location[1] + \
+                self.size[1]:
             return True
         return False
 
     def getEvent(self, event):
-        if 0 <= self.location[1] <= 400:
-            if event.type == pygame.MOUSEMOTION and self.state != 2:
-                if self.pos_in(event.pos):
-                    self.state = 1
-                    self.surface = FriendBlock.image_onHover
+        if event.type == pygame.MOUSEMOTION and self.state != 2:
+            if self.pos_in(event.pos):
+                self.state = 1
+                self.surface = FriendBlock.image_onHover
+            else:
+                self.state = 0
+                self.surface = FriendBlock.image
+            return
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
+            if self.pos_in(event.pos):
+                print(self.user.nickname)
+                if self.state == 2:
+                    self.process.createSessionWindow(233)
                 else:
-                    self.state = 0
-                    self.surface = FriendBlock.image
-                return
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
-                if self.pos_in(event.pos):
-                    print(self.user.nickname)
-                    if self.state == 2:
-                        self.process.createSessionWindow(233)
-                    else:
-                        self.state = 2
-                        self.surface = FriendBlock.image_onClick
-                else:
-                    self.state = 0
-                    self.surface = FriendBlock.image
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_RIGHT and self.pos_in(event.pos):
-                self.rightClickMenu.change_location(event.pos)
-                self.rightClickMenu.set_user(self.user)
-                self.rightClickMenu.enable()
+                    self.state = 2
+                    self.surface = FriendBlock.image_onClick
+            else:
+                self.state = 0
+                self.surface = FriendBlock.image
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_RIGHT and self.pos_in(event.pos):
+            self.rightClickMenu.change_location(event.pos)
+            self.rightClickMenu.set_user(self.user)
+            self.rightClickMenu.enable()
+
+    def is_displayed(self):
+        if -350 < self.location[0] < 350 and 0 <= self.location[1] <= 400:
+            return True
+        return False
 
 
 class FriendList(Element):
@@ -73,37 +77,39 @@ class FriendList(Element):
         Element.__init__(self, process)
         self.location = location
         self.surface = pygame.Surface((350, 500))
-        self.surface.fill((220, 220, 220))
+        self.surface.fill((255, 255, 255))
         self.size = (350, 500)
         self.friendList = []
         self.groupList = []
         self.messageList = []
         self.blocks = []
-        self.has_changed = False
+        self.change_from = 0
         self.change_to = 0
         self.listCoverY = -200
         self.cover = FriendList.listCover
         self.rightClickMenu = self.createChild(RightClickMenu)
         self.index = [0, 0, 0]
         self.frozen = False
+        self.switch_counter = 0
+        self.switch_speed = 0
 
-        for i in range(len(friend_list)):
-            user = friend_list[i]
-            self.friendList.append(self.createChild(FriendBlock, (0, i * 100), user, 1, self.rightClickMenu))
-            self.blocks.append(self.friendList[i])
-        for i in range(len(group_list)):
-            user = group_list[i]
-            self.groupList.append(self.createChild(FriendBlock, (0, i * 100), user, 2, self.rightClickMenu))
-            self.blocks.append(self.groupList[i])
         for i in range(len(message_list)):
             user = message_list[i]
             self.messageList.append(self.createChild(FriendBlock, (0, i * 100), user, 0, self.rightClickMenu))
             self.blocks.append(self.messageList[i])
+        for i in range(len(friend_list)):
+            user = friend_list[i]
+            self.friendList.append(self.createChild(FriendBlock, (350, i * 100), user, 1, self.rightClickMenu))
+            self.blocks.append(self.friendList[i])
+        for i in range(len(group_list)):
+            user = group_list[i]
+            self.groupList.append(self.createChild(FriendBlock, (700, i * 100), user, 2, self.rightClickMenu))
+            self.blocks.append(self.groupList[i])
 
     def display(self):
         surface = self.surface.copy()
         for block in self.blocks:
-            if block.active:
+            if block.is_displayed():
                 surface.blit(block.display(), block.location)
         if self.rightClickMenu.active:
             surface.blit(self.rightClickMenu.display(), self.rightClickMenu.location)
@@ -114,13 +120,13 @@ class FriendList(Element):
     def getEvent(self, event):
         if not self.frozen:
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if self.change_to == 0:
+                if self.change_from == 0:
                     blocks_ = self.messageList
                     idx = 0
-                elif self.change_to == 1:
+                elif self.change_from == 1:
                     blocks_ = self.friendList
                     idx = 1
-                elif self.change_to == 2:
+                elif self.change_from == 2:
                     blocks_ = self.groupList
                     idx = 2
                 if event.button == pygame.BUTTON_WHEELDOWN and self.index[idx] <= len(blocks_) - 6:
@@ -134,10 +140,9 @@ class FriendList(Element):
 
         if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
             event.pos = (event.pos[0] - self.location[0], event.pos[1] - self.location[1])
-
         if not self.frozen:
             for block in self.blocks:
-                if block.active:
+                if block.is_displayed():
                     block.getEvent(event)
         if self.rightClickMenu.active:
             self.rightClickMenu.getEvent(event)
@@ -152,13 +157,23 @@ class FriendList(Element):
         if self.rightClickMenu.has_closed:
             self.frozen = False
             self.rightClickMenu.has_closed = False
-        if self.has_changed:
-            for block in self.blocks:
-                if block.type != self.change_to:
-                    block.disable()
-                else:
-                    block.enable()
+
+        if self.change_from != self.change_to:
+            if self.change_from + 1 == self.change_to:
+                self.switch_speed = -35
+            elif self.change_from - 1 == self.change_to:
+                self.switch_speed = 35
+            elif self.change_from + 2 == self.change_to:
+                self.switch_speed = -70
+            elif self.change_from - 2 == self.change_to:
+                self.switch_speed = 70
+            if self.switch_counter < 10:
+                self.switch_counter += 1
+                for block in self.blocks:
+                    block.location = (block.location[0] + self.switch_speed, block.location[1])
+            else:
+                self.change_from = self.change_to
+                self.switch_counter = 0
         for child in self.childs:
             if child.active:
                 child.update()
-

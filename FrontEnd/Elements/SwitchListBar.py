@@ -27,7 +27,7 @@ class SwitchListBar(Element):
         self.surface = SwitchListBar.image
         self.buttonState = [2, 0, 0]
         self.buttonLocation = [(0, 0), (117, 0), (234, 0)]
-        self.has_changed = True
+        self.change_from = 0
         self.change_to = 0
 
     def pos_in(self, pos, index):
@@ -53,7 +53,6 @@ class SwitchListBar(Element):
                 if self.pos_in(event.pos, i):
                     self.buttonState = [0, 0, 0]
                     self.buttonState[i] = 2
-                    self.has_changed = True
                     self.change_to = i
         if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
             event.pos = (event.pos[0] + self.location[0], event.pos[1] + self.location[1])
@@ -72,4 +71,3 @@ class SwitchListBar(Element):
             if child.active:
                 surface.blit(child.display(), child.location)
         return surface
-

@@ -47,9 +47,10 @@ class UserWindowBackground(Element):
                 child.getEvent(event)
 
     def update(self):
-        self.friendList.change_to = self.switchListBar.change_to
-        self.friendList.has_changed = self.switchListBar.has_changed
-        self.switchListBar.has_changed = False
+        if self.switchListBar.change_from != self.switchListBar.change_to:
+            self.friendList.change_from = self.switchListBar.change_from
+            self.friendList.change_to = self.switchListBar.change_to
+            self.switchListBar.change_from = self.switchListBar.change_to
         if self.searchBar.input_box.focused:
             self.switchListBar.disable()
             self.friendList.disable()
