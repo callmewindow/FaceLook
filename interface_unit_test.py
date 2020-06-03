@@ -13,18 +13,18 @@ def sendRequest(request):
 try:
     message = None
     bet.start()
+
     request = {
         'messageNumber':'2',
         'username':'Clementine',
         'password':'Clementine',
         }
     sendRequest(request)
-    sleep(5)
+
     request = {
-        'messageNumber':'5',
+        'messageNumber':'4',
         }
     sendRequest(request)
-    
 except Exception as e:
     print('[Unit Test Error]:')
     print(traceback.print_exc())    
