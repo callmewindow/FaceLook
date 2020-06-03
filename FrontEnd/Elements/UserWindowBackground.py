@@ -27,7 +27,7 @@ class UserWindowBackground(Element):
         self.switchListBar = self.createChild(SwitchListBar, (0, 155))
         self.searchResult = self.createChild(SearchResult, (0, 155), self.process.data.getFriendList(),
                                              self.process.data.getGroupList())
-        self.mainMenu = self.createChild(MainMenu, (0, 700 - 80), self.process.data.getUser())
+        self.mainMenu = self.createChild(MainMenu, (0, 700 - 90), self.process.data.getUser())
         self.mainMenubar = self.createChild(MainMenubar, (0, 700))
         #self.test = self.createChild(InputArea, (50, 50),(250,130),pygame.font.SysFont('DENGXIAN',24),(0,0,0),(255,255,255))
 

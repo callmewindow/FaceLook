@@ -4,6 +4,7 @@ import pygame
 
 
 class RightClickMenu(Element):
+    image = pygame.image.load('./resources/UserWindowUI/friend_right_menu.png')
 
     def __init__(self, process):
         Element.__init__(self, process)
@@ -13,7 +14,7 @@ class RightClickMenu(Element):
         self.blocks.append(self.createChild(RightClickMenuBlock, (5, 5), 0))
         self.blocks.append(self.createChild(RightClickMenuBlock, (5, 45), 1))
         self.blocks.append(self.createChild(RightClickMenuBlock, (5, 85), 2))
-        self.surface = pygame.image.load('./resources/UserWindowUI/friend_right_menu.png')
+        self.surface = RightClickMenu.image
         # self.surface.set_alpha(230)
         self.size = (130, 130)
         self.has_closed = False

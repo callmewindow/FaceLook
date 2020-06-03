@@ -1,21 +1,20 @@
 from FrontEnd.Elements.Element import Element
-from FrontEnd.Elements.text_default import text_default
+from FrontEnd.Elements.CustomText import CustomText
 import pygame
 
 
 class MainMenu(Element):
-    image = pygame.Surface((150, 80))
-    image.fill((255, 255, 255))
+    image = pygame.image.load('./resources/UserWindowUI/main_menu.png')
 
     def __init__(self, process, location, user):
         Element.__init__(self, process)
         self.disable()
         self.location = location
         self.user = user
-        self.size = (150, 80)
+        self.size = (160, 90)
         self.surface = MainMenu.image
-        self.createChild(MainMenuBlock, (0, 0), user, 0)
-        self.createChild(MainMenuBlock, (0, 40), user, 1)
+        self.createChild(MainMenuBlock, (5, 5), user, 0)
+        self.createChild(MainMenuBlock, (5, 45), user, 1)
 
     def getEvent(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
@@ -29,10 +28,11 @@ class MainMenu(Element):
 class MainMenuBlock(Element):
     # block_type==0 个人资料
     # block_type==1 ？？？
-    image = pygame.Surface((150, 40))
-    image.fill((250, 250, 250))
+    image = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/transparent_background.png'),
+                                         (150, 40))
     image_onHover = pygame.Surface((150, 40))
-    image_onHover.fill((240, 240, 240))
+    image_onHover.fill((230, 230, 230))
+    image_onHover.set_alpha(200)
 
     def __init__(self, process, location, user, block_type):
         Element.__init__(self, process)
@@ -40,7 +40,7 @@ class MainMenuBlock(Element):
             self.text = '个人资料'
         elif block_type == 1:
             self.text = '？？？'
-        self.block_text = self.createChild(text_default, (12, 6), self.text, (0, 0, 0))
+        self.block_text = self.createChild(CustomText, (16, 12), 'simhei', 16, (0, 0, 0), self.text)
         self.surface = MainMenuBlock.image
         self.location = location
         self.size = (150, 40)
@@ -49,8 +49,8 @@ class MainMenuBlock(Element):
 
     def pos_in(self, pos):
         x, y = pos[0], pos[1]
-        if self.location[0] <= x <= self.location[0] + self.size[0] \
-                and self.location[1] <= y <= self.location[1] + self.size[1]:
+        if self.location[0] < x < self.location[0] + self.size[0] \
+                and self.location[1] < y < self.location[1] + self.size[1]:
             return True
         return False
 

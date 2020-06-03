@@ -4,8 +4,7 @@ import pygame
 
 
 class MainMenubar(Element):
-    image = pygame.Surface((350, 50))
-    image.fill((255, 255, 255))
+    image = pygame.image.load('./resources/UserWindowUI/main_menu_bar.png')
 
     def __init__(self, process, location):
         Element.__init__(self, process)

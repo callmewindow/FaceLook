@@ -16,7 +16,7 @@ class TripleStateButton(Element):
     def __init__(self, process, location, image, size):
         Element.__init__(self, process)
         self.size = size
-        self.iconsize = (int(size[1]*0.8),int(size[1]*0.8))
+        self.iconsize = (int(size[1] * 0.8), int(size[1] * 0.8))
         self.icon = pygame.transform.smoothscale(pygame.image.load(image), self.iconsize)
         self.image = pygame.transform.smoothscale(self.image, size)
         self.image_hover = pygame.transform.smoothscale(self.image_hover, size)
@@ -39,8 +39,8 @@ class TripleStateButton(Element):
                     self.state = 1
                 else:
                     self.state = 0
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
-            if self.pos_in(event.pos):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.pos_in(event.pos) and event.button == pygame.BUTTON_LEFT:
                 if self.state != 2:
                     self.state = 2
                 else:
@@ -56,5 +56,5 @@ class TripleStateButton(Element):
         else:
             self.surface = self.image_select
         surface = self.surface.copy()
-        surface.blit(self.icon, ((self.size[0]-self.iconsize[0])/2, (self.size[1]-self.iconsize[1])/2))
+        surface.blit(self.icon, ((self.size[0] - self.iconsize[0]) / 2, (self.size[1] - self.iconsize[1]) / 2))
         return surface
