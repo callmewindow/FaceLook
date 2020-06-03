@@ -58,8 +58,31 @@ class LocalStorage(object):
                 self.messageRecords[sessionID].append(record)
             addNum = {'num_of_message':tableItem['num_of_message']+len(records)}
             tableItem.update(addNum)
-            tableItem['last_time'] = records[-1].get('time',None)
-            tableItem['last_message'] = records[-1]
+            if len(records) > 0 :
+                tableItem['last_time'] = records[len(records)-1].get('time',None)
+                tableItem['last_message'] = records[len(records)-1]
+
+    def rewriteRecord(self,sessionID,records):
+        #用records覆盖某会话的存储
+        #records为list
+        tableItem = self.sessionTable.get(sessionID,None)
+        if tableItem == None:
+            addNum = {'num_of_session':self.sessionTable['num_of_session']+1}
+            self.sessionTable.update(addNum)
+        self.messageRecords[sessionID] = []
+        self.sessionTable[sessionID] = {
+            'num_of_message' : 0,
+            'last_time' : None,
+            'last_message' : None
+        }
+        tableItem = self.sessionTable.get(sessionID,None)
+        for record in records:
+            self.messageRecords[sessionID].append(record)
+        addNum = {'num_of_message':tableItem['num_of_message']+len(records)}
+        tableItem.update(addNum)
+        if len(records) > 0 :
+            tableItem['last_time'] = records[len(records)-1].get('time',None)
+            tableItem['last_message'] = records[len(records)-1]
 
 
     def getSessionNum(self):

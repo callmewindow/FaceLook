@@ -2,7 +2,7 @@ import threading
 import json
 import pickle
 from BackEnd.TcpConnection import TcpClient
-#from TcpConnection import TcpClient
+# from TcpConnection import TcpClient
 
 
 class Login(threading.Thread):
@@ -20,7 +20,6 @@ class Login(threading.Thread):
     def run(self):
         data = {'messageField1':self.username,'messageField2':self.password,'messageNumber':'2'}
         self.client.sendMessage(data)
-
 
 
 class Register(threading.Thread):
@@ -115,6 +114,7 @@ class CreateSession(threading.Thread):
         data = {'messageNumber':'6'}
         self.client.sendMessage(data)
 
+
 class JoinSession(threading.Thread):
     # 加入群聊
     def __init__(self, client, request):
@@ -133,20 +133,17 @@ class JoinSession(threading.Thread):
         data = {'messageField1':self.username, 'messageField2':self.sessionId, 'messageNumber':'7'}
         self.client.sendMessage(data)
 
-class RefreshRecord(threading.Thread):
-    # 刷新聊天记录
-    def __init__(self, client, request):
+
+class GetFriendRegister(threading.Thread):
+    # 获取好友请求列表
+    def __init__(self, client):
         threading.Thread.__init__(self)
-        self.client = client
-        self.sessionId = request.get('messageField1', None)
-        if self.sessionId == None:
-            self.sessionId = request.get('sessionId',None)
-            if self.sessionId == None:
-                self.sessionId == request.get('sessionID')
+        self.client = client 
 
     def run(self):
-        data = {'messageField1':self.sessionId, 'messageNumber': '8'}
+        data = {'messageNumber':'8'}
         self.client.sendMessage(data)
+
 
 class RespondFriendRegister(threading.Thread):
     # 回应好友申请
@@ -185,6 +182,7 @@ class DeleteFriend(threading.Thread):
         data = {'messageField1': self.username, 'messageField2': self.deleteUsername,
                 'messageNumber': '13'}
         self.client.sendMessage(data)
+
 
 class Close(threading.Thread):
     #退出登录

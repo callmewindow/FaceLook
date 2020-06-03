@@ -23,17 +23,14 @@ class TcpClient(object):
                 dataj = self.tcpClientSocket.recv(BUFSIZE).decode("utf-8")
                 if len(dataj)>0:
                     data = json.loads(dataj)
-                    if type(data) is list:
-                        messageNum = data[0].get('messageNumber',None)
-                        if messageNum != None:
-                            datad = {}
-                            datad['messageNumber'] = messageNum
-                            datad['content'] = data
-                            data = datad
                 else:
                     continue
+                #print(data)
                 rq.put(data)
             except error as e:
+                self.stopFlag = True
+                if self.receiver is not None:
+                    self.tcpClientSocket.close()
                 print(e)
 
     def runTcp(self, rq):

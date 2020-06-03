@@ -18,8 +18,8 @@ requestQueue.put(logintest)
 #requestQueue.put(joinchat)
 # getfriendlsit = {"messageNumber": "4"}
 # requestQueue.put(getfriendlsit)
-# gethistory = {"messageNumber": "5"}
-# requestQueue.put(gethistory)
+gethistory = {"messageNumber": "8"}
+requestQueue.put(gethistory)
 # sleep(10)
 # message = {'from':'hcz','to':None,'time':datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S'),'content':'hello dsm'}
 # sendmessage = {"messageNumber": "9",'messageField1':'2','messageField2':json.dumps(message)}
