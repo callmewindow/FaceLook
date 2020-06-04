@@ -8,6 +8,3 @@ windowTest.py
 */*/__pycache__
 venv/
 userdata
-interface_unit_test.py
-FrontEndUnitTest.py
-FrontEnd/UnitTest/*
