@@ -32,3 +32,5 @@ finally:
     sleep(5)
     bet.stop()
     bet.join()
+
+# 测试
