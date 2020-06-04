@@ -113,8 +113,8 @@ class BackEndThread(threading.Thread):
             }
             self.messageQueue.put(message)
             self.username = request.get('messageField3',None)
-            if result != '0' and self.username != None:
-                self.localStorage = LocalStorage(self.username)
+            # if result != '0' and self.username != None:
+            #     self.localStorage = LocalStorage(self.username)
         #注册
         #request格式：{"username": "hcz", "password": "123456", "nickname": "quq", "messageNumber": "2"}
         #message格式：见下方
@@ -132,8 +132,8 @@ class BackEndThread(threading.Thread):
             }
             self.messageQueue.put(message)
             self.username = request.get('messageField3',None)
-            if result != '0' and self.username != None:
-                self.localStorage = LocalStorage(self.username)
+            # if result != '0' and self.username != None:
+            #     self.localStorage = LocalStorage(self.username)
         #获取好友列表
         #request格式：{"messageNumber": "4"}
         #message格式：num表示好友个数，friendlist为一个dict列表，字段分别为username和nickname
@@ -172,7 +172,7 @@ class BackEndThread(threading.Thread):
             data = request.get('messageField2',None)
             sessionlist = json.loads(data)
             result = []
-            if type(sessionlist)== list and sessionNum != '0':
+            if type(sessionlist)== list and sessionNum != '0' and self.localStorage is not None:
                 for session in sessionlist:
                     temp = {}
                     sessinID = session.get('messageField1',None)
@@ -259,7 +259,8 @@ class BackEndThread(threading.Thread):
                 message = request.get('message',None)
             if message != None:
                 content = json.loads(message)
-            self.localStorage.addRecordsDict(sessionID,content)
+            if self.localStorage is not None:
+                self.localStorage.addRecordsDict(sessionID,content)
 
         elif messageNumber == RequestType.SENDMESSAGERET:
             data = request.get('messageField2', None)
@@ -272,7 +273,8 @@ class BackEndThread(threading.Thread):
                 'message' : content
             }
             self.messageQueue.put(message)
-            self.localStorage.addRecordsDict(sessionID,content)
+            if self.localStorage is not None:
+                self.localStorage.addRecordsDict(sessionID,content)
 
         #以下未实装
 
