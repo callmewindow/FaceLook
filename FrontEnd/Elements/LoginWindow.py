@@ -2,9 +2,12 @@ from FrontEnd.Elements.Window import Window
 from FrontEnd.Elements.LoginWindowBackgrond import LoginWindowBackground as lwb
 import pygame
 from Common.base import *
+import sys
 class LoginWindow(Window):
-    def DragFilesCallback(self,msg):
-        print('在这里拖放文件{}是无效的。'.format(msg))
+    def DragFilesCallback(self,filePaths):
+        print('在这里拖放文件{}是无效的。'.format(filePaths))
+
+
     def __init__(self,process):
         Window.__init__(self,process,'Login',(600,450),(255,255,255),True)
         self.set_rounded_rectangle(20)

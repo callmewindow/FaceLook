@@ -75,7 +75,7 @@ if __name__ == '__main__':
     # print(lwp.messageQueue)
     lwp.run()
     
-
+    lwp.close()
     test_data(data)
     
     uwp = UWP(data, RQ, MQ, bet)
