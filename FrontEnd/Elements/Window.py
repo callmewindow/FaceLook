@@ -5,17 +5,22 @@ import win32con
 import win32api
 import windnd
 class Window(Element):
-    def __init__(self,process,caption,size,color):
+    def __init__(self,process,caption,size,color,noframe=False):
         Element.__init__(self,process)
         self.color = color
         pygame.display.set_caption(caption)        
         self.FPSClock=pygame.time.Clock()
-        self.surface = pygame.display.set_mode(size)
+        self.noframe = noframe
+        if self.noframe:
+            self.surface = pygame.display.set_mode(size,pygame.NOFRAME)
+        else:
+            self.surface = pygame.display.set_mode(size)
         self.surface.fill(color)
         self.size = size
         self.alpha = 255
         #self.origin = pygame.Surface.copy(self.surface)
         self.hwnd = pygame.display.get_wm_info()['window']
+        
     def setDragFilesCallback(self,func):
         windnd.hook_dropfiles(self.hwnd,func)
 
@@ -41,3 +46,7 @@ class Window(Element):
             print('[Error]Cannot set window\'s alpha. Are you using Windows OS?')
             return
         self.alpha = alpha
+    def set_location(self,location):
+        win32gui.SetWindowPos(self.hwnd,win32con.HWND_TOPMOST,location[0],location[1],600,450,win32con.SWP_SHOWWINDOW)
+    def minimize(self):
+        pygame.display.iconify()
