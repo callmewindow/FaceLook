@@ -1,6 +1,7 @@
 from sys import exit
 from queue import Queue
-
+import win32gui,win32con,win32api,windnd
+import pyautogui
 
 
 def panic():

@@ -1,25 +1,20 @@
 import pygame
-from FrontEnd.Elements.SessionWindow import SessionWindow
-from FrontEnd.Processes.WindowProcess import WindowProcess
-from Common.base import *
-class SessionWindowProcess():
-    def __init__(self,sessionID,data):        
+from queue import Empty
+pygame.init()
+import pyautogui
+import win32gui
+class WindowProcessWithoutQueue():
+    def __init__(self,data,window):        
         pygame.init()
         self.FPS = 60 
         self.go = True    
         self.data = data
-        self.sessionID = sessionID
-        # 先完成窗口内容
-        # self.session = self.data.getSessionByID(sessionID)
-        # print(self.data)
-        # for msg in self.session.userMessages:
-        #     print(msg.sender,msg.time,msg.content)
         self.actionList = []
-        self.window = SessionWindow(self)
-        self.title_rect = (0,0,670,100)
-        self.dragging = False
+        self.window = window
         self.window_pos = (0,0)
         self.mouse_pos = (0,0)
+        self.title_rect = (0,0,1000,1000)
+        self.dragging = False
         self.hwnd = self.window.hwnd
     def run(self):
         while self.go:
@@ -57,6 +52,8 @@ class SessionWindowProcess():
         pass
     def stop(self):
         self.go = False
-def createSession(sessionID,data):
-    swp = SessionWindowProcess(sessionID,data)
-    swp.run()
+    def minimize(self):
+        pygame.display.iconify()
+    def close(self):
+        pygame.display.quit()
+        self.stop()
