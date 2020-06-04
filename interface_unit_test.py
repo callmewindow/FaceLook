@@ -16,8 +16,8 @@ try:
 
     request = {
         'messageNumber':'2',
-        'username':'Clementine',
-        'password':'Clementine',
+        'username':'hcz',
+        'password':'123456',
         }
     sendRequest(request)
 
