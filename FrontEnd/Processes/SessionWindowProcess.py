@@ -2,25 +2,12 @@ import pygame
 from FrontEnd.Elements.SessionWindow import SessionWindow
 from FrontEnd.Processes.WindowProcess import WindowProcess
 from Common.base import *
-class SessionWindowProcess():
-    def __init__(self,sessionID,data):        
-        pygame.init()
-        self.FPS = 60 
-        self.go = True    
-        self.data = data
+class SessionWindowProcess(WindowProcess):
+    def __init__(self,sessionID,data,RQ,MQ):     
+        bet = None   
         self.sessionID = sessionID
-        # 先完成窗口内容
-        # self.session = self.data.getSessionByID(sessionID)
-        # print(self.data)
-        # for msg in self.session.userMessages:
-        #     print(msg.sender,msg.time,msg.content)
-        self.actionList = []
-        self.window = SessionWindow(self)
-        self.title_rect = (0,0,670,100)
-        self.dragging = False
-        self.window_pos = (0,0)
-        self.mouse_pos = (0,0)
-        self.hwnd = self.window.hwnd
+        WindowProcess.__init__(self, data, RQ, MQ, bet, SessionWindow(self))
+        print(self.requestQueue)
     def run(self):
         while self.go:
             if self.dragging:
@@ -51,12 +38,7 @@ class SessionWindowProcess():
             self.window.display()
             pygame.display.update()
             self.window.FPSClock.tick(self.FPS)
-    def addAction(self,action):
-        self.actionList.append(action)
-    def doAction(self,action):
-        pass
-    def stop(self):
-        self.go = False
-def createSession(sessionID,data):
-    swp = SessionWindowProcess(sessionID,data)
+
+def createSession(sessionID,data,RQ,MQ):
+    swp = SessionWindowProcess(sessionID,data,RQ,MQ)
     swp.run()
