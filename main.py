@@ -6,6 +6,7 @@ pygame.key.set_repeat(500, 40)
 from FrontEnd.Processes.UserWindowProcess import UserWindowProcess as UWP
 from FrontEnd.Processes.LoginWindowProcess import LoginWindowProcess as LWP
 from BackEnd.BackEndThread import BackEndThread
+import multiprocessing
 from multiprocessing import Process
 from Common.base import *
 from multiprocessing.managers import BaseManager
@@ -58,10 +59,12 @@ def test_data(data):
 if __name__ == '__main__':
     manager = BaseManager()
     manager.register('DataCenter',DataCenter)
+    manager.register('Queue',multiprocessing.Queue)
     manager.start()
     data = manager.DataCenter()
-    RQ = Queue()
-    MQ = Queue()
+    RQ = manager.Queue()
+    MQ = manager.Queue()
+    print(RQ)
     bet = BackEndThread(RQ, MQ)
     bet.start()
     

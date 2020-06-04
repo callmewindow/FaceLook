@@ -1,7 +1,6 @@
 import pygame
 from FrontEnd.Elements.UserWindow import UserWindow
 from FrontEnd.Processes.WindowProcess import WindowProcess
-from FrontEnd.Processes.SessionWindowProcess import SessionWindowProcess
 from FrontEnd.Processes.SessionWindowProcess import createSession
 import multiprocessing
 class UserWindowProcess(WindowProcess):
@@ -10,5 +9,5 @@ class UserWindowProcess(WindowProcess):
         self.window.bg.init()
         self.sessions = []
     def createSessionWindow(self,sessionID):
-        proc = multiprocessing.Process(target=createSession,args=(sessionID,self.data))
+        proc = multiprocessing.Process(target=createSession,args=(sessionID,self.data,self.requestQueue,self.messageQueue))
         proc.start()

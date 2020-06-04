@@ -3,16 +3,13 @@ from queue import Empty
 pygame.init()
 import pyautogui
 import win32gui
-class WindowProcess():
-    def __init__(self,data,RQ,MQ,bet,window):        
+class WindowProcessWithoutQueue():
+    def __init__(self,data,window):        
         pygame.init()
         self.FPS = 60 
         self.go = True    
         self.data = data
         self.actionList = []
-        self.requestQueue = RQ
-        self.messageQueue = MQ
-        self.bet = bet
         self.window = window
         self.window_pos = (0,0)
         self.mouse_pos = (0,0)
@@ -43,12 +40,6 @@ class WindowProcess():
                 if (event.type==pygame.MOUSEBUTTONUP and event.button==pygame.BUTTON_LEFT and self.dragging==True):
                     self.dragging = False
                 self.window.getEvent(event)
-            try:
-                message = self.messageQueue.get(block=False)
-                self.window.getMessage(message)
-                print('[New Message]',message)
-            except Empty:
-                pass
             for action in self.actionList:
                 self.doAction(action)
             self.actionList.clear()   

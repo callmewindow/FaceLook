@@ -6,6 +6,7 @@ from queue import Queue
 class LoginWindowProcess(WindowProcess):
     def __init__(self,data,RQ,MQ,bet):  
         WindowProcess.__init__(self,data,RQ,MQ,bet,LoginWindow(self))
+        self.title_rect = (0,0,650,100)
     def doAction(self,action):
         if action.type == ActionType.LOGIN:
             bg = self.window.bg

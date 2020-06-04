@@ -2,7 +2,7 @@ from Common.base import *
 from FrontEnd.Elements.Element import Element
 from FrontEnd.Elements.SelfInfo import SelfInfo
 from FrontEnd.Elements.text_variable import text_variable
-from FrontEnd.Elements.Inforbar import InforBar
+from FrontEnd.Elements.InforBar import InforBar
 from FrontEnd.Elements.TripleStateButton import TripleStateButton
 import pygame
 
