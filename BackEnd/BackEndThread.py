@@ -79,8 +79,8 @@ class BackEndThread(threading.Thread):
             try:
                 request = self.requestQueue.get(block=False)
                 #print('this request:',request)
-            except:
-                pass
+            except Exception as e:
+                print(e)
             if request is not None:
                 self.handleRequest(request)
             sleep(0.1)

@@ -27,7 +27,7 @@ class TcpClient(object):
                     continue
                 #print(data)
                 rq.put(data)
-            except error as e:
+            except Exception as e:
                 self.stopFlag = True
                 if self.receiver is not None:
                     self.tcpClientSocket.close()
@@ -38,7 +38,7 @@ class TcpClient(object):
             self.tcpClientSocket.connect(ADDRESS)
             self.receiver = threading.Thread(target=TcpClient.receiverThread, args=(self, rq))
             self.receiver.start()
-        except error as e:
+        except Exception as e:
             print(e)
 
     def sendMessage(self, data):
@@ -46,7 +46,7 @@ class TcpClient(object):
         try:
             dataj = json.dumps(data)
             self.tcpClientSocket.send(dataj.encode("utf-8"))
-        except error as e:
+        except Exception as e:
             print(e)
 
     def closeServer(self):
