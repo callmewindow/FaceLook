@@ -16,7 +16,7 @@ class WindowProcess():
         self.window = window
         self.window_pos = (0,0)
         self.mouse_pos = (0,0)
-        self.title_rect = (0,0,650,200)
+        self.title_rect = (0,0,1000,1000)
         self.dragging = False
         self.hwnd = self.window.hwnd
     def run(self):
@@ -40,9 +40,7 @@ class WindowProcess():
                     self.window_pos = (windowRect[0],windowRect[1])
                     self.mouse_pos = pyautogui.position()
                     del windowRect
-                if (event.type==pygame.MOUSEBUTTONUP and event.button==pygame.BUTTON_LEFT and self.dragging==True and
-                    event.pos[0]>=self.title_rect[0] and event.pos[0]<=self.title_rect[2] and
-                    event.pos[1]>=self.title_rect[1] and event.pos[1]<=self.title_rect[3]):
+                if (event.type==pygame.MOUSEBUTTONUP and event.button==pygame.BUTTON_LEFT and self.dragging==True):
                     self.dragging = False
                 self.window.getEvent(event)
             try:
@@ -67,4 +65,4 @@ class WindowProcess():
         pygame.display.iconify()
     def close(self):
         pygame.display.quit()
-        self.stop
+        self.stop()
