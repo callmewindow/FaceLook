@@ -1,5 +1,5 @@
 from FrontEnd.Elements.Element import Element
-from FrontEnd.Elements.text_default import text_default
+from FrontEnd.Elements.CustomText import CustomText
 import pygame
 
 
@@ -11,7 +11,7 @@ class DropDownMenu(Element):
         self.location = location
         self.selections = selections
         self.length = len(selections)
-        self.surface = pygame.transform.smoothscale(DropDownMenu.image, (120, self.length * 30 + 30))
+        self.surface = pygame.transform.smoothscale(DropDownMenu.image, (120, self.length * 30 + 31))
         self.selected = self.createChild(Selected, (0, 0))
         self.selected.set_text(selections[0])
         self.blocks = []
@@ -22,7 +22,8 @@ class DropDownMenu(Element):
         if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
             event.pos = (event.pos[0] - self.location[0], event.pos[1] - self.location[1])
         for child in self.childs:
-            child.getEvent(event)
+            if child.active:
+                child.getEvent(event)
         if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
             event.pos = (event.pos[0] + self.location[0], event.pos[1] + self.location[1])
 
@@ -53,7 +54,7 @@ class Selected(Element):
     def __init__(self, process, location):
         Element.__init__(self, process)
         self.location = location
-        self.text = self.createChild(text_default, (0, 0), 'test', (0, 0, 0))
+        self.text = self.createChild(CustomText, (16, 7), 'simhei', 16, (0, 0, 0), '')
         self.state = 0
         self.has_selected = False
         self.size = (120, 30)
@@ -91,20 +92,18 @@ class Selected(Element):
             self.surface = Selected.image_drop
 
     def set_text(self, text):
-        self.text.setText(text)
+        self.text.set_text(text)
 
 
 class Selections(Element):
-    image = pygame.Surface((120, 30))
-    image.fill((255, 255, 255))
-    image_onHover = pygame.Surface((120, 30))
-    image_onHover.fill((245, 245, 245))
+    image = pygame.image.load('./resources/UserWindowUI/dropdown_select.png')
+    image_hover = pygame.image.load('./resources/UserWindowUI/dropdown_select_hover.png')
 
     def __init__(self, process, location, text):
         Element.__init__(self, process)
         self.disable()
         self.location = location
-        self.text = self.createChild(text_default, (0, 0), text, (0, 0, 0))
+        self.text = self.createChild(CustomText, (16, 7), 'simhei', 16, (0, 0, 0), text)
         self.is_selected = False
         self.size = (120, 30)
         self.surface = Selections.image
@@ -119,7 +118,7 @@ class Selections(Element):
     def getEvent(self, event):
         if event.type == pygame.MOUSEMOTION:
             if self.pos_in(event.pos):
-                self.surface = Selections.image_onHover
+                self.surface = Selections.image_hover
             else:
                 self.surface = Selections.image
             return
