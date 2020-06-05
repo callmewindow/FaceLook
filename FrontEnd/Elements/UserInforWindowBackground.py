@@ -1,10 +1,10 @@
+import pygame
 from Common.base import *
 from FrontEnd.Elements.Element import Element
 from FrontEnd.Elements.SelfInfo import SelfInfo
 from FrontEnd.Elements.text_variable import text_variable
 from FrontEnd.Elements.InforBar import InforBar
 from FrontEnd.Elements.TripleStateButton import TripleStateButton
-import pygame
 
 class UserInforWindowBackground(Element):
     topbg = pygame.Surface((400, 150))
