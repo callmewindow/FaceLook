@@ -61,6 +61,7 @@ if __name__ == '__main__':
 
     manager.register('Queue',multiprocessing.Queue)
     data = multiprocessing.Manager().dict()
+    test_data(data)
     manager.start()
     RQ = manager.Queue()
     MQ = manager.Queue()
@@ -78,6 +79,8 @@ if __name__ == '__main__':
     lwp.close()
 
     test_data(data)
+    
+    print(data['user']['username'])
     
     uwp = UWP(data, RQ, MQ, bet)
     uwp.run()

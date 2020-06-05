@@ -7,7 +7,7 @@ class SessionWindowProcess(WindowProcess):
         bet = None   
         self.sessionID = sessionID
         WindowProcess.__init__(self, data, RQ, MQ, bet, SessionWindow(self))
-        print(self.requestQueue)
+        print(self.data)
 
     def doAction(self,action):
          

@@ -1,4 +1,5 @@
 from FrontEnd.Elements.Element import Element
+from FrontEnd.Processes.SessionWindowProcess import createSession
 import pygame
 from Common.base import *
 class CandyButton(Element):
@@ -37,5 +38,6 @@ class CandyButton(Element):
                 self.process.addAction(Action(ActionType.LOGIN,None))
         if event.type == pygame.constants.MOUSEBUTTONDOWN and event.button == pygame.constants.BUTTON_RIGHT:
             self.process.window.set_alpha(self.process.window.alpha-10)
+
             
         
