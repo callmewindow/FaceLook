@@ -58,18 +58,16 @@ def test_data(data):
     print(session)
     
 if __name__ == '__main__':
-    manager = BaseManager()
 
-    manager.register('Queue',multiprocessing.Queue)
     mgr = multiprocessing.Manager()
     inner = {}
     test_data(inner)
     data=mgr.dict({
         "inner":inner,
         })
-    manager.start()
-    RQ = manager.Queue()
-    MQ = manager.Queue()
+
+    RQ = multiprocessing.Queue()
+    MQ = multiprocessing.Queue()
     print(RQ)
     bet = BackEndThread(RQ, MQ)
     bet.start()
