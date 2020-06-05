@@ -87,7 +87,7 @@ class SessionWindowBackground(Element):
 
         # 发送消息
         if self.sendButton.state == 2:
-            self.closeButton.setState(1)
+            self.sendButton.state = 1
             self.process.addAction(Action("send",None))
     
     def getInputCon(self):
