@@ -4,6 +4,10 @@ import pyautogui
 from BackEnd import ImageManagement
 def panic():
     raise Exception()
+def readData(data):
+    return data['inner']
+def writeData(data,data_copy):
+    data['inner'] = data_copy
 
 
 class ActionType():

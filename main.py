@@ -11,6 +11,7 @@ from multiprocessing import Process
 import multiprocessing
 from Common.base import *
 from multiprocessing.managers import BaseManager
+
 def test_data(data):
     avatar = "image::DEFAULT_AQUA"
     meaAvatar = "image::DEFUALT_MEA"
@@ -60,8 +61,12 @@ if __name__ == '__main__':
     manager = BaseManager()
 
     manager.register('Queue',multiprocessing.Queue)
-    data = multiprocessing.Manager().dict()
-    test_data(data)
+    mgr = multiprocessing.Manager()
+    inner = {}
+    test_data(inner)
+    data=mgr.dict({
+        "inner":inner,
+        })
     manager.start()
     RQ = manager.Queue()
     MQ = manager.Queue()
