@@ -9,7 +9,7 @@ class SearchWindowBackground(Element):
 
     def __init__(self, process):
         Element.__init__(self, process)
-        self.surface = pygame.Surface((700, 450))
+        self.surface = pygame.Surface((800, 450))
         self.surface.fill((255, 255, 255))
         self.location = (0, 0)
         self.search_people_group = self.createChild(SearchPeopleOrGroup, (0, 0))
