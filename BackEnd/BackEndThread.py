@@ -38,10 +38,11 @@ class RequestType():
     RECEIVEFRIENDREGISTERRET = '11r'
     RESPONDFRIENDREGISTER = '12'
     RESPONDFRIENDREGISTERRET = '12r'
-    DELETEFRIEND = '13'
-    DELETEFRIENDRET = '13r'
-    GETFRIENDREGISTERRESULT = '14'
-    GETFRIENDREGISTERRESULTRET = '14r'
+    GETFRIENDREGISTERRESULT = '13'
+    GETFRIENDREGISTERRESULTRET = '13r'
+    GETFRIENDREGISTERRESULTRETLIST = '14'
+    GETFRIENDREGISTERRESULTRETLISTRET = '14r'
+    DELETEFRIEND = '15'
 
 
 class MessageType():
@@ -55,8 +56,8 @@ class MessageType():
     FRIENDREGISTERRET = '10r'
     RECEIVEFRIENDREGISTERRET = '11r'
     RESPONDFRIENDREGISTERRET = '12r'
-    DELETEFRIENDRET = '13r'
-    GETFRIENDREGISTERRESULTRET = '14r'
+    GETFRIENDREGISTERRESULTRET = '13r'
+    GETFRIENDREGISTERRESULTRETLISTRET = '14r'
 
 
 class BackEndThread(threading.Thread):
@@ -281,53 +282,173 @@ class BackEndThread(threading.Thread):
 
         #以下未实装
 
-        #添加好友
+        # 添加好友，发送好友申请
+        # request格式:{"toUserName":"lex", "checkMessage":"我是你爸爸"， "messageNumber":"10"}
+        # message无
         elif messageNumber == RequestType.FRIENDREGISTER:
             thread = FriendRegister(self.client, request)
             thread.setDaemon(True)
             thread.start()
             self.task.append(thread)
-        elif messageNumber == RequestType.FRIENDREGISTERRET:
-            message = {
-                'messageNumber': MessageType.FRIENDREGISTERRET,
-                'result': request.get('messageField1',None),
-                'information': request.get('messageField2',None)
-            }
-            self.messageQueue.put(message)
-        #收到好友申请
+        # elif messageNumber == RequestType.FRIENDREGISTERRET:
+        #     message = {
+        #         'messageNumber': MessageType.FRIENDREGISTERRET
+        #     }
+        #     self.messageQueue.put(message)
+
+        # 收到好友申请
+        # request无
+        # message格式：
         elif messageNumber == RequestType.RECEIVEFRIENDREGISTERRET:
             message = {
                 'messageNumber': MessageType.RECEIVEFRIENDREGISTERRET,
-                'fromUsername': request.get('messageField1',None),
-                'message': request.get('messageField2',None)
+                'fromUsername': request.get('messageField1', None),
+                'checkMessage': request.get('messageField2', None)
             }
             self.messageQueue.put(message)
+
+        # 回复好友申请
+        # request格式：{"fromUsername":"hololive", "result":1, "messageNumber":"12"}
+        # result为0表示拒绝，为1表示接受
+        # 无message
         elif messageNumber == RequestType.RESPONDFRIENDREGISTER:
             thread = RespondFriendRegister(self.client, request)
             thread.setDaemon(True)
             thread.start()
             self.task.append(thread)
-        #回复申请
-        elif messageNumber == RequestType.RESPONDFRIENDREGISTERRET:
+
+        # elif messageNumber == RequestType.RESPONDFRIENDREGISTERRET:
+        #     message = {
+        #         'messageNumber': MessageType.RESPONDFRIENDREGISTERRET,
+        #         'result': request.get('messageField1', None),
+        #         'information': request.get('messageField2', None)
+        #     }
+        #     self.messageQueue.put(message)
+
+        # 用户接收到添加好友申请结果
+        # request无
+        # message格式如下
+        # elif messageNumber == RequestType.GETFRIENDREGISTERRESULT:
+        #     thread = GetFriendRegisterResult(self.client, request)
+        #     thread.setDaemon(True)
+        #     thread.start()
+        #     self.task.append(thread)
+        elif messageNumber == RequestType.GETFRIENDREGISTERRESULTRET:
             message = {
-                'messageNumber': MessageType.RESPONDFRIENDREGISTERRET,
-                'result': request.get('messageField1',None),
-                'information': request.get('messageField2',None)
+                'messageNumber': MessageType.GETFRIENDREGISTERRESULTRET,
+                'toUsername': request.get('messageField1', None),
+                'result': request.get('messageField2', None)
             }
             self.messageQueue.put(message)
+
+        # 获取申请结果列表
+        # request格式：{'messageNumber':'14'}
+        elif messageNumber == RequestType.GETFRIENDREGISTERRESULTRETLIST:
+            thread = GetFriendRegisterResultList(self.client)
+            thread.setDaemon(True)
+            thread.start()
+            self.task.append(thread)
+        elif messageNumber == RequestType.GETFRIENDREGISTERRESULTRETLISTRET:
+            registerResultNum = request.get('messageField1', None)
+            data = request.get('messageField2', None)
+            registerResultList = json.loads(data)
+            print(registerResultList)
+            result = []
+            if type(registerResultList) == list and registerResultNum != '0':
+                for registerResult in registerResultList:
+                    temp = {'toUsername': registerResult.get('messageField1', None),
+                            'registerResult': registerResult.get('messageField2', None)}
+                    result.append(temp)
+            message = {
+                'messageNumber': MessageType.GETFRIENDREGISTERRESULTRETLISTRET,
+                'registerResultNum': registerResultNum,
+                'registerResultList': result
+            }
+            self.messageQueue.put(message)
+
+        # 删除好友
+        # request格式：{'deleteUsername': 'hamzy', 'messageNumber':'15'}
+        # message无
+        elif messageNumber == RequestType.DELETEFRIEND:
+            thread = DeleteFriend(self.client, request)
+            thread.setDaemon(True)
+            thread.start()
+            self.task.append(thread)        # 添加好友，发送好友申请
+        # request格式:{"toUserName":"lex", "checkMessage":"我是你爸爸"， "messageNumber":"10"}
+        # message无
+        elif messageNumber == RequestType.FRIENDREGISTER:
+            thread = FriendRegister(self.client, request)
+            thread.setDaemon(True)
+            thread.start()
+            self.task.append(thread)
+        # elif messageNumber == RequestType.FRIENDREGISTERRET:
+        #     message = {
+        #         'messageNumber': MessageType.FRIENDREGISTERRET
+        #     }
+        #     self.messageQueue.put(message)
+
+        # 收到好友申请
+        # request无
+        # message格式：
+        elif messageNumber == RequestType.RECEIVEFRIENDREGISTERRET:
+            message = {
+                'messageNumber': MessageType.RECEIVEFRIENDREGISTERRET,
+                'fromUsername': request.get('messageField1', None),
+                'checkMessage': request.get('messageField2', None)
+            }
+            self.messageQueue.put(message)
+
+        # 回复好友申请
+        # request格式：{"fromUsername":"hololive", "result":1, "messageNumber":"12"}
+        # result为0表示拒绝，为1表示接受
+        # 无message
+        elif messageNumber == RequestType.RESPONDFRIENDREGISTER:
+            thread = RespondFriendRegister(self.client, request)
+            thread.setDaemon(True)
+            thread.start()
+            self.task.append(thread)
+
+        elif messageNumber == RequestType.GETFRIENDREGISTERRESULTRET:
+            message = {
+                'messageNumber': MessageType.GETFRIENDREGISTERRESULTRET,
+                'toUsername': request.get('messageField1', None),
+                'result': request.get('messageField2', None)
+            }
+            self.messageQueue.put(message)
+
+        # 获取申请结果列表
+        # request格式：{'messageNumber':'14'}
+        elif messageNumber == RequestType.GETFRIENDREGISTERRESULTRETLIST:
+            thread = GetFriendRegisterResultList(self.client)
+            thread.setDaemon(True)
+            thread.start()
+            self.task.append(thread)
+        elif messageNumber == RequestType.GETFRIENDREGISTERRESULTRETLISTRET:
+            registerResultNum = request.get('messageField1', None)
+            data = request.get('messageField2', None)
+            registerResultList = json.loads(data)
+            print(registerResultList)
+            result = []
+            if type(registerResultList) == list and registerResultNum != '0':
+                for registerResult in registerResultList:
+                    temp = {'toUsername': registerResult.get('messageField1', None),
+                            'registerResult': registerResult.get('messageField2', None)}
+                    result.append(temp)
+            message = {
+                'messageNumber': MessageType.GETFRIENDREGISTERRESULTRETLISTRET,
+                'registerResultNum': registerResultNum,
+                'registerResultList': result
+            }
+            self.messageQueue.put(message)
+
+        # 删除好友
+        # request格式：{'deleteUsername': 'hamzy', 'messageNumber':'15'}
+        # message无
         elif messageNumber == RequestType.DELETEFRIEND:
             thread = DeleteFriend(self.client, request)
             thread.setDaemon(True)
             thread.start()
             self.task.append(thread)
-        #删除好友
-        elif messageNumber == RequestType.DELETEFRIENDRET:
-            message = {
-                'messageNumber': MessageType.DELETEFRIENDRET,
-                'result': request.get('messageField1',None),
-                'information': request.get('messageField2',None)
-            }
-            self.messageQueue.put(message)
         else:
             self.stop()
         
