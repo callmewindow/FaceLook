@@ -22,6 +22,7 @@ class Window(Element):
         self.hwnd = pygame.display.get_wm_info()['window']
         
     def setDragFilesCallback(self,func):
+
         windnd.hook_dropfiles(self.hwnd,func)
 
     def display(self):
@@ -33,6 +34,7 @@ class Window(Element):
         pass
     
     def set_alpha(self,alpha):        
+
         try:
             if alpha<0 or alpha>255:
                 return
@@ -47,10 +49,12 @@ class Window(Element):
             return
         self.alpha = alpha
     def set_location(self,location):
-        win32gui.SetWindowPos(self.hwnd,win32con.HWND_TOPMOST,location[0],location[1],600,450,win32con.SWP_SHOWWINDOW)
+
+        win32gui.SetWindowPos(self.hwnd,win32con.HWND_TOPMOST,location[0],location[1],self.size[0],self.size[1],win32con.SWP_SHOWWINDOW)
     def minimize(self):
         pygame.display.iconify()
     def set_rounded_rectangle(self,pixel):
+
         wr = win32gui.GetWindowRect(self.hwnd)
         PyGdiHANDLE = win32gui.CreateRoundRectRgn(0,0,wr[2]-wr[0],wr[3]-wr[1],pixel,pixel)
         win32gui.SetWindowRgn(self.hwnd,PyGdiHANDLE,False) 

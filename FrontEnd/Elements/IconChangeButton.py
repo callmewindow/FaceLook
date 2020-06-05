@@ -16,7 +16,7 @@ class IconChangeButton(Element):
     def __init__(self, process, location, image, image_select, size):
         Element.__init__(self, process)
         self.size = size
-        self.iconsize = (int(size[1]*0.7),int(size[1]*0.7))
+        self.iconsize = (int(size[1]*0.65),int(size[1]*0.65))
         self.icon = pygame.transform.smoothscale(pygame.image.load(image), self.iconsize)
         self.icon_select = pygame.transform.smoothscale(pygame.image.load(image_select), self.iconsize)
         self.image = pygame.transform.smoothscale(self.image, size)
@@ -24,30 +24,33 @@ class IconChangeButton(Element):
         self.image_select = pygame.transform.smoothscale(self.image_select, size)
         self.location = location
         self.state = 0
+    # # 为了在状态切换中使用，去除了原本的状态改变能力
+    # def pos_in(self, pos):
+    #     x = pos[0]
+    #     y = pos[1]
+    #     if self.location[0] <= x <= self.location[0] + self.size[0] \
+    #             and self.location[1] <= y <= self.location[1] + self.size[1]:
+    #         return True
+    #     return False
 
-    def pos_in(self, pos):
-        x = pos[0]
-        y = pos[1]
-        if self.location[0] <= x <= self.location[0] + self.size[0] \
-                and self.location[1] <= y <= self.location[1] + self.size[1]:
-            return True
-        return False
-
-    def getEvent(self, event):
-        if event.type == pygame.MOUSEMOTION:
-            if self.state != 2:
-                if self.pos_in(event.pos):
-                    self.state = 1
-                else:
-                    self.state = 0
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
-            if self.pos_in(event.pos):
-                if self.state != 2:
-                    self.state = 2
-                else:
-                    self.state = 1
-            else:
-                self.state = 0
+    # def getEvent(self, event):
+    #     if event.type == pygame.MOUSEMOTION:
+    #         if self.state != 2:
+    #             if self.pos_in(event.pos):
+    #                 self.state = 1
+    #             else:
+    #                 self.state = 0
+    #     if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
+    #         if self.pos_in(event.pos):
+    #             if self.state != 2:
+    #                 self.state = 2
+    #             else:
+    #                 self.state = 1
+    #         else:
+    #             self.state = 0
+    
+    def setState(self, stateType):
+        self.state = stateType
 
     def display(self):
         if self.state == 0:
@@ -63,3 +66,4 @@ class IconChangeButton(Element):
         surface = self.surface.copy()
         surface.blit(iconShow, ((self.size[0]-self.iconsize[0])/2, (self.size[1]-self.iconsize[1])/2))
         return surface
+    

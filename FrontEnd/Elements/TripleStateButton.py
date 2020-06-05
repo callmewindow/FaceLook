@@ -48,6 +48,9 @@ class TripleStateButton(Element):
             else:
                 self.state = 0
 
+    def setState(self,stateType):
+        self.state = stateType
+
     def display(self):
         if self.state == 0:
             self.surface = self.image
