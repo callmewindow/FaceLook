@@ -1,5 +1,6 @@
 from FrontEnd.Elements.Element import Element
 import pygame
+from BackEnd import ImageManagement
 
 
 class Image(Element):
@@ -12,11 +13,16 @@ class Image(Element):
         self.ready = False
         self.size = size
         self.counter = 0
+        self.called = False
         #BackEnd.fetchImage(url)
     def update(self):
         if self.ready == True:
             return
         else:
+            if self.called == False and self.url:
+                ImageManagement.downloadImage(self.url)
+                self.called = True
+                return
             if self.counter == 0:
                 try:
                     localURL = self.url

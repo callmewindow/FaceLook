@@ -11,3 +11,4 @@ userdata
 interface_unit_test.py
 FrontEndUnitTest.py
 FrontEnd/UnitTest/
+images/*
