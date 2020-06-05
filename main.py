@@ -8,6 +8,7 @@ from FrontEnd.Processes.LoginWindowProcess import LoginWindowProcess as LWP
 from BackEnd.BackEndThread import BackEndThread
 import multiprocessing
 from multiprocessing import Process
+import multiprocessing
 from Common.base import *
 from multiprocessing.managers import BaseManager
 def test_data(data):
@@ -59,20 +60,8 @@ if __name__ == '__main__':
     manager = BaseManager()
 
     manager.register('Queue',multiprocessing.Queue)
+    data = multiprocessing.Manager().dict()
     manager.start()
-    data = {
-        'user':{
-            'username':None,
-            'password':None,
-            'nickname':None,
-            'avatarURL':None,
-            'state':None,
-            },
-        'friendList':[],
-        'groupList':[],
-        'messageList':[],
-        'sessions':[]       
-        }
     RQ = manager.Queue()
     MQ = manager.Queue()
     print(RQ)
