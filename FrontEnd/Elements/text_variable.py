@@ -3,9 +3,10 @@ import pygame
 
 
 class text_variable(Element):
-    def __init__(self, process, location, text, fonttype, fontsize, color):
+    def __init__(self, process, location, text, fonttype, fontsize, color, setBold=False):
         Element.__init__(self, process)
         self.font = pygame.font.SysFont(fonttype, fontsize)
+        self.font.set_bold(setBold)
         self.location = location
         if text == None:
             tempText = "无"

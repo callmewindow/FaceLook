@@ -43,15 +43,18 @@ class SessionWindowBackground(Element):
         self.location = (0,0)
         self.surface = pygame.Surface((900,750))
         self.surface.fill((255,255,255))
+        self.titleBG = pygame.Surface((900,60))
+        self.titleBG.fill((102, 153, 204))
+        self.surface.blit(self.titleBG,(0,0))
 
         # 渲染整体框架
         line = pygame.Surface((900,2))
         line.fill((224, 224, 224))
         # self.surface.blit(line,(0,0))
         titleLeft = (900-12*len(self.sessionInfor.get("title").encode("gbk")))/2
-        self.sessionTitle = self.createChild(text_variable, (int(titleLeft),19), self.sessionInfor.get("title"), 'simhei', 22, (0,0,0))
+        self.sessionTitle = self.createChild(text_variable, (int(titleLeft),18), self.sessionInfor.get("title"), 'simhei', 24, (255,255,255))
         marginTop1 = 60
-        self.surface.blit(line,(0,marginTop1-2))
+        # self.surface.blit(line,(0,marginTop1-2))
         self.surface.blit(line,(0,marginTop1+50))
         marginTop2 = 520
         self.surface.blit(line,(0,marginTop2))
@@ -62,7 +65,7 @@ class SessionWindowBackground(Element):
         self.switchList = self.createChild(SwitchListBarSession, (0, marginTop1))
 
         # 窗口控制按钮
-        controlBtnSize = (28,28)
+        controlBtnSize = (0,0)
         self.smallButton = self.createChild(TripleStateButton, (770, 14), './resources/WindowControlUI/move.png', controlBtnSize)
         self.bigButton = self.createChild(TripleStateButton, (770+45, 14), './resources/WindowControlUI/square.png', controlBtnSize)
         self.closeButton = self.createChild(TripleStateButton, (770+90, 14), './resources/WindowControlUI/close.png', controlBtnSize)
@@ -98,13 +101,15 @@ class SessionWindowBackground(Element):
 
         # 最小化
         if self.smallButton.state == 2:
-            self.process.minimize()
+            # self.process.minimize()
             self.smallButton.setState(0)
+            self.process.dragging=False
+            self.process.minimize()
 
         # 关闭
         if self.closeButton.state == 2:
-            self.process.close()
             self.closeButton.setState(0)
+            self.process.stop()
 
     def update(self):
         for child in self.childs:
