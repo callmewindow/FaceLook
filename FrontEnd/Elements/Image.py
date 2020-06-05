@@ -14,25 +14,24 @@ class Image(Element):
         self.size = size
         self.counter = 0
         self.called = False
-        #BackEnd.fetchImage(url)
     def update(self):
         if self.ready == True:
             return
-        else:
-            if self.called == False and self.url:
+        #Not Ready
+        self.counter = (self.counter+1)%10
+        if self.counter == 1 and self.url:
+            surface = ImageManagement.getLocalImage('./images/'+self.url)
+            if surface != None:
+                self.surface = pygame.transform.smoothscale(surface, self.size)
+                self.ready = True
+                return
+            #Not local
+            if self.called == False:
                 ImageManagement.downloadImage(self.url)
                 self.called = True
-                return
-            if self.counter == 0:
-                try:
-                    localURL = self.url
-                    image = pygame.image.load(localURL)
-                    self.surface = pygame.transform.smoothscale(image,self.size)
-                    del image
-                    self.ready = True
-                except:
-                    return
             else:
-                self.counter = (self.counter+1)%60
+                #called and not returned
+                pass
+            
     def display(self):
         return self.surface
