@@ -1,5 +1,6 @@
 import threading 
 import queue
+from multiprocessing.queues import Empty
 from time import sleep
 from BackEnd.SolverThreads import *
 from BackEnd.LocalStorage import *
@@ -79,6 +80,8 @@ class BackEndThread(threading.Thread):
             try:
                 request = self.requestQueue.get(block=False)
                 #print('this request:',request)
+            except Empty:
+                pass
             except Exception as e:
                 print(e)
             if request is not None:

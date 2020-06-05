@@ -1,7 +1,7 @@
 from sys import exit
 import win32gui,win32con,win32api,windnd
 import pyautogui
-
+from BackEnd.ImageManagement import *
 def panic():
     raise Exception()
 
