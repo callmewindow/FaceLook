@@ -12,7 +12,7 @@ class SearchBar(Element):
         Element.__init__(self, process)
         self.location = location
         self.size = (350, 55)
-        self.input = self.createChild(InputBox, (50, 8), 290, 'dengxian', 24, (0, 0, 0), (255, 255, 255))
+        self.input = self.createChild(InputBox, (50, 14), 290, 'dengxian', 24, (0, 0, 0), (255, 255, 255))
         self.surface = SearchBar.image
         self.input.enable()
 
@@ -21,7 +21,7 @@ class SearchBar(Element):
         for child in self.childs:
             if child.active:
                 surface.blit(child.display(), child.location)
-        surface.blit(SearchBar.image, (10, 10))
+        surface.blit(SearchBar.searchIcon, (10, 10))
         return surface
 
     def getEvent(self, event):

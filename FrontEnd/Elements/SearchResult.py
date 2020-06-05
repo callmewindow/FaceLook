@@ -91,6 +91,7 @@ class SearchResult(Element):
         self.blocks = []
         self.rightClickMenu = None
         self.index = 0
+        self.refresh('')
 
     def refresh(self, keyword):
         self.blocks.clear()

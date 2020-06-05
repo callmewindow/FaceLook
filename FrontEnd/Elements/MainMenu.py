@@ -1,20 +1,24 @@
 from FrontEnd.Elements.Element import Element
 from FrontEnd.Elements.CustomText import CustomText
+from Common.base import readData
 import pygame
 
 
 class MainMenu(Element):
     image = pygame.image.load('./resources/UserWindowUI/main_menu.png')
 
-    def __init__(self, process, location, user):
+    def __init__(self, process, location):
         Element.__init__(self, process)
         self.disable()
         self.location = location
-        self.user = user
+        try:
+            self.user = readData(self.process.data)['user']
+        except KeyError:
+            print('key error in MainMenu')
         self.size = (160, 90)
         self.surface = MainMenu.image
-        self.createChild(MainMenuBlock, (5, 5), user, 0)
-        self.createChild(MainMenuBlock, (5, 45), user, 1)
+        self.createChild(MainMenuBlock, (5, 5), self.user, 0)
+        self.createChild(MainMenuBlock, (5, 45), self.user, 1)
 
     def getEvent(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:

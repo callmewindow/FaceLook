@@ -7,6 +7,7 @@ import multiprocessing
 
 class UserWindowProcess(WindowProcess):
     def __init__(self, data, RQ, MQ, bet):
+        self.data = data
         WindowProcess.__init__(self, data, RQ, MQ, bet, UserWindow(self))
         self.sessions = []
 
