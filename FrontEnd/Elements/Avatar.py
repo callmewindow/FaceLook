@@ -27,7 +27,7 @@ class Avatar(Element):
         self.border = Avatar.avatarBorder
 
     def display(self):
-        surface = pygame.Surface.copy(self.surface)
+        surface = self.surface.copy()
         surface.blit(self.border, (0, 0))
         surface.set_colorkey((1, 1, 1))
         return surface

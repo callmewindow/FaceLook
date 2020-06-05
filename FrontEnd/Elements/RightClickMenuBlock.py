@@ -29,7 +29,6 @@ class RightClickMenuBlock(Element):
             self.text = '发送申请'
         self.block_text = self.createChild(CustomText, (16, 12), 'simhei', 16, (0, 0, 0), self.text)
         self.surface = RightClickMenuBlock.image
-        # self.surface = pygame.font.SysFont('simhei', 16).render(self.text, True, (0, 0, 0))
         self.location = location
         self.size = (120, 40)
         self.block_type = block_type

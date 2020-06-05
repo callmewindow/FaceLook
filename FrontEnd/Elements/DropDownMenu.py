@@ -61,8 +61,8 @@ class Selected(Element):
 
     def pos_in(self, pos):
         x, y = pos[0], pos[1]
-        if self.location[0] <= x <= self.location[0] + self.size[0] \
-                and self.location[1] <= y <= self.location[1] + self.size[1]:
+        if self.location[0] < x < self.location[0] + self.size[0] \
+                and self.location[1] < y < self.location[1] + self.size[1]:
             return True
         return False
 
@@ -110,8 +110,8 @@ class Selections(Element):
 
     def pos_in(self, pos):
         x, y = pos[0], pos[1]
-        if self.location[0] <= x <= self.location[0] + self.size[0] \
-                and self.location[1] <= y <= self.location[1] + self.size[1]:
+        if self.location[0] < x < self.location[0] + self.size[0] \
+                and self.location[1] < y < self.location[1] + self.size[1]:
             return True
         return False
 
@@ -125,4 +125,3 @@ class Selections(Element):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
             if self.pos_in(event.pos):
                 self.is_selected = True
-                print(self.text.text)

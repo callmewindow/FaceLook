@@ -1,7 +1,8 @@
 from FrontEnd.Elements.Element import Element
 from FrontEnd.Elements.Avatar import Avatar
-from FrontEnd.Elements.text_default import text_default
+from FrontEnd.Elements.CustomText import CustomText
 from FrontEnd.Elements.SearchRightClick import SearchRightClick
+from Common.base import readData
 import pygame
 
 
@@ -35,9 +36,9 @@ class ResultBlock(Element):
         Element.__init__(self, process)
         self.user = user
         self.rightClickMenu = menu
-        self.avatar = self.createChild(Avatar, (25, 15), user.get_avatarURL())
-        user_state_text = ' (online)' if user.state == 1 else ' (offline)'
-        self.nicknameText = self.createChild(text_default, (120, 38), user.nickname + user_state_text, (0, 0, 0))
+        self.avatar = self.createChild(Avatar, (25, 15), user['avatarURL'])
+        state = ' (online)' if user.state == 1 else ' (offline)'
+        self.nicknameText = self.createChild(CustomText, (120, 38), 'dengxian', 25, (0, 0, 0), user['nickname'] + state)
         self.surface = ResultBlock.image
         self.location = location
         self.size = (350, 100)
@@ -47,8 +48,8 @@ class ResultBlock(Element):
     def pos_in(self, pos):
         x = pos[0]
         y = pos[1]
-        if self.location[0] <= x <= self.location[0] + self.size[0] \
-                and self.location[1] <= y <= self.location[1] + self.size[1]:
+        if self.location[0] < x < self.location[0] + self.size[0] \
+                and self.location[1] < y < self.location[1] + self.size[1]:
             return True
         return False
 
@@ -64,7 +65,6 @@ class ResultBlock(Element):
                 return
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
                 if self.pos_in(event.pos):
-                    print(self.user.nickname)
                     if self.state == 2:
                         self.process.createSessionWindow(233)
                     else:
@@ -82,45 +82,50 @@ class ResultBlock(Element):
 class SearchResult(Element):
     stupid_hint = pygame.image.load('./resources/UserWindowUI/support_to_search.png')
 
-    def __init__(self, process, location, friend_list, group_list):
+    def __init__(self, process, location):
         Element.__init__(self, process)
         self.disable()
         self.location = location
         self.surface = pygame.Surface((350, 550))
         self.surface.fill((220, 220, 220))
         self.blocks = []
-        self.friend_list = friend_list
-        self.group_list = group_list
-        self.rightClickMenu = self.createChild(SearchRightClick)
+        self.rightClickMenu = None
         self.index = 0
 
-    def init(self, keyword):
+    def refresh(self, keyword):
         self.blocks.clear()
+        self.childs.clear()
+        self.rightClickMenu = self.createChild(SearchRightClick)
+        data = readData(self.process.data)
         if keyword == '':
             return
         self.blocks.append(self.createChild(Title, (0, 0), 0))
         index_ = 0
-        for i in range(len(self.friend_list)):
-            user = self.friend_list[i]
-            if keyword in user.get_nickname() or keyword in user.get_username():
-                self.blocks.append(self.createChild(ResultBlock, (0, index_ * 100 + 50), user, 1, self.rightClickMenu))
-                index_ += 1
-        if index_ != 0:
-            self.blocks.append(self.createChild(Title, (0, index_ * 100 + 50), 1))
-            for i in range(len(self.group_list)):
-                user = self.group_list[i]
-                if keyword in user.get_nickname() or keyword in user.get_username():
+        try:
+            for i in range(len(data['friendList'])):
+                user = data['friendList'][i]
+                if keyword in user['nickname'] or keyword in user['username']:
                     self.blocks.append(
-                        self.createChild(ResultBlock, (0, index_ * 100 + 100), user, 2, self.rightClickMenu))
+                        self.createChild(ResultBlock, (0, index_ * 100 + 50), user, 1, self.rightClickMenu))
                     index_ += 1
-        else:
-            self.blocks.append(self.createChild(Title, (0, 100), 1))
-            for i in range(len(self.group_list)):
-                user = self.group_list[i]
-                if keyword in user.get_nickname() or keyword in user.get_username():
-                    self.blocks.append(
-                        self.createChild(ResultBlock, (0, index_ * 100 + 150), user, 2, self.rightClickMenu))
-                    index_ += 1
+            if index_ != 0:
+                self.blocks.append(self.createChild(Title, (0, index_ * 100 + 50), 1))
+                for i in range(len(data['groupList'])):
+                    user = data['groupList'][i]
+                    if keyword in user['nickname'] or keyword in user['username']:
+                        self.blocks.append(
+                            self.createChild(ResultBlock, (0, index_ * 100 + 100), user, 2, self.rightClickMenu))
+                        index_ += 1
+            else:
+                self.blocks.append(self.createChild(Title, (0, 100), 1))
+                for i in range(len(data['groupList'])):
+                    user = data['groupList'][i]
+                    if keyword in user['nickname'] or keyword in user['username']:
+                        self.blocks.append(
+                            self.createChild(ResultBlock, (0, index_ * 100 + 150), user, 2, self.rightClickMenu))
+                        index_ += 1
+        except KeyError:
+            print('key error in SearchResult')
 
     def display(self):
         surface = self.surface.copy()

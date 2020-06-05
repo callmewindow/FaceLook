@@ -11,7 +11,7 @@ class SearchPeopleOrGroup(Element):
     def __init__(self, process, location):
         Element.__init__(self, process)
         self.location = location
-        self.size = (700, 50)
+        self.size = (800, 50)
         self.surface = SearchPeopleOrGroup.image_people
         self.state = 0
 

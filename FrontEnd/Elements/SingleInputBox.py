@@ -1,5 +1,4 @@
 from FrontEnd.Elements.Element import Element
-from typing import Tuple
 import pygame
 from math import ceil
 
@@ -8,8 +7,7 @@ class InputBox(Element):
     cursor_image = pygame.image.load('./resources/input_cursor.png')
 
     # 位置，宽度，字体，字号，字色，背景色
-    def __init__(self, process, location, width: int, font_type: str, font_size: int,
-                 font_color: Tuple[int, int, int], background_color: Tuple[int, int, int]):
+    def __init__(self, process, location, width: int, font_type: str, font_size: int, font_color, background_color):
         Element.__init__(self, process)
         self.text = ''
         self.focused = False
@@ -91,7 +89,10 @@ class InputBox(Element):
     def pos_in(self, pos):
         x = pos[0]
         y = pos[1]
-        if self.location[0] <= x <= self.location[0] + self.size[0] \
-                and self.location[1] <= y <= self.location[1] + self.size[1]:
+        if self.location[0] < x < self.location[0] + self.size[0] \
+                and self.location[1] < y < self.location[1] + self.size[1]:
             return True
         return False
+
+    def get_text(self):
+        return self.text

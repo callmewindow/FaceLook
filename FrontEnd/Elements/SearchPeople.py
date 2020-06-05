@@ -34,7 +34,7 @@ class SearchPeople(Element):
         self.menu = self.createChild(DropDownMenu, (50, 20), ['用户名', '昵称', '手机号', '邮箱'])
         self.input = self.createChild(InputBox, (200, 22), 350, 'dengxian', 24, (0, 0, 0), (255, 255, 255))
         self.search_button = self.createChild(TextButton, (680, 20), '搜索', 20, (80, 30))
-        self.createChild(PeopleBlock, (0, 80), User('testusername', 'testpassword', 'nickname', 'image::DEFAULT_AQUA', 1))
+        self.createChild(PeopleBlock, (0, 80), User('username', 'password', 'nickname', 'image::DEFAULT_AQUA', 1))
 
     def getEvent(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:

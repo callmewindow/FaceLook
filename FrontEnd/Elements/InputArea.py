@@ -1,5 +1,4 @@
 from FrontEnd.Elements.Element import Element
-from typing import Tuple
 import pygame
 
 
@@ -7,8 +6,7 @@ class InputArea(Element):
     cursor_image = pygame.image.load('./resources/input_cursor.png')
 
     # 位置，宽高，字体，字号，字色，背景色。高度最好是(字号*1.05后向上取整)的整数倍
-    def __init__(self, process, location, size: Tuple[int, int], font_type: str, font_size: int,
-                 font_color: Tuple[int, int, int], background_color: Tuple[int, int, int]):
+    def __init__(self, process, location, size, font_type: str, font_size: int, font_color, background_color):
         Element.__init__(self, process)
         self.text = ''
         self.text_group = ['']
@@ -131,5 +129,4 @@ class InputArea(Element):
         return False
 
     def getContent(self):
-        tempString = "\n".join(self.text_group)
-        return tempString
+        return self.text
