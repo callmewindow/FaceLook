@@ -30,7 +30,7 @@ def test_data(data):
     xiaohuliAvatar = pygame.transform.smoothscale(
         pygame.image.load('./resources/UserData/MinatoAqua/cache/xiaohuli.jpg'), (75, 75))
     '''
-    data.setUser(User('MinatoAqua', 'MinatoAqua', 'Aqua', avatar, UserStateType.ONLINE))
+    data['user']=User('MinatoAqua', 'MinatoAqua', 'Aqua', avatar, UserStateType.ONLINE)
 
     mea = User('Mea', 'Mea', '消息列表1', meaAvatar, UserStateType.ONLINE)
     miko = User('Miko', 'Miko', '消息列表2', mikoAvatar, UserStateType.ONLINE)
@@ -42,26 +42,37 @@ def test_data(data):
     mazili2 = User('Mazili2', 'Mazili2', '群组列表2', matsuriAvatar, UserStateType.ONLINE)
     xiaohuli2 = User('Xiaohuli2', 'Xiaohuli2', '群组列表3', fubukiAvatar, UserStateType.ONLINE)
 
-    data.setMessageList([mea, miko, shion,mea, miko, shion,mea, miko, shion])
-    data.setFriendList([mazili, xiaohuli, miko2])
-    data.setGroupList([shion2, mazili2, xiaohuli2])
+    data['messageList']=[mea, miko, shion,mea, miko, shion,mea, miko, shion]
+    data['friendList']=[mazili, xiaohuli, miko2]
+    data['groupList']=[shion2, mazili2, xiaohuli2]
     
     testUserMessage1 = UserMessage('Fubuki','2020-5-26 15:13','KONKONKON')
     testUserMessage2 = UserMessage('Fubuki','2020-5-26 15:14','KONKONKON')
     testUserMessage3 = UserMessage('Fubuki','2020-5-26 15:15','KONKONKON')
     testUserMessage4 = UserMessage('Fubuki','2020-5-26 15:16','KONKONKON')
     testUserMessage5 = UserMessage('Fubuki','2020-5-26 15:17','KONKONKON')
-    data.setSessions([Session(233,[testUserMessage1,testUserMessage2,testUserMessage3,testUserMessage4,testUserMessage5])])
-    session = data.getSessionByID(233)
-    for msg in session.userMessages:
-        print(msg.sender,msg.time,msg.content)
+    data['sessions']=[Session(233,[testUserMessage1,testUserMessage2,testUserMessage3,testUserMessage4,testUserMessage5])]
+    session = data['sessions'][0]
+    print(session)
     
 if __name__ == '__main__':
     manager = BaseManager()
-    manager.register('DataCenter',DataCenter)
+
     manager.register('Queue',multiprocessing.Queue)
     manager.start()
-    data = manager.DataCenter()
+    data = {
+        'user':{
+            'username':None,
+            'password':None,
+            'nickname':None,
+            'avatarURL':None,
+            'state':None,
+            },
+        'friendList':[],
+        'groupList':[],
+        'messageList':[],
+        'sessions':[]       
+        }
     RQ = manager.Queue()
     MQ = manager.Queue()
     print(RQ)

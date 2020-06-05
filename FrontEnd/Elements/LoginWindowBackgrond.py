@@ -66,7 +66,7 @@ class LoginWindowBackground(Element):
         if self.state == login_state.loading:
             if result == '1':
                 self.set_success()
-                self.process.data.getUser().state = UserStateType.ONLINE
+                self.process.data['user']['state'] = UserStateType.ONLINE
                 self.process.stop()
             elif result == '0':
                 self.set_failure(info)
