@@ -18,7 +18,7 @@ class InputArea(Element):
         self.font = pygame.font.SysFont(font_type, font_size)
         self.font_color = font_color
         self.size = size
-        self.line_height = self.font.size('a')[1]
+        self.line_height = self.font.size('a')[1]+4
         self.cursor_index = 0
         self.cursor_pos = (0, 0)
         self.cursor_count = 0
@@ -129,3 +129,7 @@ class InputArea(Element):
                 and self.location[1] <= y <= self.location[1] + self.size[1]:
             return True
         return False
+
+    def getContent(self):
+        tempString = "\n".join(self.text_group)
+        return tempString

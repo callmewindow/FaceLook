@@ -8,6 +8,24 @@ class SessionWindowProcess(WindowProcess):
         self.sessionID = sessionID
         WindowProcess.__init__(self, data, RQ, MQ, bet, SessionWindow(self))
         print(self.requestQueue)
+
+    def doAction(self,action):
+        if action.type == "send":
+            bg = self.window.bg
+            inputCon = bg.getInputCon()
+            print(inputCon) # 还是会输出多次
+            self.sendMessage(inputCon)
+            return
+    
+    def sendMessage(self,inputCon):
+        # request = {
+        #     'messageNumber':'x',
+        #     'messageField1':username,
+        #     'messageField2':password,
+        #     }
+        # self.requestQueue.put(request)
+        pass
+
     def run(self):
         while self.go:
             if self.dragging:
@@ -38,6 +56,7 @@ class SessionWindowProcess(WindowProcess):
             self.window.display()
             pygame.display.update()
             self.window.FPSClock.tick(self.FPS)
+
 
 def createSession(sessionID,data,RQ,MQ):
     swp = SessionWindowProcess(sessionID,data,RQ,MQ)

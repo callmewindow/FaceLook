@@ -45,7 +45,6 @@ class TextAreaVariable(Element):
                 line_height = sentence_size[1]
             if sentence_size[0]>self.text_width or char=='\n':
                 lines.append(sentence)
-                print(sentence_size[0],sentence)
                 text_height += sentence_size[1] + self.line_spacing
                 if char == '\n':
                     sentence = ''
@@ -59,7 +58,6 @@ class TextAreaVariable(Element):
             sentence = ''
         bubble_width = int(self.bubble_width)
         bubble_height = int(text_height/self.text_height_rate)
-        print('Debug:bubble ',bubble_width,bubble_height)
         self.surface = pygame.transform.smoothscale(self.bubble,(bubble_width,bubble_height))
         drawX = self.text_width_left_rate*bubble_width
         drawY = self.text_height_top_rate*bubble_height
