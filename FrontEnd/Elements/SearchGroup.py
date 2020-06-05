@@ -10,11 +10,12 @@ class SearchGroup(Element):
 
     def __init__(self, process, location):
         Element.__init__(self, process)
-        self.surface = pygame.Surface((700, 400))
+        self.surface = pygame.Surface((800, 400))
         self.surface.fill((255, 255, 255))
         self.location = location
+        self.size = (800, 400)
         self.input = self.createChild(InputBox, (50, 22), 350, 'dengxian', 24, (0, 0, 0), (255, 255, 255))
-        self.search_button = self.createChild(TextButton, (580, 20), '搜索', 20, (80, 30))
+        self.search_button = self.createChild(TextButton, (680, 20), '搜索', 20, (80, 30))
 
     def getEvent(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
