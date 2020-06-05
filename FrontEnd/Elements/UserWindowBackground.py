@@ -28,6 +28,7 @@ class UserWindowBackground(Element):
 
     def refresh(self):
         self.childs.clear()
+         
         data = readData(self.process.data)
         try:
             self.self_info = self.createChild(SelfInfo, (0, 0), data['user'])
