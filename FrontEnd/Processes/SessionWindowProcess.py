@@ -26,6 +26,13 @@ class SessionWindowProcess(WindowProcess):
         #     }
         # self.requestQueue.put(request)
         pass
+    
+    def createSessionWindow(self, sessionID):
+        # proc = multiprocessing.Process(target=createSession,
+        #                                args=(sessionID, self.data, self.requestQueue, self.messageQueue))
+        # proc.start()
+        print("生成会话")
+        pass
 
     def run(self):
         while self.go:

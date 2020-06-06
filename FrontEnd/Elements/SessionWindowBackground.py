@@ -16,6 +16,7 @@ class SessionWindowBackground(Element):
 
     def __init__(self,process):
         Element.__init__(self,process)
+        print(self.counter)
         self.location = (0,0)
         self.surface = pygame.Surface((900,750))
         self.surface.fill((255,255,255))
@@ -88,6 +89,7 @@ class SessionWindowBackground(Element):
         # 发送消息
         if self.sendButton.state == 2:
             self.closeButton.setState(1)
+            self.messageList.changeTest()
             self.process.addAction(Action("send",None))
     
     def getInputCon(self):
@@ -99,7 +101,6 @@ class SessionWindowBackground(Element):
         for child in self.childs:
             if child.active:
                 child.update()
-    
         
         
         
