@@ -4,9 +4,11 @@ from FrontEnd.Elements.logo import logo
 from FrontEnd.Elements.Aqua import Aqua
 from FrontEnd.Elements.Inputbox_default import Inputbox_default
 from FrontEnd.Elements.Inputbox_password import Inputbox_password
+from FrontEnd.Elements.TripleStateButton import TripleStateButton
 from FrontEnd.Elements.CandyButton import CandyButton
 from FrontEnd.Elements.AquaLoading import AquaLoading
 from FrontEnd.Elements.text_default import text_default
+from FrontEnd.Elements.Button import CloseButton,MinimizeButton
 from Common.base import *
 class login_state():
     login=0
@@ -34,6 +36,9 @@ class LoginWindowBackground(Element):
         self.aqualoading.disable()
         self.loadingText.disable()
         self.messageText.disable()
+        
+        self.closeButton = self.createChild(CloseButton,(600-40,4))
+        self.minimizeButton = self.createChild(MinimizeButton,(600-40*2,4))
     def set_loading(self):
         self.state = 1
         self.counter = 0
@@ -83,6 +88,7 @@ class LoginWindowBackground(Element):
             if loading_time >= 30:
                 self.set_failure('登录超时！请检查网络状况。')
         Element.update(self)
+
         
           
         
