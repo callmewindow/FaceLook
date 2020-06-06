@@ -79,5 +79,27 @@ def Friend(nickname,avatarURL,state):
         }
 
 
+'''def User(username, password, nickname, email, phone, address, avatarURL):
+    return {
+        'username': username,
+        'password': password,
+        'nickname': nickname,
+        'avatarURL': avatarURL,
+        'email': email,
+        'phone': phone,
+        'address': address,
+    }
+
+
+def Friend(username, nickname, email, phone, address, avatarURL):
+    return {
+        'nickname': nickname,
+        'avatarURL': avatarURL,
+        'username': username,
+        'email': email,
+        'phone': phone,
+        'address': address,
+    }'''
+
 
 

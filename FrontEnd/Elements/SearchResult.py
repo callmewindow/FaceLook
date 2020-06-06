@@ -37,8 +37,7 @@ class ResultBlock(Element):
         self.user = user
         self.rightClickMenu = menu
         self.avatar = self.createChild(Avatar, (25, 15), user['avatarURL'])
-        state = ' (online)' if user.state == 1 else ' (offline)'
-        self.nicknameText = self.createChild(CustomText, (120, 38), 'dengxian', 25, (0, 0, 0), user['nickname'] + state)
+        self.nicknameText = self.createChild(CustomText, (120, 38), 'dengxian', 25, (0, 0, 0), user['nickname'])
         self.surface = ResultBlock.image
         self.location = location
         self.size = (350, 100)
