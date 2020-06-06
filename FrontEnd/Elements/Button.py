@@ -40,12 +40,14 @@ class Button(Element):
 class CloseButton(Button):
     def onClick(self):
         self.process.stop()
+        self.process.dragging = False
 class MinimizeButton(Button):
     source_img = pygame.image.load('./resources/WindowControlUI/user_move.png')
     image = pygame.transform.smoothscale(source_img,(32,32))
     bigImage = pygame.transform.smoothscale(source_img,(40,40))
     def onClick(self):
         self.process.minimize()
+        self.process.dragging = False
 
 class UserCloseButton(Button):
     source_img = pygame.image.load('./resources/WindowControlUI/user_close.png')
@@ -65,6 +67,7 @@ class UserCloseButton(Button):
 
     def onClick(self):
         self.process.stop()
+        self.process.dragging = False
 
 class UserMinimizeButton(UserCloseButton):
     source_img = pygame.image.load('./resources/WindowControlUI/user_move.png')
@@ -73,6 +76,7 @@ class UserMinimizeButton(UserCloseButton):
 
     def onClick(self):
         self.process.minimize()
+        self.process.dragging = False
     
 
 
