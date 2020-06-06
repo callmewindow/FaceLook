@@ -31,6 +31,8 @@ class FriendBlock(Element):
         self.location = location
         self.size = (350, 100)
         self.type = block_type
+        self.doubleclick_start = False
+        self.doubleclick_counter = 0
 
     def pos_in(self, pos):
         x = pos[0]
@@ -51,11 +53,15 @@ class FriendBlock(Element):
             return
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
             if self.pos_in(event.pos):
-                if self.state == 2:
+                self.state = 2
+                self.surface = FriendBlock.image_onClick
+                if self.doubleclick_start:
+                    self.doubleclick_start = False
+                    self.doubleclick_counter = 0
                     self.process.createSessionWindow(233)
-                else:
-                    self.state = 2
-                    self.surface = FriendBlock.image_onClick
+                elif not self.doubleclick_start:
+                    self.doubleclick_start = True
+
             else:
                 self.state = 0
                 self.surface = FriendBlock.image
@@ -63,6 +69,16 @@ class FriendBlock(Element):
             self.rightClickMenu.change_location(event.pos)
             self.rightClickMenu.set_user(self.user)
             self.rightClickMenu.enable()
+
+    def update(self):
+        if self.doubleclick_start:
+            self.doubleclick_counter += 1
+            if self.doubleclick_counter > 18:
+                self.doubleclick_start = False
+                self.doubleclick_counter = 0
+        for child in self.childs:
+            if child.active:
+                child.update()
 
     def is_displayed(self):
         if -350 < self.location[0] < 350 and 0 <= self.location[1] <= 400:
