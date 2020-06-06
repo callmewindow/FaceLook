@@ -6,6 +6,7 @@ from FrontEnd.Elements.SwitchListBar import SwitchListBar
 from FrontEnd.Elements.SearchResult import SearchResult
 from FrontEnd.Elements.MainMenubar import MainMenubar
 from FrontEnd.Elements.MainMenu import MainMenu
+from FrontEnd.Elements.Button import UserCloseButton, UserMinimizeButton
 from Common.base import readData
 import pygame
 
@@ -18,19 +19,21 @@ class UserWindowBackground(Element):
         self.surface.fill((255, 255, 255))
         self.location = (0, 0)
         self.self_info = self.createChild(SelfInfo, (0, 0))
-        self.search_bar = self.createChild(SearchBar, (0, 100))
+        self.search_bar = self.createChild(SearchBar, (0, 119))
         self.friend_list = self.createChild(FriendList, (0, 200))
         self.switch_list_bar = self.createChild(SwitchListBar, (0, 155))
         self.search_result = self.createChild(SearchResult, (0, 155))
         self.main_menu = self.createChild(MainMenu, (0, 700 - 90))
         self.main_menubar = self.createChild(MainMenubar, (0, 700))
+        self.closeButton = self.createChild(UserCloseButton, (315, 8))
+        self.minimizeButton = self.createChild(UserMinimizeButton, (280, 8))
 
     def getEvent(self, event):
         if self.search_bar.input.focused and event.type == pygame.KEYDOWN and (
                 event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER):
             self.search_result.refresh(self.search_bar.get_text())
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if 0 <= event.pos[0] <= 350 and 0 <= event.pos[1] <= 100:
+            if 0 <= event.pos[0] <= 350 and 0 <= event.pos[1] <= 119:
                 self.switch_list_bar.enable()
                 self.friend_list.enable()
                 self.search_bar.input.text = ''

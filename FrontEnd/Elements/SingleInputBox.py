@@ -52,7 +52,7 @@ class InputBox(Element):
                 self.base_x -= update_x
             elif update_x >= self.size[0]:
                 self.base_x -= (update_x - self.size[0] + 1)
-        self.cursor_count = (self.cursor_count + 1) if self.cursor_count < 60 else 0
+        self.cursor_count = (self.cursor_count + 1) % 60
 
     def display(self):
         surface = self.surface.copy()

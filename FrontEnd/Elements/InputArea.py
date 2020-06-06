@@ -16,7 +16,7 @@ class InputArea(Element):
         self.font = pygame.font.SysFont(font_type, font_size)
         self.font_color = font_color
         self.size = size
-        self.line_height = self.font.size('a')[1]+4
+        self.line_height = self.font.size('a')[1] + 4
         self.cursor_index = 0
         self.cursor_pos = (0, 0)
         self.cursor_count = 0
@@ -75,7 +75,7 @@ class InputArea(Element):
                 self.index = self.cursor_pos[0]
             elif self.cursor_pos[0] + 1 > self.index + self.max_line:
                 self.index = self.cursor_pos[0] - self.max_line + 1
-        self.cursor_count = (self.cursor_count + 1) if self.cursor_count < 60 else 0
+        self.cursor_count = (self.cursor_count + 1) % 60
 
     def display(self):
         surface = self.surface.copy()

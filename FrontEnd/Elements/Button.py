@@ -3,7 +3,7 @@ from FrontEnd.Processes.SessionWindowProcess import createSession
 import pygame
 from Common.base import *
 class Button(Element):
-    source_img = pygame.image.load('./resources/WindowControlUI/close.png')
+    source_img = pygame.image.load('./resources/WindowControlUI/user_close.png')
     image = pygame.transform.smoothscale(source_img,(32,32))
     bigImage = pygame.transform.smoothscale(source_img,(40,40))
     del source_img
@@ -41,9 +41,36 @@ class CloseButton(Button):
     def onClick(self):
         self.process.stop()
 class MinimizeButton(Button):
-    source_img = pygame.image.load('./resources/WindowControlUI/move.png')
+    source_img = pygame.image.load('./resources/WindowControlUI/user_move.png')
     image = pygame.transform.smoothscale(source_img,(32,32))
     bigImage = pygame.transform.smoothscale(source_img,(40,40))
+    def onClick(self):
+        self.process.minimize()
+
+class UserCloseButton(Button):
+    source_img = pygame.image.load('./resources/WindowControlUI/user_close.png')
+    image = pygame.transform.smoothscale(source_img,(24,24))
+    bigImage = pygame.transform.smoothscale(source_img,(30,30))
+
+    def __init__(self, process, location):
+        Button.__init__(self,process,location)
+        self.surface = self.image
+        self.smallSize = (24, 24)
+        self.smallLocation = location
+        self.bigSize = (30, 30)
+        self.bigLocation = (location[0] - (self.bigSize[0] - self.smallSize[0]) / 2,
+                            location[1] - (self.bigSize[1] - self.smallSize[1]) / 2)
+        self.location = location
+        self.size = self.smallSize
+
+    def onClick(self):
+        self.process.stop()
+
+class UserMinimizeButton(UserCloseButton):
+    source_img = pygame.image.load('./resources/WindowControlUI/user_move.png')
+    image = pygame.transform.smoothscale(source_img,(24,24))
+    bigImage = pygame.transform.smoothscale(source_img,(30,30))
+
     def onClick(self):
         self.process.minimize()
     

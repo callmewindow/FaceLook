@@ -11,7 +11,7 @@ class SelfInfo(Element):
     def __init__(self, process, location):
         Element.__init__(self, process)
         self.location = location
-        self.size = (350, 100)
+        self.size = (350, 129)
         self.avatar = None
         self.nicknameText = None
         self.surface = SelfInfo.image
