@@ -2,6 +2,7 @@ from FrontEnd.Elements.Element import Element
 from FrontEnd.Elements.Avatar import Avatar
 from FrontEnd.Elements.CustomText import CustomText
 from FrontEnd.Elements.RightClickMenu import RightClickMenu
+from FrontEnd.Elements.Image import Image
 from Common.base import readData
 import pygame
 
@@ -24,8 +25,14 @@ class FriendBlock(Element):
         Element.__init__(self, process)
         self.user = user
         self.rightClickMenu = menu
-        self.avatar = self.createChild(Avatar, (25, 15), user['avatarURL'])
-        self.nicknameText = self.createChild(CustomText, (120, 38), 'dengxian', 25, (0, 0, 0), user['nickname'])
+        try:
+            self.avatar = self.createChild(Avatar, (12, 12), user['avatarURL'])
+            # self.avatar = self.createChild(Image, (12, 12), user['avatarURL'][7:])
+            self.nickname = self.createChild(CustomText, (100, 24), 'dengxian', 22, (0, 0, 0), user['nickname'])
+            self.last_message = self.createChild(CustomText, (100, 60), 'dengxian', 16, (128, 128, 128), '最最最最最最最新消息')
+            self.last_time = self.createChild(CustomText, (300, 60), 'dengxian', 16, (128, 128, 128), '23:33')
+        except KeyError:
+            print('key error in FriendBlock')
         self.surface = FriendBlock.image
         self.location = location
         self.size = (350, 100)

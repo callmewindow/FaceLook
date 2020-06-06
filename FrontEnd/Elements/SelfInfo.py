@@ -1,6 +1,7 @@
 from FrontEnd.Elements.Element import Element
 from FrontEnd.Elements.Avatar import Avatar
 from FrontEnd.Elements.CustomText import CustomText
+from FrontEnd.Elements.Image import Image
 from Common.base import readData
 import pygame
 
@@ -15,13 +16,14 @@ class SelfInfo(Element):
         self.avatar = None
         self.nicknameText = None
         self.surface = SelfInfo.image
-        self.refresh()
+        data = readData(self.process.data)
+        try:
+            self.avatar = self.createChild(Avatar, (27, 27), data['user']['avatarURL'])
+            # self.avatar = self.createChild(Image, (27, 27), data['user']['avatarURL'][7:])
+            self.nickname = self.createChild(CustomText, (120, 50), 'dengxian', 26, (0, 0, 0), data['user']['nickname'])
+        except KeyError:
+            print('key error in SelfInfo')
 
     def refresh(self):
         self.childs.clear()
-        data = readData(self.process.data)
-        try:
-            self.avatar = self.createChild(Avatar, (15, 15), data['user']['avatarURL'])
-            self.nicknameText = self.createChild(CustomText, (100, 36), 'dengxian', 25, (0, 0, 0), data['user']['nickname'])
-        except KeyError:
-            print('key error in SelfInfo')
+
