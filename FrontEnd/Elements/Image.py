@@ -54,3 +54,7 @@ class Image(Element):
             
     def display(self):
         return self.surface
+
+    def change(self, url):
+        self.url = url
+        self.ready = False

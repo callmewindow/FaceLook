@@ -8,71 +8,63 @@ class SwitchListBar(Element):
     # state==2 select
     image0 = pygame.image.load('./resources/UserWindowUI/switch_0.png')
     image1 = pygame.image.load('./resources/UserWindowUI/switch_1.png')
-    image2 = pygame.image.load('./resources/UserWindowUI/switch_2.png')
-    icon1 = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/message.png'), (30, 30))
-    icon2 = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/people.png'), (30, 30))
-    icon3 = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/group.png'), (30, 30))
-    icon1_h = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/message_black.png'), (30, 30))
-    icon2_h = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/people_black.png'), (30, 30))
-    icon3_h = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/group_black.png'), (30, 30))
-    icon1_s = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/message_blue.png'), (30, 30))
-    icon2_s = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/people_blue.png'), (30, 30))
-    icon3_s = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/group_blue.png'), (30, 30))
+    icon0 = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/people.png'), (30, 30))
+    #icon1 = pygame.image.load('./resources/UserWindowUI/group.png')
+    icon1 = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/group.png'), (30, 30))
+    icon0_h = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/people_black.png'), (30, 30))
+    icon1_h = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/group_black.png'), (30, 30))
+    icon0_s = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/people_blue.png'), (30, 30))
+    icon1_s = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/group_blue.png'), (30, 30))
 
     def __init__(self, process, location):
         Element.__init__(self, process)
         self.location = location
         self.size = (350, 45)
-        self.buttonSize = (117, 45)
-        self.icon = [SwitchListBar.icon1, SwitchListBar.icon2, SwitchListBar.icon3]
-        self.icon_hover = [SwitchListBar.icon1_h, SwitchListBar.icon2_h, SwitchListBar.icon3_h]
-        self.icon_select = [SwitchListBar.icon1_s, SwitchListBar.icon2_s, SwitchListBar.icon3_s]
-        self.switch = [SwitchListBar.image0, SwitchListBar.image1, SwitchListBar.image2]
+        self.buttonSize = (175, 45)
+        self.icon = [SwitchListBar.icon0, SwitchListBar.icon1]
+        self.icon_hover = [SwitchListBar.icon0_h, SwitchListBar.icon1_h]
+        self.icon_select = [SwitchListBar.icon0_s, SwitchListBar.icon1_s]
+        self.image = [SwitchListBar.image0, SwitchListBar.image1]
+        self.buttonState = [2, 0]
+        self.buttonLocation = [0, 175]
+        self.changed = False
         self.surface = SwitchListBar.image0
-        self.buttonState = [2, 0, 0]
-        self.buttonLocation = [0, 117, 234]
-        self.change_from = 0
-        self.change_to = 0
 
-    def pos_in(self, pos, index):
+    def pos_in(self, pos):
         x = pos[0]
         y = pos[1]
-        if self.buttonLocation[index] < x < self.buttonLocation[index] + self.buttonSize[0] and \
-                0 < y < self.buttonSize[1]:
-            return True
-        return False
+        if self.location[1] < y < self.size[1] + self.location[1]:
+            if 0 < x < self.size[0] // 2:
+                return 0
+            elif self.size[0] // 2 < x < self.size[0]:
+                return 1
+        return -1
 
     def getEvent(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
-            event.pos = (event.pos[0] - self.location[0], event.pos[1] - self.location[1])
         if event.type == pygame.MOUSEMOTION:
-            for i in range(3):
-                if self.buttonState[i] != 2:
-                    if self.pos_in(event.pos, i):
-                        self.buttonState[i] = 1
-                    else:
-                        self.buttonState[i] = 0
+            target = self.pos_in(event.pos)
+            if target == -1:
+                if self.buttonState[0] != 2:
+                    self.buttonState[0] = 0
+                if self.buttonState[1] != 2:
+                    self.buttonState[1] = 0
+            if target != -1 and self.buttonState[target] != 2:
+                self.buttonState[target] = 1
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
-            for i in range(3):
-                if self.pos_in(event.pos, i):
-                    self.buttonState = [0, 0, 0]
-                    self.buttonState[i] = 2
-                    self.change_to = i
-                    self.surface = self.switch[i]
-        if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
-            event.pos = (event.pos[0] + self.location[0], event.pos[1] + self.location[1])
+            target = self.pos_in(event.pos)
+            if target != -1 and self.buttonState[target] != 2:
+                self.buttonState[target] = 2
+                self.surface = self.image[target]
+                self.buttonState[1 - target] = 0
+                self.changed = True
 
     def display(self):
         surface = self.surface.copy()
-        for i in range(3):
+        for i in range(2):
             if self.buttonState[i] == 0:
-                surface.blit(self.icon[i], (self.buttonLocation[i] + 43, 7))
+                surface.blit(self.icon[i], (self.buttonLocation[i] + 72, 7))
             elif self.buttonState[i] == 1:
-                surface.blit(self.icon_hover[i], (self.buttonLocation[i] + 43, 7))
+                surface.blit(self.icon_hover[i], (self.buttonLocation[i] + 72, 7))
             else:
-                surface.blit(self.icon_select[i], (self.buttonLocation[i] + 43, 7))
-
-        for child in self.childs:
-            if child.active:
-                surface.blit(child.display(), child.location)
+                surface.blit(self.icon_select[i], (self.buttonLocation[i] + 72, 7))
         return surface

@@ -18,9 +18,11 @@ class UserWindowBackground(Element):
         self.surface = pygame.Surface((350, 740))
         self.surface.fill((255, 255, 255))
         self.location = (0, 0)
+        self.displayed_list = 0
         self.self_info = self.createChild(SelfInfo, (0, 0))
         self.search_bar = self.createChild(SearchBar, (0, 119))
-        self.friend_list = self.createChild(FriendList, (0, 200))
+        self.friend_list = self.createChild(FriendList, (0, 200), 0)
+        self.group_list = self.createChild(FriendList, (350, 200), 1)
         self.switch_list_bar = self.createChild(SwitchListBar, (0, 155))
         self.search_result = self.createChild(SearchResult, (0, 155))
         self.main_menu = self.createChild(MainMenu, (0, 700 - 90))
@@ -35,7 +37,10 @@ class UserWindowBackground(Element):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if 0 <= event.pos[0] <= 350 and 0 <= event.pos[1] <= 119:
                 self.switch_list_bar.enable()
-                self.friend_list.enable()
+                if self.displayed_list == 0:
+                    self.friend_list.enable()
+                else:
+                    self.group_list.enable()
                 self.search_bar.input.text = ''
                 self.search_result.disable()
         for child in self.childs:
@@ -43,19 +48,31 @@ class UserWindowBackground(Element):
                 child.getEvent(event)
 
     def update(self):
-        if self.switch_list_bar.change_from != self.switch_list_bar.change_to:
-            self.friend_list.change_from = self.switch_list_bar.change_from
-            self.friend_list.change_to = self.switch_list_bar.change_to
-            self.switch_list_bar.change_from = self.switch_list_bar.change_to
+        if self.switch_list_bar.changed:
+            self.friend_list.enable()
+            self.group_list.enable()
+            if self.displayed_list == 0 and self.group_list.location[0] > 0:
+                self.friend_list.location = (self.friend_list.location[0] - 35, 200)
+                self.group_list.location = (self.group_list.location[0] - 35, 200)
+            elif self.displayed_list == 1 and self.friend_list.location[0] < 0:
+                self.friend_list.location = (self.friend_list.location[0] + 35, 200)
+                self.group_list.location = (self.group_list.location[0] + 35, 200)
+            else:
+                self.switch_list_bar.changed = False
+                self.displayed_list = 1 - self.displayed_list
+                if self.displayed_list == 0:
+                    self.group_list.disable()
+                else:
+                    self.friend_list.disable()
+
         if self.search_bar.input.focused:
             self.switch_list_bar.disable()
             self.friend_list.disable()
+            self.group_list.disable()
             self.search_result.enable()
         if self.main_menubar.get_state() == 2:
-            self.friend_list.frozen = True
             self.main_menu.enable()
         else:
-            self.friend_list.frozen = False
             self.main_menu.disable()
         for child in self.childs:
             if child.active:
