@@ -24,26 +24,6 @@ class Login(threading.Thread):
         self.client.sendMessage(data)
 
 
-# class Register(threading.Thread):
-#     # 注册
-#     def __init__(self, client, request):
-#         threading.Thread.__init__(self)
-#         self.client = client
-#         self.username = request.get('messageField1', None)
-#         if self.username is None:
-#             self.username = request.get('username', None)
-#         self.password = request.get('messageField2', None)
-#         if self.password is None:
-#             self.password = request.get('password', None)
-#         self.nickname = request.get('messageField3', None)
-#         if self.nickname is None:
-#             self.nickname = request.get('nickname', None)
-#
-#     def run(self):
-#         data = {'messageField1': self.username, 'messageField2': self.password, 'messageField3': self.nickname,
-#                 'messageNumber': '3'}
-#         self.client.sendMessage(data)
-
 class Register(threading.Thread):
     # 注册
     def __init__(self, client, request):
@@ -51,7 +31,15 @@ class Register(threading.Thread):
         self.client = client
         self.user = request.get('messageField1', None)
         if self.user is None:
-            self.user = request.get('user', None)
+            self.user = {
+                'username': request.get('username', None),
+                'password': request.get('password', None),
+                'avatarAddress': request.get('avatarAddress', None),
+                'phoneNumber': request.get('phoneNumber', None),
+                'email':request.get('email', None),
+                'occupation': request.get('occupation', None),
+                'location': request.get('location', None)
+            }
 
     def run(self):
         data = {'messageField1': self.user, 'messageNumber': '3'}

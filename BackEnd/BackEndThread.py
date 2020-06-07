@@ -109,14 +109,19 @@ class BackEndThread(threading.Thread):
             thread.start()
             self.task.append(thread)
         elif messageNumber == RequestType.LOGINRET:
-            result = request.get('messageField1',None)
+            result = request.get('messageField1', None)
+            data = request.get('messageField3', None)
+            user = {}
+            if result != '0':
+                user = json.loads(data)
+                self.username = user.get('username', None)
             message = {
-                'messageNumber':MessageType.LOGINRET,
-                'result':result,
-                'information':request.get('messageField2',None)
+                'messageNumber': MessageType.LOGINRET,
+                'result': result,
+                'information': request.get('messageField2', None),
+                'user': user
             }
             self.messageQueue.put(message)
-            self.username = request.get('messageField3',None)
             # if result != '0' and self.username != None:
             #     self.localStorage = LocalStorage(self.username)
         #注册
@@ -129,13 +134,18 @@ class BackEndThread(threading.Thread):
             self.task.append(thread)
         elif messageNumber == RequestType.REGISTERRET:
             result = request.get('messageField1',None)
+            data = request.get('messageField3', None)
+            user = {}
+            if result != '0':
+                user = json.loads(data)
+                self.username = user.get('username', None)
             message = {
                 'messageNumber':MessageType.REGISTERRET,
                 'result':request.get('messageField1',None),
-                'information':request.get('messageField2',None)
+                'information':request.get('messageField2',None),
+                'user': user
             }
             self.messageQueue.put(message)
-            self.username = request.get('messageField3',None)
             # if result != '0' and self.username != None:
             #     self.localStorage = LocalStorage(self.username)
         #获取好友列表
