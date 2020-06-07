@@ -25,6 +25,7 @@ class UserWindowBackground(Element):
         self.group_list = self.createChild(FriendList, (350, 200), 1)
         self.switch_list_bar = self.createChild(SwitchListBar, (0, 155))
         self.search_result = self.createChild(SearchResult, (0, 155))
+        self.search_result.refresh('', self.friend_list, self.group_list)
         self.main_menu = self.createChild(MainMenu, (0, 700 - 90))
         self.main_menubar = self.createChild(MainMenubar, (0, 700))
         self.closeButton = self.createChild(UserCloseButton, (315, 8))
@@ -33,7 +34,7 @@ class UserWindowBackground(Element):
     def getEvent(self, event):
         if self.search_bar.input.focused and event.type == pygame.KEYDOWN and (
                 event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER):
-            self.search_result.refresh(self.search_bar.get_text())
+            self.search_result.refresh(self.search_bar.get_text(), self.friend_list, self.group_list)
         if event.type == pygame.MOUSEBUTTONDOWN:
             if 0 <= event.pos[0] <= 350 and 0 <= event.pos[1] <= 119:
                 self.switch_list_bar.enable()

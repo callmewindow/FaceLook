@@ -1,7 +1,6 @@
 from FrontEnd.Elements.Element import Element
 from FrontEnd.Elements.Avatar import Avatar
 from FrontEnd.Elements.CustomText import CustomText
-from FrontEnd.Elements.RightClickMenu import RightClickMenu
 from FrontEnd.Elements.Image import Image
 from Common.base import readData
 import pygame
@@ -80,7 +79,7 @@ class FriendBlock(Element):
                     child.update()
 
     def is_displayed(self):
-        if -350 < self.location[0] < 350 and 0 <= self.location[1] <= 400:
+        if 0 <= self.location[1] <= 400:
             return True
         return False
 
