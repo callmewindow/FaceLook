@@ -4,8 +4,8 @@ import pygame
 
 
 class SearchBar(Element):
-    #searchIcon = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/search.png'), (20, 20))
-    searchIcon = pygame.image.load('./resources/UserWindowUI/search_icon.png')
+    searchIcon = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/search.png'), (20, 20))
+    #searchIcon = pygame.image.load('./resources/UserWindowUI/search_icon.png')
     image = pygame.image.load('./resources/UserWindowUI/search_bar.png')
     image_white = pygame.Surface((350, 36))
     image_white.fill((255, 255, 255))
