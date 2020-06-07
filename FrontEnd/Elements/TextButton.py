@@ -10,9 +10,9 @@ class TextButton(Element):
     image = pygame.Surface((100, 100))
     image_hover = pygame.Surface((100, 100))
     image_select = pygame.Surface((100, 100))
-    image.fill((85, 165, 255))
-    image_hover.fill((105, 185, 255))
-    image_select.fill((65, 145, 255))
+    image.fill((251, 114, 153))
+    image_hover.fill((251, 130, 173))
+    image_select.fill((251, 78, 135))
 
     def __init__(self, process, location, text, fontsize, size):
         Element.__init__(self, process)
@@ -45,12 +45,14 @@ class TextButton(Element):
                     self.state = 1
                 else:
                     self.state = 0
-        if (event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEBUTTONUP) and self.pos_in(event.pos):
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
+        if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEBUTTONUP:
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT and self.pos_in(event.pos):
                 self.state = 2
             if event.type == pygame.MOUSEBUTTONUP and event.button == pygame.BUTTON_LEFT:
                 self.state = 0
-                # do something
+                if self.pos_in(event.pos):
+                    pass
+                    # do something
 
     def display(self):
         if self.state == 0:
