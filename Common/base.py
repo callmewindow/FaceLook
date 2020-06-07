@@ -61,21 +61,12 @@ def Session(sessionID,userMessages):
     return {'sessionID':sessionID,'userMessages':userMessages}
 
 
-def User(username, password, nickname, avatarURL, state):
+def User(username, password, nickname, avatarURL):
     return {
         'username':username,
         'password':password,
         'nickname':nickname,
         'avatarURL':avatarURL,
-        'state':state
-        }
-
-
-def Friend(nickname,avatarURL,state):
-    return {
-        'nickname':nickname,
-        'avatarURL':avatarURL,
-        'state':state
         }
 
 

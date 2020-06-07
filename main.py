@@ -32,17 +32,17 @@ def test_data(data):
     xiaohuliAvatar = pygame.transform.smoothscale(
         pygame.image.load('./resources/UserData/MinatoAqua/cache/xiaohuli.jpg'), (75, 75))
     '''
-    data['user']=User('MinatoAqua', 'MinatoAqua', 'Aqua', avatar, UserStateType.ONLINE)
+    data['user']=User('MinatoAqua', 'MinatoAqua', 'Aqua', avatar)
 
-    mea = User('Mea', 'Mea', '消息列表1', meaAvatar, UserStateType.ONLINE)
-    miko = User('Miko', 'Miko', '消息列表2', mikoAvatar, UserStateType.ONLINE)
-    shion = User('Shion', 'Shion', '消息列表3', shionAvatar, UserStateType.ONLINE)
-    mazili = User('Mazili', 'Mazili', '好友列表1', matsuriAvatar, UserStateType.ONLINE)
-    xiaohuli = User('Xiaohuli', 'Xiaohuli', '好友列表2', fubukiAvatar, UserStateType.ONLINE)
-    miko2 = User('Miko2', 'Miko2', '好友列表3', mikoAvatar, UserStateType.ONLINE)
-    shion2 = User('Shion2', 'Shion2', '群组列表1', shionAvatar, UserStateType.ONLINE)
-    mazili2 = User('Mazili2', 'Mazili2', '群组列表2', matsuriAvatar, UserStateType.ONLINE)
-    xiaohuli2 = User('Xiaohuli2', 'Xiaohuli2', '群组列表3', fubukiAvatar, UserStateType.ONLINE)
+    mea = User('Mea', 'Mea', '消息列表1', meaAvatar)
+    miko = User('Miko', 'Miko', '消息列表2', mikoAvatar)
+    shion = User('Shion', 'Shion', '消息列表3', shionAvatar)
+    mazili = User('Mazili', 'Mazili', '好友列表1', matsuriAvatar)
+    xiaohuli = User('Xiaohuli', 'Xiaohuli', '好友列表2', fubukiAvatar)
+    miko2 = User('Miko2', 'Miko2', '好友列表3', mikoAvatar)
+    shion2 = User('Shion2', 'Shion2', '群组列表1', shionAvatar)
+    mazili2 = User('Mazili2', 'Mazili2', '群组列表2', matsuriAvatar)
+    xiaohuli2 = User('Xiaohuli2', 'Xiaohuli2', '群组列表3', fubukiAvatar)
 
     data['messageList']=[mea, miko, shion,mea, miko, shion,mea, miko, shion]
     data['friendList']=[mazili, xiaohuli, miko2]
@@ -56,7 +56,9 @@ def test_data(data):
     data['sessions']=[Session(233,[testUserMessage1,testUserMessage2,testUserMessage3,testUserMessage4,testUserMessage5])]
     session = data['sessions'][0]
     print(session)
-    
+
+    data['search_result'] = None
+
 if __name__ == '__main__':
 
     mgr = multiprocessing.Manager()
