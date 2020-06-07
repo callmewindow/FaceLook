@@ -16,6 +16,7 @@ class FriendBlock(Element):
     image_onHover.fill((245, 245, 245))
     image_onClick = pygame.Surface((350, 100))
     image_onClick.fill((240, 240, 240))
+    avatar_cover = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/news.png'), (75, 75))
 
     def __init__(self, process, location, user):
         Element.__init__(self, process)
@@ -34,6 +35,7 @@ class FriendBlock(Element):
         self.doubleclick_start = False
         self.doubleclick_counter = 0
         self.state = 0
+        self.covered = False
 
     def pos_in(self, pos):
         x = pos[0]
@@ -43,26 +45,42 @@ class FriendBlock(Element):
             return True
         return False
 
+    def pos_in_avatar(self, pos):
+        x = pos[0]
+        y = pos[1]
+        if self.location[0] + 12 < x < self.location[0] + 12 + 75 \
+                and self.location[1] + 12 < y < self.location[1] + 12 + 75:
+            return True
+
     def getEvent(self, event):
         if self.is_displayed():
-            if event.type == pygame.MOUSEMOTION and self.state != 2:
-                if self.pos_in(event.pos):
-                    self.state = 1
-                    self.surface = FriendBlock.image_onHover
+            if event.type == pygame.MOUSEMOTION:
+                if self.state != 2:
+                    if self.pos_in(event.pos):
+                        self.state = 1
+                        self.surface = FriendBlock.image_onHover
+                    else:
+                        self.state = 0
+                        self.surface = FriendBlock.image
+                if self.pos_in_avatar(event.pos):
+                    self.covered = True
                 else:
-                    self.state = 0
-                    self.surface = FriendBlock.image
+                    self.covered = False
                 return
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
                 if self.pos_in(event.pos):
                     self.state = 2
                     self.surface = FriendBlock.image_onClick
-                    if self.doubleclick_start:
-                        self.doubleclick_start = False
-                        self.doubleclick_counter = 0
-                        self.process.createSessionWindow(233)
-                    elif not self.doubleclick_start:
-                        self.doubleclick_start = True
+                    if self.pos_in_avatar(event.pos):
+                        print('查看' + self.user['nickname'] + '资料')
+                        # self.process.createxxxxxx
+                    else:
+                        if self.doubleclick_start:
+                            self.doubleclick_start = False
+                            self.doubleclick_counter = 0
+                            self.process.createSessionWindow(233)
+                        elif not self.doubleclick_start:
+                            self.doubleclick_start = True
                 else:
                     self.state = 0
                     self.surface = FriendBlock.image
@@ -77,6 +95,15 @@ class FriendBlock(Element):
             for child in self.childs:
                 if child.active:
                     child.update()
+
+    def display(self):
+        surface = self.surface.copy()
+        for child in self.childs:
+            if child.active:
+                surface.blit(child.display(), child.location)
+        if self.covered:
+            surface.blit(FriendBlock.avatar_cover, (12, 12))
+        return surface
 
     def is_displayed(self):
         if 0 <= self.location[1] <= 400:
