@@ -7,6 +7,7 @@ register_request = {
         'messageNumber':'3',
         'username':'MinatoAqua',
         'password':'MinatoAqua',
+        'nickname':'MinatoAqua',
         'avatarAddress':'cd37c244-6558-42de-8fd4-770f75d1be8e',
         'phoneNumber':'404',
         'email':'minato@aqua.com',
