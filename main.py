@@ -12,83 +12,69 @@ import multiprocessing
 from Common.base import *
 from multiprocessing.managers import BaseManager
 
+
 def test_data(data):
-    avatar = "image::DEFAULT_AQUA"
-    meaAvatar = "image::DEFUALT_MEA"
-    mikoAvatar = "image::DEFAULT_MIKO"
-    shionAvatar = "image::DEFAULT_SHION"
-    matsuriAvatar = "image::DEFAULT_MATSURI"
-    fubukiAvatar = "image::DEFAULT_FUBUKI"
-    '''
-    avatar = pygame.transform.smoothscale(pygame.image.load('./resources/UserData/MinatoAqua/MinatoAqua.jpg'), (75, 75))
-    meaAvatar = pygame.transform.smoothscale(pygame.image.load('./resources/UserData/MinatoAqua/cache/mea.jpg'),
-                                             (75, 75))
-    mikoAvatar = pygame.transform.smoothscale(pygame.image.load('./resources/UserData/MinatoAqua/cache/miko.jpg'),
-                                              (75, 75))
-    shionAvatar = pygame.transform.smoothscale(pygame.image.load('./resources/UserData/MinatoAqua/cache/shion.jpg'),
-                                               (75, 75))
-    maziliAvatar = pygame.transform.smoothscale(pygame.image.load('./resources/UserData/MinatoAqua/cache/mazili.jpg'),
-                                                (75, 75))
-    xiaohuliAvatar = pygame.transform.smoothscale(
-        pygame.image.load('./resources/UserData/MinatoAqua/cache/xiaohuli.jpg'), (75, 75))
-    '''
-    data['user']=User('MinatoAqua', 'MinatoAqua', 'Aqua', avatar)
+    avatar = "cd37c244-6558-42de-8fd4-770f75d1be8e"
+    meaAvatar = "c1a33c9a-6de2-4ed9-91a1-d632f35865ca"
+    mikoAvatar = "9ca418f1-2b37-42e6-962a-2a6e110b45c5"
+    shionAvatar = "02862688-be78-42e9-9c51-2e06f534074c"
+    matsuriAvatar = "116aba69-4727-41ad-948b-d4e6d98381ed"
+    fubukiAvatar = "2e52793d-e18e-4591-bf2c-18099c61e88d"
 
-    mea = User('Mea', 'Mea', '消息列表1', meaAvatar)
-    miko = User('Miko', 'Miko', '消息列表2', mikoAvatar)
-    shion = User('Shion', 'Shion', '消息列表3', shionAvatar)
-    mazili = User('Mazili', 'Mazili', '好友列表1', matsuriAvatar)
-    xiaohuli = User('Xiaohuli', 'Xiaohuli', '好友列表2', fubukiAvatar)
-    miko2 = User('Miko2', 'Miko2', '好友列表3', mikoAvatar)
-    shion2 = User('Shion2', 'Shion2', '群组列表1', shionAvatar)
-    mazili2 = User('Mazili2', 'Mazili2', '群组列表2', matsuriAvatar)
-    xiaohuli2 = User('Xiaohuli2', 'Xiaohuli2', '群组列表3', fubukiAvatar)
+    data['user'] = User('MinatoAqua', 'MinatoAqua', 'Aqua', avatar)
 
-    data['messageList']=[mea, miko, shion,mea, miko, shion,mea, miko, shion]
-    data['friendList']=[mazili, xiaohuli, miko2]
-    data['groupList']=[shion2, mazili2, xiaohuli2]
-    
-    testUserMessage1 = UserMessage('Fubuki','2020-5-26 15:13','KONKONKON')
-    testUserMessage2 = UserMessage('Fubuki','2020-5-26 15:14','KONKONKON')
-    testUserMessage3 = UserMessage('Fubuki','2020-5-26 15:15','KONKONKON')
-    testUserMessage4 = UserMessage('Fubuki','2020-5-26 15:16','KONKONKON')
-    testUserMessage5 = UserMessage('Fubuki','2020-5-26 15:17','KONKONKON')
-    data['sessions']=[Session(233,[testUserMessage1,testUserMessage2,testUserMessage3,testUserMessage4,testUserMessage5])]
+    mea = User('Mea', 'Mea', '昵称：mea', meaAvatar)
+    miko = User('Miko', 'Miko', '昵称：miko', mikoAvatar)
+    shion = User('Shion', 'Shion', '昵称：shion', shionAvatar)
+    mazili = User('Mazili', 'Mazili', '昵称：matsuri', matsuriAvatar)
+    xiaohuli = User('Xiaohuli', 'Xiaohuli', '昵称：fubuki', fubukiAvatar)
+    fankangjun = User('fankangjun', 'fankangjun', '群名：反抗军', avatar)
+
+    data['friendList'] = [mea, miko, shion, mazili, xiaohuli]
+    data['groupList'] = [fankangjun]
+
+    testUserMessage1 = UserMessage('Fubuki', '2020-5-26 15:13', 'KONKONKON')
+    testUserMessage2 = UserMessage('Fubuki', '2020-5-26 15:14', 'KONKONKON')
+    testUserMessage3 = UserMessage('Fubuki', '2020-5-26 15:15', 'KONKONKON')
+    testUserMessage4 = UserMessage('Fubuki', '2020-5-26 15:16', 'KONKONKON')
+    testUserMessage5 = UserMessage('Fubuki', '2020-5-26 15:17', 'KONKONKON')
+    data['sessions'] = [
+        Session(233, [testUserMessage1, testUserMessage2, testUserMessage3, testUserMessage4, testUserMessage5])]
     session = data['sessions'][0]
-    print(session)
+
+    #print(session)
 
     data['search_result'] = None
 
-if __name__ == '__main__':
 
+if __name__ == '__main__':
     mgr = multiprocessing.Manager()
     inner = {}
     test_data(inner)
-    data=mgr.dict({
-        "inner":inner,
-        })
+    data = mgr.dict({
+        "inner": inner,
+    })
 
     RQ = multiprocessing.Queue()
     MQ = multiprocessing.Queue()
     print(RQ)
     bet = BackEndThread(RQ, MQ)
     bet.start()
-    
+
     # login
 
     lwp = LWP(data, RQ, MQ, bet)
     # print(bet.messageQueue)
     # print(lwp.messageQueue)
     lwp.run()
-    
+
     lwp.close()
 
     test_data(data)
-    
+
     print(data['user']['username'])
-    
+
     uwp = UWP(data, RQ, MQ, bet)
     uwp.run()
     bet.stop()
     bet.join()
-    

@@ -2,7 +2,6 @@ from FrontEnd.Elements.Element import Element
 from FrontEnd.Elements.TextButton import TextButton
 from FrontEnd.Elements.CustomText import CustomText
 from FrontEnd.Elements.Image import Image
-from FrontEnd.Elements.Avatar import Avatar
 from Common.base import readData, writeData
 import pygame
 
@@ -16,7 +15,7 @@ class PeopleBlock(Element):
         self.location = location
         self.size = (200, 80)
         self.check = check
-        self.avatar = self.createChild(Avatar, (15, 15), user['avatarURL'])
+        self.avatar = self.createChild(Image, (15, 15), (50, 50), user['avatarURL'])
         self.nickname = self.createChild(CustomText, (75, 10), 'dengxian', 20, (0, 0, 0), user['nickname'])
         self.add = self.createChild(AddButton, (80, 45), '+好友', 12, (40, 20), user['username'], check)
 

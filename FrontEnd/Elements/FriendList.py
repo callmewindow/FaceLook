@@ -1,5 +1,4 @@
 from FrontEnd.Elements.Element import Element
-from FrontEnd.Elements.Avatar import Avatar
 from FrontEnd.Elements.CustomText import CustomText
 from FrontEnd.Elements.Image import Image
 from Common.base import readData
@@ -22,8 +21,7 @@ class FriendBlock(Element):
         Element.__init__(self, process)
         self.user = user
         try:
-            self.avatar = self.createChild(Avatar, (12, 12), user['avatarURL'])
-            # self.avatar = self.createChild(Image, (12, 12), user['avatarURL'][7:])
+            self.avatar = self.createChild(Image, (12, 12), (75, 75), user['avatarURL'])
             self.nickname = self.createChild(CustomText, (100, 24), 'dengxian', 22, (0, 0, 0), user['nickname'])
             self.last_message = self.createChild(CustomText, (100, 60), 'dengxian', 16, (128, 128, 128), '最最最最最最最新消息')
             self.last_time = self.createChild(CustomText, (300, 60), 'dengxian', 16, (128, 128, 128), '23:33')
@@ -112,8 +110,7 @@ class FriendBlock(Element):
 
     def update_info(self, user):
         try:
-            self.avatar = self.createChild(Avatar, (12, 12), user['avatarURL'])
-            # self.avatar = self.createChild(Image, (12, 12), user['avatarURL'][7:])
+            self.avatar = self.createChild(Image, (12, 12), (75, 75), user['avatarURL'])
             self.nickname.set_text(user['nickname'])
             self.last_message.set_text('最最最最最最最新消息')
             self.last_time.set_text('23:33')
