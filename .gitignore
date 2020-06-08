@@ -4,11 +4,11 @@
 .pydevproject
 colorTest.css
 windowTest.py
+__pycache__
 */__pycache__
 */*/__pycache__
 venv/
 userdata
-interface_unit_test.py
 FrontEndUnitTest.py
 FrontEnd/UnitTest/
 images/*
