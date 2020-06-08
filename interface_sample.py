@@ -40,7 +40,7 @@ send_message_request = {
         'content':'本 社 爆 破',
         'kind':'0',
     }
-remove_frient_request = {
+remove_friend_request = {
         'messageNumber':'15',
         'username':'Yagoo',
     }
