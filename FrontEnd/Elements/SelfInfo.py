@@ -1,5 +1,4 @@
 from FrontEnd.Elements.Element import Element
-from FrontEnd.Elements.Avatar import Avatar
 from FrontEnd.Elements.CustomText import CustomText
 from FrontEnd.Elements.Image import Image
 from Common.base import readData
@@ -18,12 +17,10 @@ class SelfInfo(Element):
         self.surface = SelfInfo.image
         data = readData(self.process.data)
         try:
-            self.avatar = self.createChild(Avatar, (27, 27), data['user']['avatarURL'])
-            # self.avatar = self.createChild(Image, (27, 27), data['user']['avatarURL'][7:])
+            self.avatar = self.createChild(Image, (27, 27), (75, 75), data['user']['avatarURL'])
             self.nickname = self.createChild(CustomText, (120, 50), 'dengxian', 26, (0, 0, 0), data['user']['nickname'])
         except KeyError:
             print('key error in SelfInfo')
 
     def refresh(self):
         self.childs.clear()
-
