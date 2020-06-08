@@ -7,6 +7,7 @@ import pygame
 
 class SelfInfo(Element):
     image = pygame.image.load('./resources/UserWindowUI/user_info.png')
+    avatar_cover = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/news.png'), (75, 75))
 
     def __init__(self, process, location):
         Element.__init__(self, process)
@@ -15,6 +16,7 @@ class SelfInfo(Element):
         self.avatar = None
         self.nicknameText = None
         self.surface = SelfInfo.image
+        self.covered = False
         data = readData(self.process.data)
         try:
             self.avatar = self.createChild(Image, (27, 27), (75, 75), data['user']['avatarURL'])
@@ -22,5 +24,38 @@ class SelfInfo(Element):
         except KeyError:
             print('key error in SelfInfo')
 
+    def pos_in_avatar(self, pos):
+        x = pos[0]
+        y = pos[1]
+        if 27 < x < 27 + 75 and 27 < y < 27 + 75:
+            return True
+
     def refresh(self):
         self.childs.clear()
+        data = readData(self.process.data)
+        try:
+            self.avatar.change(data['user']['avatarURL'])
+            self.nickname.set_text(data['user']['nickname'])
+        except KeyError:
+            print('key error in SelfInfo when refresh')
+
+    def getEvent(self, event):
+        if event.type == pygame.MOUSEMOTION:
+            if self.pos_in_avatar(event.pos):
+                self.covered = True
+            else:
+                self.covered = False
+            return
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
+            if self.pos_in_avatar(event.pos):
+                print('查看' + self.user['nickname'] + '资料')
+                # self.process.createxxxxxx
+
+    def display(self):
+        surface = self.surface.copy()
+        for child in self.childs:
+            if child.active:
+                surface.blit(child.display(), child.location)
+        if self.covered:
+            surface.blit(SelfInfo.avatar_cover, (27, 27))
+        return surface
