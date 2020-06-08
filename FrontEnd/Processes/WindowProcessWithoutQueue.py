@@ -3,19 +3,8 @@ from queue import Empty
 pygame.init()
 import pyautogui
 import win32gui
-class WindowProcessWithoutQueue():
-    def __init__(self,data,window):        
-        pygame.init()
-        self.FPS = 60 
-        self.go = True    
-        self.data = data
-        self.actionList = []
-        self.window = window
-        self.window_pos = (0,0)
-        self.mouse_pos = (0,0)
-        self.title_rect = (0,0,1000,1000)
-        self.dragging = False
-        self.hwnd = self.window.hwnd
+from FrontEnd.Processes.WindowProcess import WindowProcess
+class WindowProcessWithoutQueue(WindowProcess):
     def run(self):
         while self.go:
             if self.dragging:
@@ -33,6 +22,7 @@ class WindowProcessWithoutQueue():
                     event.pos[0]>=self.title_rect[0] and event.pos[0]<=self.title_rect[2] and
                     event.pos[1]>=self.title_rect[1] and event.pos[1]<=self.title_rect[3]):
                     self.dragging = True
+
                     windowRect = win32gui.GetWindowRect(self.hwnd)
                     self.window_pos = (windowRect[0],windowRect[1])
                     self.mouse_pos = pyautogui.position()
@@ -46,14 +36,3 @@ class WindowProcessWithoutQueue():
             self.window.display()
             pygame.display.update()
             self.window.FPSClock.tick(self.FPS)
-    def addAction(self,action):
-        self.actionList.append(action)
-    def doAction(self,action):
-        pass
-    def stop(self):
-        self.go = False
-    def minimize(self):
-        pygame.display.iconify()
-    def close(self):
-        pygame.display.quit()
-        self.stop()
