@@ -77,13 +77,14 @@ class AddButton(TextButton):
 
     def getEvent(self, event):
         if event.type == pygame.MOUSEMOTION:
-            if self.state != 2:
-                if self.pos_in(event.pos):
+            if self.pos_in(event.pos):
+                if self.state != 2:
                     self.state = 1
-                else:
-                    self.state = 0
-        if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEBUTTONUP:
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT and self.pos_in(event.pos):
+            else:
+                self.state = 0
+            return
+        if event.type in [pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP] and self.pos_in(event.pos):
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
                 self.state = 2
             if event.type == pygame.MOUSEBUTTONUP and event.button == pygame.BUTTON_LEFT:
                 self.state = 0

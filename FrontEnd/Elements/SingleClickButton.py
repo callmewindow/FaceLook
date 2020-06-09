@@ -1,34 +1,29 @@
 from FrontEnd.Elements.Element import Element
-from FrontEnd.Elements.text_variable import text_variable
 import pygame
 
 
-class TextButton(Element):
+class SingleClickButton(Element):
     # 0 == idle
     # 1 == hover
     # 2 == select
     image = pygame.Surface((100, 100))
     image_hover = pygame.Surface((100, 100))
     image_select = pygame.Surface((100, 100))
-    image.fill((251, 114, 153))
-    image_hover.fill((251, 130, 173))
-    image_select.fill((251, 78, 135))
+    image.fill((255, 255, 255))
+    image_hover.fill((245, 245, 245))
+    image_select.fill((235, 235, 235))
 
-    def __init__(self, process, location, text, fontsize, size):
+    def __init__(self, process, location, size, icon_size, url, func: str):
         Element.__init__(self, process)
-        self.font = pygame.font.SysFont('simhei', fontsize)
-        self.content = self.font.render(text, True, (255, 255, 255))
-        # 一般情况下字号对应的宽度为字号的一半，高度为字号原本大小
-        self.textWidth = len(text.encode("gbk")) * fontsize / 2
-        self.textHeight = fontsize
         self.size = size
-        self.conPosition = ((size[0] - self.textWidth) / 2, (size[1] - self.textHeight) / 2)
-
-        self.image = pygame.transform.smoothscale(self.image, size)
-        self.image_hover = pygame.transform.smoothscale(self.image_hover, size)
-        self.image_select = pygame.transform.smoothscale(self.image_select, size)
+        self.icon_size = icon_size
+        self.icon = pygame.transform.smoothscale(pygame.image.load(url), icon_size)
+        self.image = pygame.transform.smoothscale(SingleClickButton.image, size)
+        self.image_hover = pygame.transform.smoothscale(SingleClickButton.image_hover, size)
+        self.image_select = pygame.transform.smoothscale(SingleClickButton.image_select, size)
         self.location = location
         self.state = 0
+        self.func = func
 
     def pos_in(self, pos):
         x = pos[0]
@@ -50,9 +45,11 @@ class TextButton(Element):
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
                 self.state = 2
             if event.type == pygame.MOUSEBUTTONUP and event.button == pygame.BUTTON_LEFT:
+                self.state = 0
                 if self.pos_in(event.pos):
-                    pass
-                    # do something
+                    print(self.func)
+                    if self.func == '':
+                        pass
 
     def display(self):
         if self.state == 0:
@@ -62,5 +59,8 @@ class TextButton(Element):
         else:
             self.surface = self.image_select
         surface = self.surface.copy()
-        surface.blit(self.content, self.conPosition)
+        surface.blit(self.icon, ((self.size[0] - self.icon_size[0]) // 2, (self.size[1] - self.icon_size[1]) // 2))
         return surface
+
+    def update(self):
+        pass

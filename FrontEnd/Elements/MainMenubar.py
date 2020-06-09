@@ -1,5 +1,5 @@
 from FrontEnd.Elements.Element import Element
-from FrontEnd.Elements.TripleStateButton import TripleStateButton
+from FrontEnd.Elements.SingleClickButton import SingleClickButton
 import pygame
 
 
@@ -9,20 +9,16 @@ class MainMenubar(Element):
     def __init__(self, process, location):
         Element.__init__(self, process)
         self.location = location
-        self.size = (350, 40)
+        self.size = (350, 50)
         self.surface = MainMenubar.image
-        self.button = self.createChild(TripleStateButton, (5, 5), './resources/UserWindowUI/apps.png', (30, 30))
+        self.createChild(SingleClickButton, (0, 0), (45, 40), (25, 25), './resources/UserWindowUI/profile.png', 'profile')
+        self.createChild(SingleClickButton, (45, 0), (45, 40), (25, 25), './resources/UserWindowUI/friend_add.png', 'add')
+        self.createChild(SingleClickButton, (90, 0), (45, 40), (25, 25), './resources/UserWindowUI/mail.png', 'apply')
 
     def getEvent(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
+        if event.type in [pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.MOUSEMOTION]:
             event.pos = (event.pos[0] - self.location[0], event.pos[1] - self.location[1])
         for child in self.childs:
             child.getEvent(event)
-        if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
+        if event.type in [pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.MOUSEMOTION]:
             event.pos = (event.pos[0] + self.location[0], event.pos[1] + self.location[1])
-
-    def get_state(self):
-        return self.button.state
-
-
-
