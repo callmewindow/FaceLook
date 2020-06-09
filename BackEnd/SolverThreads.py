@@ -34,9 +34,11 @@ class Register(threading.Thread):
             self.user = {
                 'username': request.get('username', None),
                 'password': request.get('password', None),
+                'nickname': request.get('nickname', None),
                 'avatarAddress': request.get('avatarAddress', None),
                 'phoneNumber': request.get('phoneNumber', None),
-                'email':request.get('email', None),
+                'invitee': 1,
+                'email': request.get('email', None),
                 'occupation': request.get('occupation', None),
                 'location': request.get('location', None)
             }
@@ -70,17 +72,20 @@ class GetHistory(threading.Thread):
 
 class CreateSession(threading.Thread):
     # 创建群聊
-    def __init__(self, client):
+    def __init__(self, client, request):
         threading.Thread.__init__(self)
         self.client = client
+        self.sessionName = request.get('messageField1', None)
+        if self.sessionName is None:
+            self.sessionName = request.get('sessionName', None)
 
     def run(self):
-        data = {'messageNumber': '6'}
+        data = {'sessionName': self.sessionName, 'messageNumber': '6'}
         self.client.sendMessage(data)
 
 
 class JoinSession(threading.Thread):
-    # 加入群聊
+    # 邀请他人加入会话
     def __init__(self, client, request):
         threading.Thread.__init__(self)
         self.client = client
@@ -133,15 +138,15 @@ class FriendRegister(threading.Thread):
     def __init__(self, client, request):
         threading.Thread.__init__(self)
         self.client = client
-        self.toUsername = request.get('messageField1', None)
-        if self.toUsername is None:
-            self.toUsername = request.get('toUsername', None)
+        self.receiverUsername = request.get('messageField1', None)
+        if self.receiverUsername is None:
+            self.receiverUsername = request.get('username', None)
         self.checkMessage = request.get('messageField2', None)
         if self.checkMessage is None:
             self.checkMessage = request.get('checkMessage', None)
 
     def run(self):
-        data = {'messageField1': self.toUsername, 'messageField2': self.checkMessage,
+        data = {'messageField1': self.receiverUsername, 'messageField2': self.checkMessage,
                 'messageNumber': '10'}
         self.client.sendMessage(data)
 
@@ -151,15 +156,15 @@ class RespondFriendRegister(threading.Thread):
     def __init__(self, client, request):
         threading.Thread.__init__(self)
         self.client = client
-        self.fromUsername = request.get('messageField1', None)
-        if self.fromUsername is None:
-            self.fromUsername = request.get('fromUsername', None)
+        self.requestorUsername = request.get('messageField1', None)
+        if self.requestorUsername is None:
+            self.requestorUsername = request.get('requestorUsername', None)
         self.result = request.get('messageField2', None)
         if self.result is None:
             self.result = request.get('result', None)
 
     def run(self):
-        data = {'messageField1': self.fromUsername, 'messageField2': self.result,
+        data = {'messageField1': self.requestorUsername, 'messageField2': self.result,
                 'messageNumber': '12'}
         self.client.sendMessage(data)
 
@@ -180,12 +185,12 @@ class DeleteFriend(threading.Thread):
     def __init__(self, client, request):
         threading.Thread.__init__(self)
         self.client = client
-        self.deleteUsername = request.get('messageField1', None)
-        if self.deleteUsername is None:
-            self.deleteUsername = request.get('deleteUsername', None)
+        self.username = request.get('messageField1', None)
+        if self.username is None:
+            self.username = request.get('username', None)
 
     def run(self):
-        data = {'messageField1': self.deleteUsername,
+        data = {'messageField1': self.username,
                 'messageNumber': '15'}
         self.client.sendMessage(data)
 
@@ -198,4 +203,64 @@ class Close(threading.Thread):
 
     def run(self):
         data = {'messageNumber': '0'}
+        self.client.sendMessage(data)
+
+
+class ExitSession(threading.Thread):
+    # 退出群聊
+    def __init__(self, client, request):
+        threading.Thread.__init__(self)
+        self.client = client
+        self.sessionId = request.get('messageField1', None)
+        if self.sessionId is None:
+            self.sessionId = request.get('sessionId', None)
+
+    def run(self):
+        data = {'messageField1': self.sessionId,
+                'messageNumber': '17'}
+        self.client.sendMessage(data)
+
+
+class UpdatePersonalInformation(threading.Thread):
+    # 更改个人信息
+    def __init__(self, client, request):
+        threading.Thread.__init__(self)
+        self.client = client
+        self.user = request.get('messageField1', None)
+        if self.user is None:
+            self.user = {
+                'username': request.get('username', None),
+                'password': request.get('password', None),
+                'nickname': request.get('nickname', None),
+                'avatarAddress': request.get('avatarAddress', None),
+                'phoneNumber': request.get('phoneNumber', None),
+                'invitee': request.get('invitee', 1),
+                'email': request.get('email', None),
+                'occupation': request.get('occupation', None),
+                'location': request.get('location', None)
+            }
+
+    def run(self):
+        data = {'messageField1': self.user,
+                'messageNumber': '18'}
+        self.client.sendMessage(data)
+
+
+class UpdateSessionInformation(threading.Thread):
+    # 修改群聊信息
+    def __init__(self, client, request):
+        threading.Thread.__init__(self)
+        self.client = client
+        self.sessionId = request.get('messageField1', None)
+        if self.sessionId is None:
+            self.sessionId = request.get('sessionId', None)
+            if self.sessionId is None:
+                self.sessionId = request.get('sessionID', None)
+        self.sessionName = request.get('messageField2', None)
+        if self.sessionName is None:
+            self.sessionName = request.get('sessionName', None)
+
+    def run(self):
+        data = {'messageField1': self.sessionId, 'messageField2': self.sessionName,
+                'messageNumber': '19'}
         self.client.sendMessage(data)
