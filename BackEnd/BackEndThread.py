@@ -145,7 +145,7 @@ class BackEndThread(threading.Thread):
             # if result != '0' and self.username != None:
             #     self.localStorage = LocalStorage(self.username)
         # 注册
-        # request格式：{"username": "hcz", "password": "123456", "nickname": "quq", "messageNumber": "2"}
+        # request格式：{"username": "hcz", "password": "123456", "nickname": "quq", "messageNumber": "3"}
         # message格式：见下方
         elif messageNumber == RequestType.REGISTER:
             thread = Register(self.client, request)
@@ -275,6 +275,7 @@ class BackEndThread(threading.Thread):
                         time = Time[0] + "年" + Time[1] + "月" + Time[2] + "日"
                     temp = {'requestorUsername': register.get('requestorUsername', None),
                             'checkMessage': register.get('checkMessage', None),
+                            'avatarAddress': register.get('avatarAddress', None),
                             'time': time}
                     result.append(temp)
             message = {
@@ -321,7 +322,7 @@ class BackEndThread(threading.Thread):
             if self.localStorage is not None:
                 self.localStorage.addRecordsDict(sessionID, content)
 
-        # 添加好友，发送好友申请
+        # 添加好友，发送好友申请 {'messageNumber':'10'}
         # request格式:{"toUserName":"lex", "checkMessage":"我是你爸爸"， "messageNumber":"10"}
         # message无
         elif messageNumber == RequestType.FRIENDREGISTER:
@@ -329,11 +330,6 @@ class BackEndThread(threading.Thread):
             thread.setDaemon(True)
             thread.start()
             self.task.append(thread)
-        # elif messageNumber == RequestType.FRIENDREGISTERRET:
-        #     message = {
-        #         'messageNumber': MessageType.FRIENDREGISTERRET
-        #     }
-        #     self.messageQueue.put(message)
 
         # 收到好友申请 {'messageNumber':'11r'}
         # request无
@@ -351,6 +347,7 @@ class BackEndThread(threading.Thread):
             message = {
                 'messageNumber': MessageType.RECEIVEFRIENDREGISTERRET,
                 'requestorUsername': dictRequest.get('requestorUsername', None),
+                'avatarAddress': dictRequest.get('avatarAddress', None),
                 'checkMessage': dictRequest.get('checkMessage', None),
                 'time': time
             }
@@ -366,15 +363,7 @@ class BackEndThread(threading.Thread):
             thread.start()
             self.task.append(thread)
 
-        # elif messageNumber == RequestType.RESPONDFRIENDREGISTERRET:
-        #     message = {
-        #         'messageNumber': MessageType.RESPONDFRIENDREGISTERRET,
-        #         'result': request.get('messageField1', None),
-        #         'information': request.get('messageField2', None)
-        #     }
-        #     self.messageQueue.put(message)
-
-        # 用户接收到添加好友申请结果
+        # 用户接收到添加好友申请结果 {'messageNumber':'13r'}
         # request无
         # message格式如下
         elif messageNumber == RequestType.GETFRIENDREGISTERRESULTRET:
@@ -389,6 +378,7 @@ class BackEndThread(threading.Thread):
             message = {
                 'messageNumber': MessageType.GETFRIENDREGISTERRESULTRET,
                 'requestorUsername': dictResult.get('receiverUsername', None),
+                'avatarAddress': dictResult.get('avatarAddress', None),
                 'result': dictResult.get('result', None),
                 'time': time
             }
@@ -413,6 +403,7 @@ class BackEndThread(threading.Thread):
                         Time = time.split('-', 6)
                         time = Time[0] + "年" + Time[1] + "月" + Time[2] + "日"
                     temp = {'receiverUsername': registerResult.get('receiverUsername', None),
+                            'avatarAddress': registerResult.get('avatarAddress', None),
                             'result': registerResult.get('result', None),
                             'time': time}
                     result.append(temp)
@@ -420,74 +411,6 @@ class BackEndThread(threading.Thread):
                 'messageNumber': MessageType.GETFRIENDREGISTERRESULTRETLISTRET,
                 'receiverNum': registerResultNum,
                 'receiverList': result
-            }
-            self.messageQueue.put(message)
-
-        # 添加好友，发送好友申请
-        # request格式:{"toUserName":"lex", "checkMessage":"我是你爸爸"， "messageNumber":"10"}
-        # message无
-        elif messageNumber == RequestType.FRIENDREGISTER:
-            thread = FriendRegister(self.client, request)
-            thread.setDaemon(True)
-            thread.start()
-            self.task.append(thread)
-        # elif messageNumber == RequestType.FRIENDREGISTERRET:
-        #     message = {
-        #         'messageNumber': MessageType.FRIENDREGISTERRET
-        #     }
-        #     self.messageQueue.put(message)
-
-        # 收到好友申请
-        # request无
-        # message格式：
-        elif messageNumber == RequestType.RECEIVEFRIENDREGISTERRET:
-            message = {
-                'messageNumber': MessageType.RECEIVEFRIENDREGISTERRET,
-                'username': request.get('messageField1', None),
-                'checkMessage': request.get('messageField2', None)
-            }
-            self.messageQueue.put(message)
-
-        # 回复好友申请
-        # request格式：{"fromUsername":"hololive", "result":1, "messageNumber":"12"}
-        # result为0表示拒绝，为1表示接受
-        # 无message
-        elif messageNumber == RequestType.RESPONDFRIENDREGISTER:
-            thread = RespondFriendRegister(self.client, request)
-            thread.setDaemon(True)
-            thread.start()
-            self.task.append(thread)
-
-        elif messageNumber == RequestType.GETFRIENDREGISTERRESULTRET:
-            message = {
-                'messageNumber': MessageType.GETFRIENDREGISTERRESULTRET,
-                'toUsername': request.get('messageField1', None),
-                'result': request.get('messageField2', None)
-            }
-            self.messageQueue.put(message)
-
-        # 获取申请结果列表
-        # request格式：{'messageNumber':'14'}
-        elif messageNumber == RequestType.GETFRIENDREGISTERRESULTRETLIST:
-            thread = GetFriendRegisterResultList(self.client)
-            thread.setDaemon(True)
-            thread.start()
-            self.task.append(thread)
-        elif messageNumber == RequestType.GETFRIENDREGISTERRESULTRETLISTRET:
-            registerResultNum = request.get('messageField1', None)
-            data = request.get('messageField2', None)
-            registerResultList = json.loads(data)
-            print(registerResultList)
-            result = []
-            if type(registerResultList) == list and registerResultNum != '0':
-                for registerResult in registerResultList:
-                    temp = {'toUsername': registerResult.get('messageField1', None),
-                            'registerResult': registerResult.get('messageField2', None)}
-                    result.append(temp)
-            message = {
-                'messageNumber': MessageType.GETFRIENDREGISTERRESULTRETLISTRET,
-                'registerResultNum': registerResultNum,
-                'registerResultList': result
             }
             self.messageQueue.put(message)
 
@@ -530,7 +453,13 @@ class BackEndThread(threading.Thread):
             thread.setDaemon(True)
             thread.start()
             self.task.append(thread)
-        # 通过nickname搜索
+        # 更改群聊信息 {'messageNumber':'19'}
+        elif messageNumber == RequestType.UPDATESESSIONINFORMATION:
+            thread = UpdateSessionInformation(self.client, request)
+            thread.setDaemon(True)
+            thread.start()
+            self.task.append(thread)
+        # 通过nickname搜索 {'messageNumber':'20'}
         # requset
         # message
         elif messageNumber == RequestType.SEARCHBYNICKNAME:
@@ -557,7 +486,7 @@ class BackEndThread(threading.Thread):
                 'userlist': result
             }
             self.messageQueue.put(message)
-        #通过username搜索
+        # 通过username搜索 {'messageNumber':'21'}
         elif messageNumber == RequestType.SEARCHBYUSERNAME:
             thread = SearchByUsername(self.client, request)
             thread.setDaemon(True)
