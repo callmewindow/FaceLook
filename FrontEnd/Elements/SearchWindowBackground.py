@@ -4,23 +4,27 @@ from FrontEnd.Elements.DropDownMenu import DropDownMenu
 from FrontEnd.Elements.SingleInputBox import InputBox
 from FrontEnd.Elements.TextButton import TextButton
 from FrontEnd.Elements.AddCheckMessage import AddCheckMessage
+from FrontEnd.Elements.Button import UserCloseButton, UserMinimizeButton
 import pygame
 
 
 class SearchWindowBackground(Element):
     input_border = pygame.image.load('./resources/SearchWindowUI/people_input_border.png')
+    title = pygame.image.load('./resources/SearchWindowUI/title.png')
 
     def __init__(self, process):
         Element.__init__(self, process)
         self.surface = pygame.Surface((800, 450))
         self.surface.fill((255, 255, 255))
         self.location = (0, 0)
-        self.search_people = self.createChild(SearchPeople, (0, 60))
-        self.check_message = self.createChild(AddCheckMessage, (150, 80))
+        self.search_people = self.createChild(SearchPeople, (0, 60+40))
+        self.check_message = self.createChild(AddCheckMessage, (150, 80+40))
         self.search_people.check = self.check_message
-        self.menu = self.createChild(DropDownMenu, (50, 20), ['用户名', '昵称', '手机号', '邮箱', '职业', '地区'])
-        self.input = self.createChild(InputBox, (200, 22), 450, 'dengxian', 24, (0, 0, 0), (255, 255, 255))
-        self.search_button = self.createChild(SearchButton, (680, 20), '搜索', 20, (80, 30))
+        self.menu = self.createChild(DropDownMenu, (50, 20+40), ['用户名', '昵称', '手机号', '邮箱', '职业', '地区'])
+        self.input = self.createChild(InputBox, (200, 22+40), 450, 'dengxian', 24, (0, 0, 0), (255, 255, 255))
+        self.search_button = self.createChild(SearchButton, (680, 20+40), '搜索', 20, (80, 30))
+        self.closeButton = self.createChild(UserCloseButton, (765, 8))
+        self.minimizeButton = self.createChild(UserMinimizeButton, (730, 8))
 
     def getEvent(self, event):
         for child in self.childs:
@@ -46,7 +50,8 @@ class SearchWindowBackground(Element):
 
     def display(self):
         surface = self.surface.copy()
-        surface.blit(SearchWindowBackground.input_border, (195, 20))
+        surface.blit(SearchWindowBackground.input_border, (195, 20+40))
+        surface.blit(SearchWindowBackground.title, (0, 0))
         for child in self.childs:
             if child.active:
                 surface.blit(child.display(), child.location)

@@ -48,8 +48,8 @@ class SingleClickButton(Element):
                 self.state = 0
                 if self.pos_in(event.pos):
                     print(self.func)
-                    if self.func == '':
-                        pass
+                    if self.func == 'add':
+                        self.process.createSearchWindow()
 
     def display(self):
         if self.state == 0:
