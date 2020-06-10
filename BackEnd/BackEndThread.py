@@ -48,6 +48,10 @@ class RequestType():
     UPDATEPERSONALINFORMATION = '18'
     UPDATESESSIONINFORMATION = '19'
     UPDATESESSIONINFORMATIONRET = '19r'
+    SEARCHBYNICKNAME = '20'
+    SEARCHBYNICKNAMERET = '20r'
+    SEARCHBYUSERNAME = '21'
+    SEARCHBYUSERNAMERET = '21r'
 
 
 class MessageType():
@@ -65,6 +69,8 @@ class MessageType():
     GETFRIENDREGISTERRESULTRETLISTRET = '14r'
     DELETEFRIENDRET = '16r'
     UPDATESESSIONINFORMATIONRET = '19r'
+    SEARCHBYNICKNAMERET = '20r'
+    SEARCHBYUSERNAMERET = '21r'
 
 
 class BackEndThread(threading.Thread):
@@ -524,7 +530,59 @@ class BackEndThread(threading.Thread):
             thread.setDaemon(True)
             thread.start()
             self.task.append(thread)
-
+        # 通过nickname搜索
+        # requset
+        # message
+        elif messageNumber == RequestType.SEARCHBYNICKNAME:
+            thread = SearchByNickname(self.client, request)
+            thread.setDaemon(True)
+            thread.start()
+            self.task.append(thread)
+        elif messageNumber == RequestType.SEARCHBYNICKNAMERET:
+            resultNum = request.get('messageField1', None)
+            data = request.get('messageField2', None)
+            userList = json.loads(data)
+            # print(userList)
+            result = []
+            if type(userList) == list and resultNum != '0':
+                for userResult in userList:
+                    temp = {'username': userResult.get('username', None), 'nickname': userResult.get('nickname', None),
+                            'invitee': userResult.get('invitee', None), 'avatarAddress': userResult.get('avatarAddress', None),
+                            'phoneNumber': userResult.get('phoneNumber', None), 'email': userResult.get('email', None),
+                            'occupation': userResult.get('occupation', None), 'location': userResult.get('location', None)}
+                    result.append(temp)
+            message = {
+                'messageNumber': MessageType.SEARCHBYNICKNAMERET,
+                'num': resultNum,
+                'userlist': result
+            }
+            self.messageQueue.put(message)
+        #通过username搜索
+        elif messageNumber == RequestType.SEARCHBYUSERNAME:
+            thread = SearchByUsername(self.client, request)
+            thread.setDaemon(True)
+            thread.start()
+            self.task.append(thread)
+        elif messageNumber == RequestType.SEARCHBYUSERNAMERET:
+            # print('aaa')
+            resultNum = request.get('messageField1', None)
+            data = request.get('messageField2', None)
+            userList = json.loads(data)
+            # print(userList)
+            result = []
+            if type(userList) == list and resultNum != '0':
+                for userResult in userList:
+                    temp = {'username': userResult.get('username', None), 'nickname': userResult.get('nickname', None),
+                            'invitee': userResult.get('invitee', None), 'avatarAddress': userResult.get('avatarAddress', None),
+                            'phoneNumber': userResult.get('phoneNumber', None), 'email': userResult.get('email', None),
+                            'occupation': userResult.get('occupation', None), 'location': userResult.get('location', None)}
+                    result.append(temp)
+            message = {
+                'messageNumber': MessageType.SEARCHBYUSERNAMERET,
+                'num': resultNum,
+                'userlist': result
+            }
+            self.messageQueue.put(message)
         else:
             self.stop()
         

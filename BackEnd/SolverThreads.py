@@ -264,3 +264,33 @@ class UpdateSessionInformation(threading.Thread):
         data = {'messageField1': self.sessionId, 'messageField2': self.sessionName,
                 'messageNumber': '19'}
         self.client.sendMessage(data)
+
+
+class SearchByNickname(threading.Thread):
+    # 通过nickname搜索
+    def __init__(self, client, request):
+        threading.Thread.__init__(self)
+        self.client = client
+        self.nickname = request.get('messageField1', None)
+        if self.nickname is None:
+            self.nickname = request.get('keyword', None)
+
+    def run(self):
+        data = {'messageField1': self.nickname,
+                'messageNumber': '20'}
+        self.client.sendMessage(data)
+
+
+class SearchByUsername(threading.Thread):
+    # 通过nickname搜索
+    def __init__(self, client, request):
+        threading.Thread.__init__(self)
+        self.client = client
+        self.username = request.get('messageField1', None)
+        if self.username is None:
+            self.username = request.get('keyword', None)
+
+    def run(self):
+        data = {'messageField1': self.username,
+                'messageNumber': '21'}
+        self.client.sendMessage(data)
