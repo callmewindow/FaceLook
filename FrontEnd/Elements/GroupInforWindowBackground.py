@@ -6,12 +6,13 @@ from FrontEnd.Elements.text_variable import text_variable
 from FrontEnd.Elements.InforBar import InforBar
 from FrontEnd.Elements.TripleStateButton import TripleStateButton
 
-class UserInforWindowBackground(Element):
+class GroupInforWindowBackground(Element):
     topbg = pygame.Surface((400, 150))
     topbg.fill((240, 240, 240))
     
     friend = dict(
             uid='wyx84',
+            remark='至尊',
             nickname='灭天魔王', 
             phonenum='18201314307', 
             address='火星',

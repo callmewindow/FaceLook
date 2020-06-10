@@ -10,7 +10,6 @@ class SessionWindowProcess(WindowProcess):
         print(self.data)
 
     def doAction(self,action):
-         
         if action.type == "send":
             bg = self.window.bg
             inputCon = bg.getInputCon()

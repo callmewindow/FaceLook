@@ -1,12 +1,12 @@
 import pygame
-from FrontEnd.Elements.UserInforWindow import UserInforWindow
+from FrontEnd.Elements.GroupInforWindow import GroupInforWindow
 from FrontEnd.Processes.WindowProcess import WindowProcess
 import multiprocessing
 from Common.base import *
 
-class UserInforWindowProcess(WindowProcess):
+class GroupInforWindowProcess(WindowProcess):
     def __init__(self,data,RQ,MQ,bet):
-        WindowProcess.__init__(self,data,RQ,MQ,bet,UserInforWindow(self))
+        WindowProcess.__init__(self,data,RQ,MQ,bet,GroupInforWindow(self))
         self.window.bg.init()
     
     def doAction(self,action):
@@ -19,15 +19,10 @@ class UserInforWindowProcess(WindowProcess):
     
     # 修改信息功能仍在本窗口实现
     
-    # 添加好友
-    def addFriend(self,friendId):
-        print("添加好友")
-        print(friendId)
-
-    # 删除好友
-    def deleteFriend(self,friendId):
-        print("删除好友")
-        print(friendId)
+    # 退出群聊
+    def exitGroup(self,groupId):
+        print("退出群聊")
+        print(groupId)
     
     def run(self):
         while self.go:
