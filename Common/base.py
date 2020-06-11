@@ -66,7 +66,7 @@ def User(username, password, nickname, avatarURL):
         'username':username,
         'password':password,
         'nickname':nickname,
-        'avatarURL':avatarURL,
+        'avatarAddress':avatarURL,
         }
 
 
