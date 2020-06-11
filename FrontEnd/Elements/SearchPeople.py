@@ -15,7 +15,7 @@ class PeopleBlock(Element):
         self.location = location
         self.size = (200, 80)
         self.check = check
-        self.avatar = self.createChild(Image, (15, 15), (50, 50), user['avatarURL'])
+        self.avatar = self.createChild(Image, (15, 15), (50, 50), user['avatarAddress'])
         self.nickname = self.createChild(CustomText, (75, 10), 'dengxian', 20, (0, 0, 0), user['nickname'])
         self.add = self.createChild(AddButton, (80, 45), '+好友', 12, (40, 20), user['username'], check)
 
@@ -38,6 +38,7 @@ class SearchPeople(Element):
         self.location = location
         self.size = (800, 400)
         self.check = None
+        self.counter = 0
 
     def getEvent(self, event):
         if event.type in [pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.MOUSEMOTION]:
@@ -49,20 +50,28 @@ class SearchPeople(Element):
             event.pos = (event.pos[0] + self.location[0], event.pos[1] + self.location[1])
 
     def update(self):
-        '''data = readData(self.process.data)
-        try:
-            if len(data['search_result']) != 0:
-                self.childs.clear()
-                x, y = 0, 0
-                for user in data['search_result']:
-                    x = (x + 200) % 800
-                    y += 80 if x == 0 else 0
-                    self.createChild(PeopleBlock, (x, y), user, self.check)
+        self.counter = (self.counter + 1) % 60
+        if self.counter == 0:
             data = readData(self.process.data)
-            data['search_result'].clear()
-            writeData(self.process.data, data)
-        except KeyError:
-            print('key error in SearchPeople')'''
+            try:
+                if 'search_nickname' in data and len(data['search_nickname']) != 0:
+                    x, y = 0, 0
+                    for user in data['search_nickname']:
+                        self.createChild(PeopleBlock, (x, y), user, self.check)
+                        x = (x + 200) % 800
+                        y += 80 if x == 0 else 0
+                    data['search_nickname'].clear()
+                    writeData(self.process.data, data)
+                elif 'search_username' in data and len(data['search_username']) != 0:
+                    x, y = 0, 0
+                    for user in data['search_username']:
+                        self.createChild(PeopleBlock, (x, y), user, self.check)
+                        x = (x + 200) % 800
+                        y += 80 if x == 0 else 0
+                    data['search_username'].clear()
+                    writeData(self.process.data, data)
+            except KeyError:
+                print('key error in search')
         for child in self.childs:
             if child.active:
                 child.update()

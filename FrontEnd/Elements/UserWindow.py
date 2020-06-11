@@ -10,12 +10,28 @@ class UserWindow(Window):
         self.set_rounded_rectangle(20)
 
     def getMessage(self, message):
+        data = readData(self.process.data)
 
-        data = readData(self.data)
+        # 登录
         try:
             if message['messageNumber'] == '2r':
                 data['user'] = message['user']
-            writeData(self.data, data)
+                writeData(self.process.data, data)
+                return
         except KeyError:
-            print('key error in message')
-        self.bg.getMessage(self, message)
+            print('key error in 2r')
+
+        try:
+            if message['messageNumber'] == '20r':
+                data['search_nickname'] = message['userlist']
+                writeData(self.process.data, data)
+                return
+        except KeyError:
+            print('key error in 20r')
+
+        try:
+            if message['messageNumber'] == '21r':
+                data['search_username'] = message['userlist']
+                writeData(self.process.data, data)
+        except KeyError:
+            print('key error in 21r')

@@ -42,14 +42,12 @@ class AddCheckMessage(Element):
 
     def update(self):
         if self.send.pressed:
-            print(self.username)
-            print(self.input.text)
-            '''request = {
+            request = {
                 'messageNumber': '10',
                 'username': self.username,
                 'checkMessage': self.input.text,
             }
-            self.process.requestQueue.put(request)'''
+            self.process.requestQueue.put(request)
             self.input.text = ''
             self.input.update()
             self.disable()

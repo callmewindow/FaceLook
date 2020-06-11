@@ -34,18 +34,19 @@ class SearchWindowBackground(Element):
     def update(self):
         if self.search_button.pressed and self.input.get_text() != '':
             key = self.menu.get_selected()
+            self.search_people.childs.clear()
             if key == '昵称':
                 request = {
                     'messageNumber': '20',
                     'keyword': self.input.get_text()
                 }
                 self.process.requestQueue.put(request)
-            '''else:
+            else:
                 request = {
                     'messageNumber': '21',
                     'keyword': self.input.get_text()
                 }
-                self.process.requestQueue.put(request)'''
+                self.process.requestQueue.put(request)
         self.search_button.pressed = False
         for child in self.childs:
             if child.active:
