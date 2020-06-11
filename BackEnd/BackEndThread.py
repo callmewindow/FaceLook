@@ -493,19 +493,18 @@ class BackEndThread(threading.Thread):
             thread.start()
             self.task.append(thread)
         elif messageNumber == RequestType.SEARCHBYUSERNAMERET:
-            # print('aaa')
             resultNum = request.get('messageField1', None)
             data = request.get('messageField2', None)
-            userList = json.loads(data)
-            # print(userList)
+            user = {}
+            if resultNum != '0':
+                user = json.loads(data)
             result = []
-            if type(userList) == list and resultNum != '0':
-                for userResult in userList:
-                    temp = {'username': userResult.get('username', None), 'nickname': userResult.get('nickname', None),
-                            'invitee': userResult.get('invitee', None), 'avatarAddress': userResult.get('avatarAddress', None),
-                            'phoneNumber': userResult.get('phoneNumber', None), 'email': userResult.get('email', None),
-                            'occupation': userResult.get('occupation', None), 'location': userResult.get('location', None)}
-                    result.append(temp)
+            if type(user) == dict and resultNum != '0':
+                temp = {'username': user.get('username', None), 'nickname': user.get('nickname', None),
+                        'invitee': user.get('invitee', None), 'avatarAddress': user.get('avatarAddress', None),
+                        'phoneNumber': user.get('phoneNumber', None), 'email': user.get('email', None),
+                        'occupation': user.get('occupation', None), 'location': user.get('location', None)}
+                result.append(temp)
             message = {
                 'messageNumber': MessageType.SEARCHBYUSERNAMERET,
                 'num': resultNum,
