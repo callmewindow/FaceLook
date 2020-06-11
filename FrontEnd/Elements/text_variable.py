@@ -28,7 +28,7 @@ class text_variable(Element):
         self.text = text
         rect = self.surface.get_rect()
         self.surface = self.font.render(text, True, self.color)
-        rectX = rect[2]
-        rectY = rect[3]
-        center = (self.location[0]+rectX//2, self.location[1]+rectY//2)
-        self.alignCenter(center)
+        # rectX = rect[2]
+        # rectY = rect[3]
+        # center = (self.location[0]+rectX//2, self.location[1]+rectY//2)
+        # self.alignCenter(center)

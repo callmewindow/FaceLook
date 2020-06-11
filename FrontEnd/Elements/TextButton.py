@@ -54,6 +54,9 @@ class TextButton(Element):
                     pass
                     # do something
 
+    def setState(self,stateType):
+        self.state = stateType
+    
     def display(self):
         if self.state == 0:
             self.surface = self.image
