@@ -9,7 +9,7 @@ class UserWindow(Window):
         self.bg = self.createChild(UserWindowBackground)
         self.set_rounded_rectangle(20)
 
-    '''def getMessage(self, message):
+    def getMessage(self, message):
 
         data = readData(self.data)
         try:
@@ -18,4 +18,4 @@ class UserWindow(Window):
             writeData(self.data, data)
         except KeyError:
             print('key error in message')
-        self.bg.getMessage(self, message)'''
+        self.bg.getMessage(self, message)

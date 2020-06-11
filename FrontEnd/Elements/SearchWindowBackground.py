@@ -20,7 +20,7 @@ class SearchWindowBackground(Element):
         self.search_people = self.createChild(SearchPeople, (0, 60+40))
         self.check_message = self.createChild(AddCheckMessage, (150, 80+40))
         self.search_people.check = self.check_message
-        self.menu = self.createChild(DropDownMenu, (50, 20+40), ['用户名', '昵称', '手机号', '邮箱', '职业', '地区'])
+        self.menu = self.createChild(DropDownMenu, (50, 20+40), ['用户名', '昵称'])
         self.input = self.createChild(InputBox, (200, 22+40), 450, 'dengxian', 24, (0, 0, 0), (255, 255, 255))
         self.search_button = self.createChild(SearchButton, (680, 20+40), '搜索', 20, (80, 30))
         self.closeButton = self.createChild(UserCloseButton, (765, 8))
@@ -34,15 +34,18 @@ class SearchWindowBackground(Element):
     def update(self):
         if self.search_button.pressed and self.input.get_text() != '':
             key = self.menu.get_selected()
-            key = 0 if key == '用户名' else 1 if key == '昵称' else 2 if key == '手机号' else 3 if key == '邮箱' else 4 if key == '职业' else 5
-            print(key)
-            print(self.input.get_text())
-            '''request = {
-                'messageNumber': '19',
-                'keyword': self.input.get_text(),
-                'key': key,
-            }
-            self.process.requestQueue.put(request)'''
+            if key == '昵称':
+                request = {
+                    'messageNumber': '20',
+                    'keyword': self.input.get_text()
+                }
+                self.process.requestQueue.put(request)
+            '''else:
+                request = {
+                    'messageNumber': '21',
+                    'keyword': self.input.get_text()
+                }
+                self.process.requestQueue.put(request)'''
         self.search_button.pressed = False
         for child in self.childs:
             if child.active:
