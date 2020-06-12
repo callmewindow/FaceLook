@@ -32,11 +32,11 @@ class SelfInfo(Element):
             return True
 
     def refresh(self):
-        self.childs.clear()
         data = readData(self.process.data)
         try:
-            self.avatar.change(data['user']['avatarAddress'])
-            self.nickname.set_text(data['user']['nickname'])
+            self.user = data['user']
+            self.avatar.change(self.user['avatarAddress'])
+            self.nickname.set_text(self.user['nickname'])
         except KeyError:
             print('key error in SelfInfo when refresh')
 
@@ -49,7 +49,6 @@ class SelfInfo(Element):
             return
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
             if self.pos_in_avatar(event.pos):
-                print('查看' + self.user['nickname'] + '资料')
                 self.process.createInfoWindow(self.user)
 
     def display(self):

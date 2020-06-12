@@ -52,6 +52,8 @@ class SingleClickButton(Element):
                         self.process.createSearchWindow()
                     elif self.func == 'create':
                         self.pressed = True
+                    elif self.func == 'apply':
+                        self.pressed = True
 
     def display(self):
         if self.state == 0:

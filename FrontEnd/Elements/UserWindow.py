@@ -92,14 +92,18 @@ class UserWindow(Window):
         # 更改个人信息
         try:
             if message['messageNumber'] == '18r':
-                data['user']['nickname'] = message['nickname']
-                data['user']['avatarAddress'] = message['avatarAddress']
-                data['user']['phoneNumber'] = message['phoneNumber']
-                data['user']['invitee'] = message['invitee']
-                data['user']['email'] = message['email']
-                data['user']['occupation'] = message['occupation']
-                data['user']['location'] = message['location']
+                data['user'] = {
+                    'username': data['user']['username'],
+                    'nickname': message['nickname'],
+                    'avatarAddress': message['avatarAddress'],
+                    'phoneNumber': message['phoneNumber'],
+                    'invitee': message['invitee'],
+                    'email': message['email'],
+                    'occupation': message['occupation'],
+                    'location': message['location'],
+                }
                 writeData(self.process.data, data)
+                self.bg.self_info.refresh()
                 return
         except KeyError:
             print('key error in 18r')
