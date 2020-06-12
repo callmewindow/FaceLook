@@ -1,10 +1,11 @@
 import traceback
-from Common.base import *
+#from Common.base import *
 from multiprocessing import Queue
 from BackEnd.BackEndThread import BackEndThread
 from time import sleep
 from interface_sample import *
 import sys
+import datetime
 RQ = Queue()
 MQ = Queue()
 bet = BackEndThread(RQ,MQ)

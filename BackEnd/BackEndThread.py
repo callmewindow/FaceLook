@@ -142,8 +142,8 @@ class BackEndThread(threading.Thread):
                 'location': user.get('location', None)
             }
             self.messageQueue.put(message)
-            # if result != '0' and self.username != None:
-            #     self.localStorage = LocalStorage(self.username)
+            if result != '0' and self.username != None:
+                self.localStorage = LocalStorage(self.username)
         # 注册
         # request格式：{"username": "hcz", "password": "123456", "nickname": "quq", "messageNumber": "3"}
         # message格式：见下方
@@ -173,8 +173,8 @@ class BackEndThread(threading.Thread):
                 'location': user.get('location', None)
             }
             self.messageQueue.put(message)
-            # if result != '0' and self.username != None:
-            #     self.localStorage = LocalStorage(self.username)
+            if result != '0' and self.username != None:
+                self.localStorage = LocalStorage(self.username)
         # 获取好友列表
         # request格式：{"messageNumber": "4"}
         # message格式：num表示好友个数，friendlist为一个dict列表，字段分别为username和nickname
@@ -213,16 +213,25 @@ class BackEndThread(threading.Thread):
             sessionNum = request.get('messageField1',None)
             data = request.get('messageField2',None)
             sessionlist = json.loads(data)
-            result = []
             if type(sessionlist)== list and sessionNum != '0' and self.localStorage is not None:
                 for session in sessionlist:
-                    temp = {}
-                    sessinID = session.get('messageField1',None)
-                    records = json.loads(session.get('messageField2',None))
-                    temp['sessionID'] = sessinID
-                    temp['records'] = records
-                    result.append(temp)
-                    self.localStorage.rewriteRecord(sessinID,records)
+                    sessinID = session.get('sessionId',None)
+                    if sessinID is None:
+                        continue
+                    sessionName = session.get('sessionName',None)
+                    managerName = session.get('managerUsername',None)
+                    members = session.get('sessionMembers',None)
+                    records = session.get('contents',None)
+                    if records is not None:
+                        records = json.loads(records)
+                    if managerName is None and members is not None:
+                        #私聊
+                        for name in members:
+                            if name != self.username:
+                                username = name
+                    else:
+                        username = None
+                    self.localStorage.rewriteRecord(sessinID,records,username,sessionName,managerName,members)
         # 建立会话并自动加入
         # request格式：{"messageNumber": "6"}
         # message格式：sessionID若为0则表示建立失败
@@ -304,7 +313,10 @@ class BackEndThread(threading.Thread):
             if message is None:
                 message = request.get('content', None)
             if message is not None:
-                content = json.loads(message)
+                if type(message) is not dict:
+                    content = json.loads(message)
+                else:
+                    content = message
             if self.localStorage is not None:
                 self.localStorage.addRecordsDict(sessionID, content)
 
@@ -313,6 +325,7 @@ class BackEndThread(threading.Thread):
             if data is not None:
                 content = json.loads(data)
             sessionID = request.get('messageField1', None)
+            username = request.get('messageField3',None)
             message = {
                 'messageNumber': MessageType.SENDMESSAGERET,
                 'sessionId': sessionID,
@@ -320,7 +333,7 @@ class BackEndThread(threading.Thread):
             }
             self.messageQueue.put(message)
             if self.localStorage is not None:
-                self.localStorage.addRecordsDict(sessionID, content)
+                self.localStorage.addRecordsDict(sessionID, content, username)
 
         # 添加好友，发送好友申请 {'messageNumber':'10'}
         # request格式:{"toUserName":"lex", "checkMessage":"我是你爸爸"， "messageNumber":"10"}
