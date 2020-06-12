@@ -5,6 +5,7 @@ from FrontEnd.Elements.SearchBar import SearchBar
 from FrontEnd.Elements.SwitchListBar import SwitchListBar
 from FrontEnd.Elements.SearchResult import SearchResult
 from FrontEnd.Elements.MainMenubar import MainMenubar
+from FrontEnd.Elements.CreateGroup import CreateGroup
 from FrontEnd.Elements.Button import UserCloseButton, UserMinimizeButton
 from Common.base import readData
 import pygame
@@ -24,6 +25,7 @@ class UserWindowBackground(Element):
         self.group_list = self.createChild(FriendList, (350, 200), 1)
         self.switch_list_bar = self.createChild(SwitchListBar, (0, 155))
         self.search_result = self.createChild(SearchResult, (0, 155))
+        self.create_group = self.createChild(CreateGroup, (25, 550))
         self.search_result.refresh('', self.friend_list, self.group_list)
         self.main_menubar = self.createChild(MainMenubar, (0, 700))
         self.closeButton = self.createChild(UserCloseButton, (315, 8))
@@ -69,6 +71,15 @@ class UserWindowBackground(Element):
             self.friend_list.disable()
             self.group_list.disable()
             self.search_result.enable()
+
+        if self.main_menubar.create_button.pressed:
+            self.main_menubar.create_button.pressed = False
+            self.friend_list.frozen = True
+            self.group_list.frozen = True
+            self.create_group.enable()
+        if not self.create_group.active:
+            self.friend_list.frozen = False
+            self.group_list.frozen = False
         for child in self.childs:
             if child.active:
                 child.update()

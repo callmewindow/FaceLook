@@ -133,6 +133,7 @@ class FriendList(Element):
         self.index = 0
         self.list_name = 'friendList' if type_ == 0 else 'groupList'
         self.refresh()
+        self.frozen = False
 
     def refresh(self):
         self.childs.clear()
@@ -155,22 +156,23 @@ class FriendList(Element):
         return surface
 
     def getEvent(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == pygame.BUTTON_WHEELDOWN and self.index <= len(self.childs) - 6:
-                self.index += 1
-                for child in self.childs:
-                    child.location = (child.location[0], child.location[1] - 100)
-            if event.button == pygame.BUTTON_WHEELUP and self.index > 0:
-                self.index -= 1
-                for child in self.childs:
-                    child.location = (child.location[0], child.location[1] + 100)
-        if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
-            event.pos = (event.pos[0] - self.location[0], event.pos[1] - self.location[1])
-        for child in self.childs:
-            if child.active:
-                child.getEvent(event)
-        if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
-            event.pos = (event.pos[0] + self.location[0], event.pos[1] + self.location[1])
+        if not self.frozen:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == pygame.BUTTON_WHEELDOWN and self.index <= len(self.childs) - 6:
+                    self.index += 1
+                    for child in self.childs:
+                        child.location = (child.location[0], child.location[1] - 100)
+                if event.button == pygame.BUTTON_WHEELUP and self.index > 0:
+                    self.index -= 1
+                    for child in self.childs:
+                        child.location = (child.location[0], child.location[1] + 100)
+            if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
+                event.pos = (event.pos[0] - self.location[0], event.pos[1] - self.location[1])
+            for child in self.childs:
+                if child.active:
+                    child.getEvent(event)
+            if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
+                event.pos = (event.pos[0] + self.location[0], event.pos[1] + self.location[1])
 
     def update(self):
         if self.list_name == 'friendList' and self.listCoverY < 500:

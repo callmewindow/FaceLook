@@ -24,6 +24,7 @@ class SingleClickButton(Element):
         self.location = location
         self.state = 0
         self.func = func
+        self.pressed = False
 
     def pos_in(self, pos):
         x = pos[0]
@@ -47,9 +48,10 @@ class SingleClickButton(Element):
             if event.type == pygame.MOUSEBUTTONUP and event.button == pygame.BUTTON_LEFT:
                 self.state = 0
                 if self.pos_in(event.pos):
-                    print(self.func)
                     if self.func == 'add':
                         self.process.createSearchWindow()
+                    elif self.func == 'create':
+                        self.pressed = True
 
     def display(self):
         if self.state == 0:
