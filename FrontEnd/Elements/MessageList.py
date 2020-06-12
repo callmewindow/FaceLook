@@ -124,7 +124,7 @@ class MessageList(Element):
         self.counter = (self.counter+1)%60
         if self.counter < 59: return
         # 直接增加即可，如果更新会每次强制到底部，无法记录位置
-        self.addTest()
+        # self.addTest()
     
     def addTest(self):
         sender0 = dict(uid="847590417", name="王宇轩")

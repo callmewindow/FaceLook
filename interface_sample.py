@@ -5,14 +5,14 @@ login_request = {
     }
 register_request = {
         'messageNumber':'3',
-        'username':'MinatoAqua',
-        'password':'MinatoAqua',
-        'nickname':'MinatoAqua',
+        'username':'wyx0',
+        'password':'847590',
+        'nickname':'稼轩',
         'avatarAddress':'cd37c244-6558-42de-8fd4-770f75d1be8e',
-        'phoneNumber':'404',
-        'email':'minato@aqua.com',
-        'occupation':'hololive',
-        'location':'Japan'
+        'phoneNumber':'111000',
+        'email':'minato@wyx.com',
+        'occupation':'holomove',
+        'location':'pajan'
         }
 get_friend_list_request = {
         'messageNumber':'4',
@@ -43,7 +43,7 @@ send_message_request = {
     }
 remove_friend_request = {
         'messageNumber':'15',
-        'username':'Yagoo',
+        'username':'zyx',
     }
 quit_session_request = {
         'messageNumber':'17',
@@ -51,7 +51,8 @@ quit_session_request = {
     }
 edit_profile_request = {
         'messageNumber':'18',
-        'nickname':'AKUKIN',
+        'nickname':'稼轩轩',
+        'invitee':0,
         'avatarAddress':'116aba69-4727-41ad-948b-d4e6d98381ed',
         'phoneNumber':'404404',
         'email':'minato@akukin.tv',

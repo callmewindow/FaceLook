@@ -4,7 +4,8 @@ from FrontEnd.Processes.WindowProcess import WindowProcess
 from Common.base import *
 class SessionWindowProcess(WindowProcess):
     def __init__(self,sessionID,data,RQ,MQ):     
-        bet = None   
+        bet = None
+        self.data = data
         self.sessionID = sessionID
         WindowProcess.__init__(self, data, RQ, MQ, bet, SessionWindow(self))
         print(self.data)

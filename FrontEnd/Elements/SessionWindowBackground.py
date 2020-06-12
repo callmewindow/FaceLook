@@ -8,15 +8,38 @@ from FrontEnd.Elements.TextButton import TextButton
 from FrontEnd.Elements.text_variable import text_variable
 from FrontEnd.Elements.InputArea import InputArea
 from FrontEnd.Elements.MessageList import MessageList
+from Common.base import readData
 from Common.base import *
-
+{
+        'user': {'username': 'hcz', 'nickname': 'HCZ', 'avatarAddress': '116aba69-4727-41ad-948b-d4e6d98381ed', 'invitee': 0, 'phoneNumber': '18501990729', 'email': '792005029@qq.com', 'occupation': 'student', 'location': 'China'},
+        'friendList': [
+            {'username': 'zyx', 'nickname': 'kotori', 'invitee': 1, 'avatarAddress': 'cd37c244-6558-42de-8fd4-770f75d1be8e', 'phoneNumber': '114514', 'email': '1919810', 'occupation': 'senpai', 'location': 'Japan'}
+            ],
+        'groupList': [
+            {'username': 'fankangjun', 'password': 'fankangjun', 'nickname': '群名：反抗军', 'avatarAddress': 'cd37c244-6558-42de-8fd4-770f75d1be8e'}
+            ],
+        'sessions': [
+            {
+                'sessionID': 233,
+                'userMessages': [
+                    {'sender': 'Fubuki', 'time': '2020-5-26 15:13', 'content': 'KONKONKON'},
+                    {'sender': 'Fubuki', 'time': '2020-5-26 15:14', 'content': 'KONKONKON'},
+                    {'sender': 'Fubuki', 'time': '2020-5-26 15:15', 'content': 'KONKONKON'},
+                    {'sender': 'Fubuki', 'time': '2020-5-26 15:16', 'content': 'KONKONKON'},
+                    {'sender': 'Fubuki', 'time': '2020-5-26 15:17', 'content': 'KONKONKON'}
+                    ]
+            }
+        ],
+        'search_result': None
+    }
 class SessionWindowBackground(Element):
 
     sessionInfor=dict(title="Facelook开发团队")
 
     def __init__(self,process):
         Element.__init__(self,process)
-        print(self.counter)
+        data = readData(self.process.data)
+        # print(data)
         self.location = (0,0)
         self.surface = pygame.Surface((900,750))
         self.surface.fill((255,255,255))
@@ -91,6 +114,7 @@ class SessionWindowBackground(Element):
             self.sendButton.setState(1)
             self.messageList.changeTest()
             self.process.doAction(Action("send",None))
+            
     
     def getInputCon(self):
         # 发送消息
