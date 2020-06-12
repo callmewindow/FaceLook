@@ -4,22 +4,15 @@ from FrontEnd.Elements.GroupInforWindowBackground import GroupInforWindowBackgro
 import pygame
 from Common.base import *
 import sys
+import win32gui
+import win32con
 
 class GroupInforWindow(Window):
-    def DragFilesCallback(self,msg):
-        urls = []
-        for fp in msg:
-            url = ImageManagement.uploadImage(fp)
-            urls.append(url)
-            print(url)
-        # if len(urls)>=1 and urls[0]!=None:
-        #     self.bg.testImage.url = urls[0]
-
+    # 群聊没有拖拽的功能
     def __init__(self,process):
-        Window.__init__(self,process,'群聊信息',(400,500),(63, 115, 163),True)
+        Window.__init__(self,process,'群聊信息',(500,600),(63,115,163),True)
         self.bg = self.createChild(GroupInforWindowBackground)
         self.set_rounded_rectangle(10)
-        self.setDragFilesCallback(self.DragFilesCallback)
     
     def getMessage(self,message):
         self.bg.getMessage(message)
