@@ -38,8 +38,14 @@ def login(username,password):
     r['username']=username
     r['password']=password
     sendRequest(r)
+def register():
+    r = register_request
+    sendRequest(r)
 def get_friend_list():
     r = get_friend_list_request
+    sendRequest(r)
+def remove_friend():
+    r = remove_friend_request
     sendRequest(r)
 def get_history_message():
     r = get_history_message_request
@@ -48,11 +54,13 @@ def create_session(sessionName):
     r = create_session_request
     r['sessionName']=sessionName
     sendRequest(r)
-
 def take_user_into_session(username,sessionId):
     r = take_user_into_session_request
     r['username']=username
     r['sessionId']=sessionId
+    sendRequest(r)
+def edit_profile():
+    r = edit_profile_request
     sendRequest(r)
 def get_notice():
     r = get_notice_request

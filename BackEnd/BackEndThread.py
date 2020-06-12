@@ -43,9 +43,11 @@ class RequestType():
     GETFRIENDREGISTERRESULTRETLIST = '14'
     GETFRIENDREGISTERRESULTRETLISTRET = '14r'
     DELETEFRIEND = '15'
-    DELETEFRIENDRET = '16r'
+    DELETEFRIENDRET = '15r'
+    BEDELETEDFRIENDRET = '16r'#被删除好友
     EXITSESSION = '17'
     UPDATEPERSONALINFORMATION = '18'
+    UPDATEPERSONALINFORMATIONRET = '18r'
     UPDATESESSIONINFORMATION = '19'
     UPDATESESSIONINFORMATIONRET = '19r'
     SEARCHBYNICKNAME = '20'
@@ -67,7 +69,9 @@ class MessageType():
     RESPONDFRIENDREGISTERRET = '12r'
     GETFRIENDREGISTERRESULTRET = '13r'
     GETFRIENDREGISTERRESULTRETLISTRET = '14r'
-    DELETEFRIENDRET = '16r'
+    DELETEFRIENDRET = '15r'
+    BEDELETEDFRIENDRET = '16r'
+    UPDATEPERSONALINFORMATIONRET = '18r'
     UPDATESESSIONINFORMATIONRET = '19r'
     SEARCHBYNICKNAMERET = '20r'
     SEARCHBYUSERNAMERET = '21r'
@@ -375,7 +379,12 @@ class BackEndThread(threading.Thread):
             thread.setDaemon(True)
             thread.start()
             self.task.append(thread)
-
+            # 顺便把result还给前端
+            message = {
+                'messageNumber': MessageType.RESPONDFRIENDREGISTERRET,
+                'result': request.get('result', None)
+            }
+            self.messageQueue.put(message)
         # 用户接收到添加好友申请结果 {'messageNumber':'13r'}
         # request无
         # message格式如下
@@ -434,9 +443,15 @@ class BackEndThread(threading.Thread):
             thread.setDaemon(True)
             thread.start()
             self.task.append(thread)
+            # 顺便把消息给前端发回去
+            message = {
+                'messageNumber': MessageType.DELETEFRIENDRET,
+                'username': request.get('username', None)
+            }
+            self.messageQueue.put(message)
         # 删除好友回复
         # request格式：{'username': 'hamzy', 'messageNumber':'16r'}
-        elif messageNumber == RequestType.DELETEFRIENDRET:
+        elif messageNumber == RequestType.BEDELETEDFRIENDRET:
             friendNum = request.get('messageField1', None)
             data = request.get('messageField2', None)
             friendlist = json.loads(data)
@@ -449,7 +464,7 @@ class BackEndThread(threading.Thread):
                             'occupation': friend.get('occupation', None), 'location': friend.get('location', None)}
                     result.append(temp)
             message = {
-                'messageNumber': MessageType.DELETEFRIENDRET,
+                'messageNumber': MessageType.BEDELETEDFRIENDRET,
                 'num': friendNum,
                 'friendlist': result
             }
@@ -466,6 +481,22 @@ class BackEndThread(threading.Thread):
             thread.setDaemon(True)
             thread.start()
             self.task.append(thread)
+        elif messageNumber == RequestType.UPDATEPERSONALINFORMATIONRET:
+            data = request.get('messageField1', None)
+            user = json.loads(data)
+            message = {
+                'messageNumber': MessageType.UPDATEPERSONALINFORMATIONRET,
+                'username': None,
+                'password': None,
+                'nickname': user.get('nickname', None),
+                'avatarAddress': user.get('avatarAddress', None),
+                'invitee': user.get('invitee', None),
+                'phoneNumber': user.get('phoneNumber', None),
+                'email': user.get('email', None),
+                'occupation': user.get('occupation', None),
+                'location': user.get('location', None)
+            }
+            self.messageQueue.put(message)
         # 更改群聊信息 {'messageNumber':'19'}
         elif messageNumber == RequestType.UPDATESESSIONINFORMATION:
             thread = UpdateSessionInformation(self.client, request)

@@ -53,8 +53,8 @@ class Request():
         self.content = content
 
 
-def UserMessage(sender, time, content):
-    return {'sender':sender,'time':time,'content':content}
+def UserMessage(sender, time, content, kind):
+    return {'sender':sender,'time':time,'content':content,'kind':kind}
 
 
 def Session(sessionID,userMessages):

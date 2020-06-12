@@ -10,22 +10,35 @@ from FrontEnd.Elements.TextButton import TextButton
 from FrontEnd.Elements.Image import Image
 from FrontEnd.Elements.Button import UserCloseButton
 from FrontEnd.Elements.SingleInputBox import InputBox
+from FrontEnd.Elements.AddCheckMessage import AddCheckMessage
 from Common.base import readData
 
 class UserInforWindowBackground(Element):
+    # state == 0 本人
+    # state == 1 好友
+    # state == 2 陌生人
+
     topbg = pygame.Surface((500, 200))
     topbg.fill((251, 114, 153))
     
-    temp = {'username': 'zyx', 'nickname': 'kotori', 'invitee': 1, 'avatarAddress': 'cd37c244-6558-42de-8fd4-770f75d1be8e', 'phoneNumber': '114514', 'email': '1919810', 'occupation': 'senpai', 'location': 'Japan'}
     def __init__(self, process):
         Element.__init__(self, process)
         self.surface = pygame.Surface((500, 600))
         self.surface.fill((255, 255, 255))
         self.location = (0, 0)
         # 获取自己的用户名和展示的用户
+        self.state = -1
+        self.tempUser = self.process.userShow
         data = readData(self.process.data)
-        self.username = data['user']['username']
-        self.tempUser = self.temp
+        friends = data.get("friendList")
+        self.username = data["user"]["username"]
+        if self.tempUser.get("username") == self.username:
+            self.state = 0
+        else:
+            self.state = 2 # 先默认认为是陌生人
+            for friend in friends:
+                if self.tempUser.get("username") == friend["username"]:
+                    self.state = 1 # 有重复的则是好友
 
     def init(self):
         # 绘制上半部分内容
@@ -51,6 +64,7 @@ class UserInforWindowBackground(Element):
         self.invitee = self.createChild(InforBar, (150, topY+240), "邀请入群", self.inviteeT, 20)
         
         # 添加功能按钮
+        self.checkMessage = self.createChild(AddCheckMessage, (0, 220))
         self.addButton = self.createChild(TripleStateButton, (10, 540), './resources/UserInforWinUI/add.png', (80, 40))
         self.deleteButton = self.createChild(TripleStateButton, (410, 540), './resources/UserInforWinUI/delete.png', (80, 40))
 
@@ -129,20 +143,6 @@ class UserInforWindowBackground(Element):
             self.addButton.enable()
             self.deleteButton.enable()
 
-            if self.inviteeM.inputBox.get_text() == "允许":
-                tempInvite = 1
-            else:
-                tempInvite = 0
-            temp = {
-                'nickname': self.nickname2M.inputBox.get_text(),
-                'invitee': tempInvite,
-                'phoneNumber': self.phonenumM.inputBox.get_text(),
-                'email': self.mailM.inputBox.get_text(),
-                'occupation': self.majorM.inputBox.get_text(),
-                'location':self.addressM.inputBox.get_text()
-            }
-            self.process.doAction(Action("modify",temp))
-
     def getEvent(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
             event.pos = (event.pos[0] - self.location[0], event.pos[1] - self.location[1])
@@ -152,7 +152,28 @@ class UserInforWindowBackground(Element):
         if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
             event.pos = (event.pos[0] + self.location[0], event.pos[1] + self.location[1])
         
-        # 修改信息
+        # 添加好友
+        if self.addButton.state == 2:
+            self.addButton.setState(0)
+            self.checkMessage.set_username(self.username)
+            self.checkMessage.enable()
+
+        # 删除好友
+        if self.deleteButton.state == 2:
+            self.deleteButton.setState(0)
+            self.counter += 1
+            if self.counter == 1:
+                self.process.createAlertWindow("此举将会删除好友关系，如果确认请再次进行操作")
+            else:
+                self.counter = 0
+                request = {
+                    'messageNumber':'15',
+                    'username':self.tempUser.get('username'),
+                }
+                self.process.requestQueue.put(request)
+
+
+        # 准备修改信息
         if self.editButton.state == 2:
             self.editButton.setState(0)
             self.editInfor()
@@ -162,27 +183,37 @@ class UserInforWindowBackground(Element):
             self.returnInit(False)
         # 保存修改信息
         if self.modifyButton.state == 2:
-            print(123)
             self.modifyButton.setState(0)
+            if self.inviteeM.inputBox.get_text() == "允许":
+                tempInvite = 1
+            else:
+                tempInvite = 0
+            request = {
+                'messageNumber':'18',
+                'nickname': self.nickname2M.inputBox.get_text(),
+                'avatarAddress': self.avatar.url,
+                'invitee': tempInvite,
+                'phoneNumber': self.phonenumM.inputBox.get_text(),
+                'email': self.mailM.inputBox.get_text(),
+                'occupation': self.majorM.inputBox.get_text(),
+                'location':self.addressM.inputBox.get_text()
+            }
+            self.process.requestQueue.put(request)
             self.returnInit(True)
-        
-
-    def getEditState(self):
-        return self.editButton.state
 
     def update(self):
         # 判断是否是自己
-        if self.tempUser.get("username") == self.username:
+        if self.state == 0:
             self.addButton.disable()
             self.deleteButton.disable()
         else:
             # 判断是否是好友
-            # if self.tempUser.get("friend") == "true":
-            #     self.addButton.disable()
-            # else:
-            #     self.editButton.disable()
-            #     self.deleteButton.disable()
-            pass
+            if self.state == 1:
+                self.editButton.disable()
+                self.addButton.disable()
+            else:
+                self.editButton.disable()
+                self.deleteButton.disable()
         
         for child in self.childs:
             if child.active:

@@ -40,6 +40,14 @@ class UserWindow(Window):
         except KeyError:
             print('key error in 11r')
 
+        # 回复好友申请（接收方==>服务端）
+        try:
+            if message['messageNumber'] == '12r' and message['result'] == 1:
+                self.process.requestQueue.put({'messageNumber': '4'})
+                return
+        except KeyError:
+            print('key error in 12r')
+
         # 好友申请回复结果（服务端==>申请方）（仅限申请方在线）
         try:
             if message['messageNumber'] == '13r':
@@ -57,6 +65,29 @@ class UserWindow(Window):
                 return
         except KeyError:
             print('key error in 14r')
+
+        # 删除好友（A==>服务端）
+        try:
+            if message['messageNumber'] == '15r':
+                for i in range(len(data['friendList'])):
+                    if data['friendList'][i]['username'] == message['username']:
+                        del data['friendList'][i]
+                        break
+                writeData(self.process.data, data)
+                self.bg.friend_list.refresh()
+                return
+        except KeyError:
+            print('key error in 15r')
+
+        # 删除好友（服务端==>B）
+        try:
+            if message['messageNumber'] == '16r':
+                data['friendList'] = message['friendlist']
+                writeData(self.process.data, data)
+                self.bg.friend_list.refresh()
+                return
+        except KeyError:
+            print('key error in 16r')
 
         # 更改个人信息
         try:
