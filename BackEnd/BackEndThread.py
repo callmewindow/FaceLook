@@ -44,7 +44,7 @@ class RequestType():
     GETFRIENDREGISTERRESULTRETLISTRET = '14r'
     DELETEFRIEND = '15'
     DELETEFRIENDRET = '15r'
-    DELETEFRIENDRET = '16r'
+    BEDELETEDFRIENDRET = '16r'#被删除好友
     EXITSESSION = '17'
     UPDATEPERSONALINFORMATION = '18'
     UPDATEPERSONALINFORMATIONRET = '18r'
@@ -70,7 +70,7 @@ class MessageType():
     GETFRIENDREGISTERRESULTRET = '13r'
     GETFRIENDREGISTERRESULTRETLISTRET = '14r'
     DELETEFRIENDRET = '15r'
-    DELETEFRIENDRET = '16r'
+    BEDELETEDFRIENDRET = '16r'
     UPDATEPERSONALINFORMATIONRET = '18r'
     UPDATESESSIONINFORMATIONRET = '19r'
     SEARCHBYNICKNAMERET = '20r'
@@ -451,7 +451,7 @@ class BackEndThread(threading.Thread):
             self.messageQueue.put(message)
         # 删除好友回复
         # request格式：{'username': 'hamzy', 'messageNumber':'16r'}
-        elif messageNumber == RequestType.DELETEFRIENDRET:
+        elif messageNumber == RequestType.BEDELETEDFRIENDRET:
             friendNum = request.get('messageField1', None)
             data = request.get('messageField2', None)
             friendlist = json.loads(data)
@@ -464,7 +464,7 @@ class BackEndThread(threading.Thread):
                             'occupation': friend.get('occupation', None), 'location': friend.get('location', None)}
                     result.append(temp)
             message = {
-                'messageNumber': MessageType.DELETEFRIENDRET,
+                'messageNumber': MessageType.BEDELETEDFRIENDRET,
                 'num': friendNum,
                 'friendlist': result
             }
