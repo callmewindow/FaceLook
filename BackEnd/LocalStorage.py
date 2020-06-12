@@ -255,8 +255,3 @@ class LocalStorage(object):
     def close(self):
         self.messageRecords.close()
         
-
-local = LocalStorage("zym")
-local.test()
-local.close()
-
