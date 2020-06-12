@@ -20,7 +20,16 @@ class UserWindow(Window):
                 self.bg.friend_list.refresh()
                 return
         except KeyError:
-            print('key error in 20r')
+            print('key error in 4r')
+
+        # 获取未处理好友申请列表
+        try:
+            if message['messageNumber'] == '8r':
+                data['friend_apply']['requestorList'] = message['requestorList']
+                writeData(self.process.data, data)
+                return
+        except KeyError:
+            print('key error in 8r')
 
         # 好友申请消息（服务端==>接收方）（仅限接收方在线）
         try:
@@ -39,6 +48,30 @@ class UserWindow(Window):
                 return
         except KeyError:
             print('key error in 13r')
+
+        # 获取申请结果列表
+        try:
+            if message['messageNumber'] == '14r':
+                data['friend_apply']['receiverList'] = message['receiverList']
+                writeData(self.process.data, data)
+                return
+        except KeyError:
+            print('key error in 14r')
+
+        # 更改个人信息
+        try:
+            if message['messageNumber'] == '18r':
+                data['user']['nickname'] = message['nickname']
+                data['user']['avatarAddress'] = message['avatarAddress']
+                data['user']['phoneNumber'] = message['phoneNumber']
+                data['user']['invitee'] = message['invitee']
+                data['user']['email'] = message['email']
+                data['user']['occupation'] = message['occupation']
+                data['user']['location'] = message['location']
+                writeData(self.process.data, data)
+                return
+        except KeyError:
+            print('key error in 18r')
 
         # 按昵称搜好友
         try:
