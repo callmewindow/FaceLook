@@ -19,8 +19,9 @@ class SelfInfo(Element):
         self.covered = False
         data = readData(self.process.data)
         try:
-            self.avatar = self.createChild(Image, (27, 27), (75, 75), data['user']['avatarAddress'])
-            self.nickname = self.createChild(CustomText, (120, 50), 'dengxian', 26, (0, 0, 0), data['user']['nickname'])
+            self.user = data['user']
+            self.avatar = self.createChild(Image, (27, 27), (75, 75), self.user['avatarAddress'])
+            self.nickname = self.createChild(CustomText, (120, 50), 'dengxian', 26, (0, 0, 0), self.user['nickname'])
         except KeyError:
             print('key error in SelfInfo')
 

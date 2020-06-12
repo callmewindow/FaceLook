@@ -80,7 +80,7 @@ class CreateSession(threading.Thread):
             self.sessionName = request.get('sessionName', None)
 
     def run(self):
-        data = {'sessionName': self.sessionName, 'messageNumber': '6'}
+        data = {'messageField1': self.sessionName, 'messageNumber': '6'}
         self.client.sendMessage(data)
 
 
@@ -126,7 +126,7 @@ class SendMessage(threading.Thread):
                 self.sessionId = request.get('sessionID')
         self.message = request.get('messageField2', None)
         if self.message is None:
-            self.message = request.get('message', None)
+            self.message = request.get('content', None)
 
     def run(self):
         data = {'messageField1': self.sessionId, 'messageField2': self.message, 'messageNumber': '9'}
@@ -234,7 +234,7 @@ class UpdatePersonalInformation(threading.Thread):
                 'nickname': request.get('nickname', None),
                 'avatarAddress': request.get('avatarAddress', None),
                 'phoneNumber': request.get('phoneNumber', None),
-                'invitee': request.get('invitee', 1),
+                'invitee': request.get('invitee', None),
                 'email': request.get('email', None),
                 'occupation': request.get('occupation', None),
                 'location': request.get('location', None)
