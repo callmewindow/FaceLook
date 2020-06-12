@@ -165,7 +165,7 @@ class BackEndThread(threading.Thread):
                 'information': request.get('messageField2',None),
                 'username': user.get('username', None),
                 'nickname': user.get('nickname', None),
-                'invitee': user.get('invitee', 1),
+                'invitee': user.get('invitee', None),
                 'avatarAddress': user.get('avatarAddress', None),
                 'phoneNumber': user.get('phoneNumber', None),
                 'email': user.get('email', None),

@@ -37,7 +37,7 @@ class Register(threading.Thread):
                 'nickname': request.get('nickname', None),
                 'avatarAddress': request.get('avatarAddress', None),
                 'phoneNumber': request.get('phoneNumber', None),
-                'invitee': 1,
+                'invitee': request.get('invitee', None),
                 'email': request.get('email', None),
                 'occupation': request.get('occupation', None),
                 'location': request.get('location', None)
