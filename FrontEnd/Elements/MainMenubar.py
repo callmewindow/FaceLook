@@ -11,9 +11,8 @@ class MainMenubar(Element):
         self.location = location
         self.size = (350, 50)
         self.surface = MainMenubar.image
-        self.createChild(SingleClickButton, (0, 0), (45, 40), (25, 25), './resources/UserWindowUI/profile.png', 'profile')
-        self.createChild(SingleClickButton, (45, 0), (45, 40), (25, 25), './resources/UserWindowUI/friend_add.png', 'add')
-        self.createChild(SingleClickButton, (90, 0), (45, 40), (25, 25), './resources/UserWindowUI/mail.png', 'apply')
+        self.createChild(SingleClickButton, (0, 0), (45, 40), (25, 25), './resources/UserWindowUI/friend_add.png', 'add')
+        self.createChild(SingleClickButton, (45, 0), (45, 40), (25, 25), './resources/UserWindowUI/mail.png', 'apply')
 
     def getEvent(self, event):
         if event.type in [pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.MOUSEMOTION]:

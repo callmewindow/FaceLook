@@ -50,7 +50,7 @@ class SelfInfo(Element):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
             if self.pos_in_avatar(event.pos):
                 print('查看' + self.user['nickname'] + '资料')
-                # self.process.createxxxxxx
+                self.process.createInfoWindow(self.user)
 
     def display(self):
         surface = self.surface.copy()

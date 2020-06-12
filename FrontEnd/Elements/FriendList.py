@@ -70,9 +70,7 @@ class FriendBlock(Element):
                     self.state = 2
                     self.surface = FriendBlock.image_onClick
                     if self.pos_in_avatar(event.pos):
-                        print('查看' + self.user['nickname'] + '资料')
-                        print(self.user)
-                        # self.process.createxxxxxx
+                        self.process.createInfoWindow(self.user)
                     else:
                         if self.doubleclick_start:
                             self.doubleclick_start = False

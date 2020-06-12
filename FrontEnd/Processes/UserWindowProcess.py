@@ -14,14 +14,16 @@ class UserWindowProcess(WindowProcess):
         self.sessions = []
 
     def createSessionWindow(self, sessionID):
-        # proc = multiprocessing.Process(target=createSession,
-        #                                args=(sessionID, self.data, self.requestQueue, self.messageQueue))
-        # proc.start()
-        proc = multiprocessing.Process(target=createUserInfor,
-                                       args=(None, self.data, self.requestQueue, self.messageQueue))
+        proc = multiprocessing.Process(target=createSession,
+                                       args=(sessionID, self.data, self.requestQueue, self.messageQueue))
         proc.start()
 
     def createSearchWindow(self):
         proc = multiprocessing.Process(target=createSearch,
                                        args=(self.data, self.requestQueue, self.messageQueue))
+        proc.start()
+
+    def createInfoWindow(self, user):
+        proc = multiprocessing.Process(target=createUserInfor,
+                                       args=(user, self.data, self.requestQueue, self.messageQueue))
         proc.start()

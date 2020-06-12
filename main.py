@@ -33,11 +33,11 @@ def test_data(data):
     data['friendList'] = [mea, miko, shion, mazili, xiaohuli]
     data['groupList'] = [fankangjun]
 
-    testUserMessage1 = UserMessage('Fubuki', '2020-5-26 15:13', 'KONKONKON')
-    testUserMessage2 = UserMessage('Fubuki', '2020-5-26 15:14', 'KONKONKON')
-    testUserMessage3 = UserMessage('Fubuki', '2020-5-26 15:15', 'KONKONKON')
-    testUserMessage4 = UserMessage('Fubuki', '2020-5-26 15:16', 'KONKONKON')
-    testUserMessage5 = UserMessage('Fubuki', '2020-5-26 15:17', 'KONKONKON')
+    testUserMessage1 = UserMessage('Fubuki', '2020-5-26 15:13', 'KONKONKON', '0')
+    testUserMessage2 = UserMessage('Fubuki', '2020-5-26 15:14', 'KONKONKON', '0')
+    testUserMessage3 = UserMessage('Fubuki', '2020-5-26 15:15', 'KONKONKON', '0')
+    testUserMessage4 = UserMessage('Fubuki', '2020-5-26 15:16', 'KONKONKON', '0')
+    testUserMessage5 = UserMessage('Fubuki', '2020-5-26 15:17', 'KONKONKON', '0')
     data['sessions'] = [
         Session(233, [testUserMessage1, testUserMessage2, testUserMessage3, testUserMessage4, testUserMessage5])]
     session = data['sessions'][0]
