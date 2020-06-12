@@ -22,6 +22,24 @@ class UserWindow(Window):
         except KeyError:
             print('key error in 20r')
 
+        # 好友申请消息（服务端==>接收方）（仅限接收方在线）
+        try:
+            if message['messageNumber'] == '11r':
+                data['friend_apply']['requestor'] = message
+                writeData(self.process.data, data)
+                return
+        except KeyError:
+            print('key error in 11r')
+
+        # 好友申请回复结果（服务端==>申请方）（仅限申请方在线）
+        try:
+            if message['messageNumber'] == '13r':
+                data['friend_apply']['receiver'] = message
+                writeData(self.process.data, data)
+                return
+        except KeyError:
+            print('key error in 13r')
+
         # 按昵称搜好友
         try:
             if message['messageNumber'] == '20r':

@@ -377,7 +377,7 @@ class BackEndThread(threading.Thread):
                 time = Time[0] + "年" + Time[1] + "月" + Time[2] + "日"
             message = {
                 'messageNumber': MessageType.GETFRIENDREGISTERRESULTRET,
-                'requestorUsername': dictResult.get('receiverUsername', None),
+                'receiverUsername': dictResult.get('receiverUsername', None),
                 'avatarAddress': dictResult.get('avatarAddress', None),
                 'result': dictResult.get('result', None),
                 'time': time
