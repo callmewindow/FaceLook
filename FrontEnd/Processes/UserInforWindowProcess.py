@@ -5,16 +5,18 @@ import multiprocessing
 from Common.base import *
 
 class UserInforWindowProcess(WindowProcess):
-    def __init__(self,data,RQ,MQ,bet):
+    def __init__(self,userShow,data,RQ,MQ):
+        bet = None
+        self.data = data
+        self.userShow = userShow
         WindowProcess.__init__(self,data,RQ,MQ,bet,UserInforWindow(self))
+        # 只有这里需要调用init函数，历史遗留内容
         self.window.bg.init()
     
     def doAction(self,action):
-        if action.type == "send":
+        if action.type == "modify":
             bg = self.window.bg
-            inputCon = bg.getInputCon()
-            print(inputCon)
-            self.sendMessage(inputCon)
+            print(action.content)
             return
     
     # 修改信息功能仍在本窗口实现
@@ -59,3 +61,7 @@ class UserInforWindowProcess(WindowProcess):
             self.window.display()
             pygame.display.update()
             self.window.FPSClock.tick(self.FPS)
+
+def createUserInfor(userShow,data,RQ,MQ):
+    uiwp = UserInforWindowProcess(userShow,data,RQ,MQ)
+    uiwp.run()

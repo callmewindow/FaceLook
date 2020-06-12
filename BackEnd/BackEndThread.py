@@ -165,7 +165,7 @@ class BackEndThread(threading.Thread):
                 'information': request.get('messageField2',None),
                 'username': user.get('username', None),
                 'nickname': user.get('nickname', None),
-                'invitee': user.get('invitee', 1),
+                'invitee': user.get('invitee', None),
                 'avatarAddress': user.get('avatarAddress', None),
                 'phoneNumber': user.get('phoneNumber', None),
                 'email': user.get('email', None),
@@ -390,7 +390,7 @@ class BackEndThread(threading.Thread):
                 time = Time[0] + "年" + Time[1] + "月" + Time[2] + "日"
             message = {
                 'messageNumber': MessageType.GETFRIENDREGISTERRESULTRET,
-                'requestorUsername': dictResult.get('receiverUsername', None),
+                'receiverUsername': dictResult.get('receiverUsername', None),
                 'avatarAddress': dictResult.get('avatarAddress', None),
                 'result': dictResult.get('result', None),
                 'time': time

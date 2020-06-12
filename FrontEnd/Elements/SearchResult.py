@@ -1,6 +1,4 @@
 from FrontEnd.Elements.Element import Element
-from FrontEnd.Elements.Avatar import Avatar
-from FrontEnd.Elements.CustomText import CustomText
 from FrontEnd.Elements.FriendList import FriendBlock
 import pygame
 

@@ -21,7 +21,7 @@ class FriendBlock(Element):
         Element.__init__(self, process)
         self.user = user
         try:
-            self.avatar = self.createChild(Image, (12, 12), (75, 75), user['avatarURL'])
+            self.avatar = self.createChild(Image, (12, 12), (75, 75), user['avatarAddress'])
             self.nickname = self.createChild(CustomText, (100, 24), 'dengxian', 22, (0, 0, 0), user['nickname'])
             self.last_message = self.createChild(CustomText, (100, 60), 'dengxian', 16, (128, 128, 128), '最最最最最最最新消息')
             self.last_time = self.createChild(CustomText, (300, 60), 'dengxian', 16, (128, 128, 128), '23:33')
@@ -71,6 +71,7 @@ class FriendBlock(Element):
                     self.surface = FriendBlock.image_onClick
                     if self.pos_in_avatar(event.pos):
                         print('查看' + self.user['nickname'] + '资料')
+                        print(self.user)
                         # self.process.createxxxxxx
                     else:
                         if self.doubleclick_start:
@@ -110,7 +111,7 @@ class FriendBlock(Element):
 
     def update_info(self, user):
         try:
-            self.avatar = self.createChild(Image, (12, 12), (75, 75), user['avatarURL'])
+            self.avatar = self.createChild(Image, (12, 12), (75, 75), user['avatarAddress'])
             self.nickname.set_text(user['nickname'])
             self.last_message.set_text('最最最最最最最新消息')
             self.last_time.set_text('23:33')
@@ -139,9 +140,10 @@ class FriendList(Element):
         self.childs.clear()
         data = readData(self.process.data)
         try:
-            for i in range(len(data[self.list_name])):
-                user = data[self.list_name][i]
-                self.createChild(FriendBlock, (0, i * 100), user)
+            if self.list_name in data:
+                for i in range(len(data[self.list_name])):
+                    user = data[self.list_name][i]
+                    self.createChild(FriendBlock, (0, i * 100), user)
         except KeyError:
             print('key error in FriendList')
 

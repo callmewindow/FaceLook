@@ -14,7 +14,11 @@ def uploadImage(imagePath):
 
         path = imagePath.decode('gbk')
         url = "http://121.199.55.52:8080/api/uploadImage"
-        data = {'image' : open(path,'rb')}
+        f = open(path,'rb')
+        data = {'image' : f.read()}
+        print(f)
+        f.close()
+        
         r = requests.post(url,files=data)
         response = r.json()
         imagename = os.path.split(response.get('data',None))[1]

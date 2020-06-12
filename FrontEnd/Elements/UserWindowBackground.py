@@ -25,7 +25,6 @@ class UserWindowBackground(Element):
         self.switch_list_bar = self.createChild(SwitchListBar, (0, 155))
         self.search_result = self.createChild(SearchResult, (0, 155))
         self.search_result.refresh('', self.friend_list, self.group_list)
-        # self.main_menu = self.createChild(MainMenu, (0, 700 - 90))
         self.main_menubar = self.createChild(MainMenubar, (0, 700))
         self.closeButton = self.createChild(UserCloseButton, (315, 8))
         self.minimizeButton = self.createChild(UserMinimizeButton, (280, 8))
