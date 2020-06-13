@@ -10,6 +10,7 @@ from FrontEnd.Processes.UserInforWindowProcess import createUserInfor
 class UserWindowProcess(WindowProcess):
     def __init__(self, data, RQ, MQ, bet):
         self.data = data
+        self.bet = bet
         WindowProcess.__init__(self, data, RQ, MQ, bet, UserWindow(self))
         self.sessions = []
 

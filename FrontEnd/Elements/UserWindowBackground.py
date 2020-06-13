@@ -7,7 +7,7 @@ from FrontEnd.Elements.SearchResult import SearchResult
 from FrontEnd.Elements.MainMenubar import MainMenubar
 from FrontEnd.Elements.CreateGroup import CreateGroup
 from FrontEnd.Elements.Button import UserCloseButton, UserMinimizeButton
-from Common.base import readData
+from time import sleep
 import pygame
 
 
@@ -20,16 +20,17 @@ class UserWindowBackground(Element):
         self.location = (0, 0)
         self.displayed_list = 0
         self.self_info = self.createChild(SelfInfo, (0, 0))
-        self.search_bar = self.createChild(SearchBar, (0, 119))
-        self.friend_list = self.createChild(FriendList, (0, 200), 0)
-        self.group_list = self.createChild(FriendList, (350, 200), 1)
-        self.switch_list_bar = self.createChild(SwitchListBar, (0, 155))
-        self.search_result = self.createChild(SearchResult, (0, 155))
-        self.create_group = self.createChild(CreateGroup, (25, 550))
-        self.search_result.refresh('', self.friend_list, self.group_list)
-        self.main_menubar = self.createChild(MainMenubar, (0, 700))
         self.closeButton = self.createChild(UserCloseButton, (315, 8))
         self.minimizeButton = self.createChild(UserMinimizeButton, (280, 8))
+        self.search_bar = self.createChild(SearchBar, (0, 119))
+        self.switch_list_bar = self.createChild(SwitchListBar, (0, 155))
+        self.search_result = self.createChild(SearchResult, (0, 155))
+        self.friend_list = self.createChild(FriendList, (0, 200), 0)
+        self.group_list = self.createChild(FriendList, (350, 200), 1)
+        self.search_result.refresh('', self.friend_list, self.group_list)
+        self.create_group = self.createChild(CreateGroup, (25, 550))
+        self.main_menubar = self.createChild(MainMenubar, (0, 700))
+        self.mes5_counter = 0
 
     def getEvent(self, event):
         if self.search_bar.input.focused and event.type == pygame.KEYDOWN and event.key in [pygame.K_RETURN,
@@ -80,6 +81,14 @@ class UserWindowBackground(Element):
         if not self.create_group.active:
             self.friend_list.frozen = False
             self.group_list.frozen = False
+
+        self.mes5_counter = (self.mes5_counter + 1) % 120
+        if self.mes5_counter == 0:
+            self.process.requestQueue.put({'messageNumber': '5'})
+
         for child in self.childs:
             if child.active:
                 child.update()
+
+    def refresh_group(self):
+        self.group_list.refresh()

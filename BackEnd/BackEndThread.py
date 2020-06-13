@@ -381,6 +381,7 @@ class BackEndThread(threading.Thread):
             self.task.append(thread)
             # 顺便把result还给前端
             message = {
+                'requestorUsername': request.get('requestorUsername', None),
                 'messageNumber': MessageType.RESPONDFRIENDREGISTERRET,
                 'result': request.get('result', None)
             }

@@ -1,6 +1,7 @@
 from FrontEnd.Elements.Window import Window
 from FrontEnd.Elements.UserWindowBackground import UserWindowBackground
 from Common.base import readData, writeData
+from time import sleep
 
 
 class UserWindow(Window):
@@ -8,6 +9,8 @@ class UserWindow(Window):
         Window.__init__(self, process, 'FaceLook!', (350, 740), (255, 255, 255), True)
         self.bg = self.createChild(UserWindowBackground)
         self.set_rounded_rectangle(20)
+        self.need_session = False
+        self.needed_username = ''
 
     def getMessage(self, message):
         data = readData(self.process.data)
@@ -21,6 +24,23 @@ class UserWindow(Window):
                 return
         except KeyError:
             print('key error in 4r')
+
+        # 创建会话
+        try:
+            if message['messageNumber'] == '6r':
+                if self.need_session:
+                    self.need_session = False
+                    self.process.requestQueue.put({'messageNumber': '7',
+                                                   'username': self.needed_username,
+                                                   'sessionId': message['sessionId']})
+                    self.process.requestQueue.put({'messageNumber': '5'})
+                else:
+                    self.process.requestQueue.put({'messageNumber': '5'})
+                    sleep(1)
+                    self.bg.group_list.refresh()
+                return
+        except KeyError:
+            print('key error in 6r')
 
         # 获取未处理好友申请列表
         try:
@@ -43,6 +63,8 @@ class UserWindow(Window):
         # 回复好友申请（接收方==>服务端）
         try:
             if message['messageNumber'] == '12r' and message['result'] == 1:
+                self.need_session = True
+                self.needed_username = message['requestorUsername']
                 self.process.requestQueue.put({'messageNumber': '4'})
                 return
         except KeyError:

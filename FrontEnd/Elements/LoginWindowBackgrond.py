@@ -10,6 +10,7 @@ from FrontEnd.Elements.AquaLoading import AquaLoading
 from FrontEnd.Elements.text_default import text_default
 from FrontEnd.Elements.Button import CloseButton, MinimizeButton
 from Common.base import *
+from time import sleep
 
 
 class login_state():
@@ -82,7 +83,7 @@ class LoginWindowBackground(Element):
                 data = readData(self.process.data)
                 try:
                     if message['messageNumber'] == '2r':
-                        user = {
+                        data['user'] = {
                             'username': message['username'],
                             'nickname': message['nickname'],
                             'avatarAddress': message['avatarAddress'],
@@ -92,11 +93,12 @@ class LoginWindowBackground(Element):
                             'occupation': message['occupation'],
                             'location': message['location'],
                         }
-                        data['user'] = user
                 except KeyError:
                     print('key error in 2r')
                 writeData(self.process.data, data)
+                self.process.requestQueue.put({'messageNumber': '5'})
                 self.process.requestQueue.put({'messageNumber': '4'})
+                sleep(1)
                 self.process.stop()
             elif result == '0':
                 self.set_failure(info)
