@@ -5,7 +5,7 @@ from FrontEnd.Processes.SessionWindowProcess import createSession
 from FrontEnd.Processes.SearchWindowProcess import createSearch
 import multiprocessing
 from FrontEnd.Processes.UserInforWindowProcess import createUserInfor
-
+from FrontEnd.Processes.FriendApplyWindowProcess import createFriendApplyProcess
 
 class UserWindowProcess(WindowProcess):
     def __init__(self, data, RQ, MQ, bet):
@@ -27,4 +27,19 @@ class UserWindowProcess(WindowProcess):
     def createInfoWindow(self, user):
         proc = multiprocessing.Process(target=createUserInfor,
                                        args=(user, self.data, self.requestQueue, self.messageQueue))
+        proc.start()
+
+    def createFriendApplyWindow(self):
+        # 在打开窗口前发送请求拿数据
+        request = {
+            'messageNumber': '14',
+        }
+        self.requestQueue.put(request)
+        request = {
+            'messageNumber': '8',
+        }
+        self.requestQueue.put(request)
+
+        proc = multiprocessing.Process(target=createFriendApplyProcess,
+                                       args=(self.data, self.requestQueue, self.messageQueue))
         proc.start()
