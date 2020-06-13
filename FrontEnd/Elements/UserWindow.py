@@ -11,6 +11,7 @@ class UserWindow(Window):
         self.set_rounded_rectangle(20)
         self.need_session = False
         self.needed_username = ''
+        self.set_location((1400, 200))
 
     def getMessage(self, message):
         data = readData(self.process.data)
