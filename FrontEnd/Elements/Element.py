@@ -2,10 +2,7 @@ import pygame
 
 
 class Element:
-    listens = []
-
     def __init__(self, process):
-        self.parent = None
         self.childs = []
         self.state = 0
         self.counter = 0
