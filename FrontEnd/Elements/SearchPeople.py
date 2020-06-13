@@ -16,7 +16,7 @@ class PeopleBlock(Element):
         self.size = (200, 80)
         self.check = check
         self.avatar = self.createChild(Image, (15, 15), (50, 50), user['avatarAddress'])
-        self.nickname = self.createChild(CustomText, (75, 10), 'dengxian', 20, (0, 0, 0), user['nickname'])
+        self.nickname = self.createChild(CustomText, (75, 10), 'simhei', 20, (0, 0, 0), user['nickname'], 190)
         self.add = self.createChild(AddButton, (80, 45), '+好友', 12, (40, 20), user['username'], check)
 
     def getEvent(self, event):

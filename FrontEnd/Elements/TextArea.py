@@ -1,7 +1,7 @@
 from FrontEnd.Elements.Element import Element
 import pygame
 class TextArea(Element):
-    font = pygame.font.SysFont('DENGXIAN',20)
+    font = pygame.font.SysFont('simhei',20)
     bubble = pygame.image.load('./resources/bubble.png')
     bubble_width = 300
     

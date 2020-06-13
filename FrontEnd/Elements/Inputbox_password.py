@@ -3,7 +3,7 @@ import pygame
 class Inputbox_password(Inputbox):
     image = pygame.transform.smoothscale(pygame.image.load('./resources/inputbox.png'),(300,50))  
     image.set_alpha(200)  
-    font = pygame.font.SysFont('dengxian',30)
+    font = pygame.font.SysFont('simhei',30)
     def __init__(self,process,location):
         Inputbox.__init__(self,process,location,Inputbox_password.image,Inputbox_password.font,(30,13))
         #surface = pygame.Surface((300,50))

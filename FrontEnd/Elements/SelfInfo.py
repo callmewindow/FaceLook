@@ -21,7 +21,7 @@ class SelfInfo(Element):
         try:
             self.user = data['user']
             self.avatar = self.createChild(Image, (27, 27), (75, 75), self.user['avatarAddress'])
-            self.nickname = self.createChild(CustomText, (120, 50), 'dengxian', 26, (0, 0, 0), self.user['nickname'])
+            self.nickname = self.createChild(CustomText, (120, 50), 'simhei', 26, (0, 0, 0), self.user['nickname'], 200)
         except KeyError:
             print('key error in SelfInfo')
 

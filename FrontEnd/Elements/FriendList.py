@@ -22,13 +22,13 @@ class FriendBlock(Element):
         self.user = user
         try:
             self.avatar = self.createChild(Image, (12, 12), (75, 75), user['avatarAddress'])
-            self.nickname = self.createChild(CustomText, (100, 24), 'dengxian', 22, (0, 0, 0), user['nickname'])
+            self.nickname = self.createChild(CustomText, (100, 24), 'simhei', 22, (0, 0, 0), user['nickname'], 190)
             mes = self.process.bet.localStorage.get_friend_last_message(user['username'])
-            self.last_message = self.createChild(CustomText, (100, 60), 'dengxian', 16, (128, 128, 128),
-                                                 ' 暂无消息' if mes is None else mes['content'])
-            self.last_date = self.createChild(CustomText, (300, 40), 'dengxian', 16, (128, 128, 128),
+            self.last_message = self.createChild(CustomText, (100, 60), 'simhei', 16, (128, 128, 128),
+                                                 ' 暂无消息' if mes is None else mes['content'], 190)
+            self.last_date = self.createChild(CustomText, (300, 40), 'simhei', 16, (128, 128, 128),
                                               ' ' if mes is None else mes['time'][5:10])
-            self.last_time = self.createChild(CustomText, (302, 60), 'dengxian', 16, (128, 128, 128),
+            self.last_time = self.createChild(CustomText, (300, 60), 'simhei', 16, (128, 128, 128),
                                               ' ' if mes is None else mes['time'][11:13] + ':' + mes['time'][14:16])
         except KeyError:
             print('key error in FriendBlock')
@@ -139,13 +139,13 @@ class GroupBlock(Element):
         Element.__init__(self, process)
         self.group = group
         try:
-            self.nickname = self.createChild(CustomText, (25, 24), 'dengxian', 22, (0, 0, 0), group['sessionName'])
+            self.nickname = self.createChild(CustomText, (25, 24), 'simhei', 22, (0, 0, 0), group['sessionName'], 260)
             mes = self.process.bet.localStorage.get_session_last_message(group['sessionID'])
-            self.last_message = self.createChild(CustomText, (25, 60), 'dengxian', 16, (128, 128, 128),
-                                                 ' 暂无消息' if mes is None else mes['content'])
-            self.last_date = self.createChild(CustomText, (300, 40), 'dengxian', 16, (128, 128, 128),
+            self.last_message = self.createChild(CustomText, (25, 60), 'simhei', 16, (128, 128, 128),
+                                                 ' 暂无消息' if mes is None else mes['content'], 260)
+            self.last_date = self.createChild(CustomText, (300, 40), 'simhei', 16, (128, 128, 128),
                                               ' ' if mes is None else mes['time'][5:10])
-            self.last_time = self.createChild(CustomText, (302, 60), 'dengxian', 16, (128, 128, 128),
+            self.last_time = self.createChild(CustomText, (300, 60), 'simhei', 16, (128, 128, 128),
                                               ' ' if mes is None else mes['time'][11:13] + ':' + mes['time'][14:16])
         except KeyError:
             print('key error in GroupBlock')

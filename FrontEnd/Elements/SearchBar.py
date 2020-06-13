@@ -14,7 +14,7 @@ class SearchBar(Element):
         Element.__init__(self, process)
         self.location = location
         self.size = (350, 36)
-        self.input = self.createChild(InputBox, (36, 5), 300, 'dengxian', 24, (0, 0, 0), (255, 255, 255))
+        self.input = self.createChild(InputBox, (36, 5), 300, 'simhei', 24, (0, 0, 0), (255, 255, 255))
         self.surface = SearchBar.image
         self.input.disable()
 

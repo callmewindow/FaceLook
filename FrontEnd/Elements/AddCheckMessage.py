@@ -15,8 +15,8 @@ class AddCheckMessage(Element):
         self.username = ''
         self.size = (500, 300)
         self.surface = AddCheckMessage.image
-        self.createChild(CustomText, (20, 20), 'dengxian', 20, (0, 0, 0), '请输入验证信息')
-        self.input = self.createChild(InputArea, (20, 50), (460, 189), 'dengxian', 20, (0, 0, 0), (245, 245, 245))
+        self.createChild(CustomText, (20, 20), 'simhei', 20, (0, 0, 0), '请输入验证信息')
+        self.input = self.createChild(InputArea, (20, 50), (460, 189), 'simhei', 20, (0, 0, 0), (245, 245, 245))
         self.send = self.createChild(AddButton, (400, 250), '发送', 20, (80, 30))
 
     def getEvent(self, event):

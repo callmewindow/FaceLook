@@ -13,7 +13,7 @@ class ModifyBar(Element):
         self.location = location
         self.surface = ModifyBar.bg
         self.title = self.createChild(text_variable, (0, 10), title+":", 'simhei', fontsize, (112,112,112))
-        self.inputBox = self.createChild(InputBox, (120, 8), 150, 'dengxian', 22, (0, 0, 0), (200, 200, 200))
+        self.inputBox = self.createChild(InputBox, (120, 8), 150, 'simhei', 22, (0, 0, 0), (200, 200, 200))
         self.inputBox.text = content
 
         # self.font = pygame.font.SysFont('simhei', fontsize)

@@ -21,7 +21,7 @@ class SearchWindowBackground(Element):
         self.check_message = self.createChild(AddCheckMessage, (150, 80+40))
         self.search_people.check = self.check_message
         self.menu = self.createChild(DropDownMenu, (50, 20+40), ['用户名', '昵称'])
-        self.input = self.createChild(InputBox, (200, 22+40), 450, 'dengxian', 24, (0, 0, 0), (255, 255, 255))
+        self.input = self.createChild(InputBox, (200, 22+40), 450, 'simhei', 24, (0, 0, 0), (255, 255, 255))
         self.search_button = self.createChild(SearchButton, (680, 20+40), '搜索', 20, (80, 30))
         self.closeButton = self.createChild(UserCloseButton, (765, 8))
         self.minimizeButton = self.createChild(UserMinimizeButton, (730, 8))

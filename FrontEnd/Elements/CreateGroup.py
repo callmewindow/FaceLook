@@ -14,8 +14,8 @@ class CreateGroup(Element):
         self.location = location
         self.size = (300, 150)
         self.surface = CreateGroup.image
-        self.createChild(CustomText, (20, 20), 'dengxian', 16, (0, 0, 0), '请输入群名')
-        self.input = self.createChild(InputBox, (20, 60), 260, 'dengxian', 20, (0, 0, 0), (245, 245, 245))
+        self.createChild(CustomText, (20, 20), 'simhei', 16, (0, 0, 0), '请输入群名')
+        self.input = self.createChild(InputBox, (20, 60), 260, 'simhei', 20, (0, 0, 0), (245, 245, 245))
         self.send = self.createChild(SendButton, (220, 105), '创建', 16, (60, 25))
 
     def getEvent(self, event):
