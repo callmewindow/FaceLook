@@ -1,5 +1,5 @@
 from FrontEnd.Elements.Element import Element
-from FrontEnd.Elements.FriendList import FriendBlock
+from FrontEnd.Elements.FriendList import FriendBlock, GroupBlock
 import pygame
 
 
@@ -47,8 +47,8 @@ class SearchResult(Element):
         self.createChild(Title, (0, base - 50), 1)
         index_ = 0
         for group in group_list.childs:
-            if keyword in group.user['username'] or keyword in group.user['nickname']:
-                self.createChild(FriendBlock, (0, index_ * 100 + base), group.user)
+            if keyword in group.group['sessionName']:
+                self.createChild(GroupBlock, (0, index_ * 100 + base), group.group)
                 index_ += 1
 
     def display(self):

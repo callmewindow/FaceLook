@@ -23,8 +23,13 @@ class FriendBlock(Element):
         try:
             self.avatar = self.createChild(Image, (12, 12), (75, 75), user['avatarAddress'])
             self.nickname = self.createChild(CustomText, (100, 24), 'dengxian', 22, (0, 0, 0), user['nickname'])
-            self.last_message = self.createChild(CustomText, (100, 60), 'dengxian', 16, (128, 128, 128), '最最最最最最最新消息')
-            self.last_time = self.createChild(CustomText, (300, 60), 'dengxian', 16, (128, 128, 128), '23:33')
+            mes = self.process.bet.localStorage.get_friend_last_message(user['username'])
+            self.last_message = self.createChild(CustomText, (100, 60), 'dengxian', 16, (128, 128, 128),
+                                                 ' 暂无消息' if mes is None else mes['content'])
+            self.last_date = self.createChild(CustomText, (300, 40), 'dengxian', 16, (128, 128, 128),
+                                              ' ' if mes is None else mes['time'][5:10])
+            self.last_time = self.createChild(CustomText, (302, 60), 'dengxian', 16, (128, 128, 128),
+                                              ' ' if mes is None else mes['time'][11:13] + ':' + mes['time'][14:16])
         except KeyError:
             print('key error in FriendBlock')
         self.surface = FriendBlock.image
@@ -108,12 +113,12 @@ class FriendBlock(Element):
             return True
         return False
 
-    def update_info(self, user):
+    def update_info(self):
         try:
-            self.avatar = self.createChild(Image, (12, 12), (75, 75), user['avatarAddress'])
-            self.nickname.set_text(user['nickname'])
-            self.last_message.set_text('最最最最最最最新消息')
-            self.last_time.set_text('23:33')
+            mes = self.process.bet.localStorage.get_friend_last_message(self.user['username'])
+            self.last_message.set_text(' 暂无消息' if mes is None else mes['content'])
+            self.last_date.set_text(' ' if mes is None else mes['time'][5:10])
+            self.last_time.set_text(' ' if mes is None else mes['time'][11:13] + ':' + mes['time'][14:16])
         except KeyError:
             print('key error in update FriendBlock')
 
@@ -136,7 +141,6 @@ class GroupBlock(Element):
         try:
             self.nickname = self.createChild(CustomText, (25, 24), 'dengxian', 22, (0, 0, 0), group['sessionName'])
             mes = self.process.bet.localStorage.get_session_last_message(group['sessionID'])
-            print(mes)
             self.last_message = self.createChild(CustomText, (25, 60), 'dengxian', 16, (128, 128, 128),
                                                  ' 暂无消息' if mes is None else mes['content'])
             self.last_date = self.createChild(CustomText, (300, 40), 'dengxian', 16, (128, 128, 128),
@@ -248,7 +252,7 @@ class FriendList(Element):
         except KeyError:
             print('key error in FriendList')
 
-    def update_group(self):
+    def update_info(self):
         for child in self.childs:
             child.update_info()
 
@@ -283,10 +287,6 @@ class FriendList(Element):
     def update(self):
         if self.type_ == 0 and self.listCoverY < 500:
             self.listCoverY = self.listCoverY + 8
-
-        self.sort_counter = (self.sort_counter + 1) % 60
-        if self.sort_counter == 0:
-            pass
         for child in self.childs:
             if child.active:
                 child.update()

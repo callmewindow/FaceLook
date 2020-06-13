@@ -7,7 +7,6 @@ from FrontEnd.Elements.SearchResult import SearchResult
 from FrontEnd.Elements.MainMenubar import MainMenubar
 from FrontEnd.Elements.CreateGroup import CreateGroup
 from FrontEnd.Elements.Button import UserCloseButton, UserMinimizeButton
-from time import sleep
 import pygame
 
 
@@ -81,10 +80,6 @@ class UserWindowBackground(Element):
         if not self.create_group.active:
             self.friend_list.frozen = False
             self.group_list.frozen = False
-
-        self.mes5_counter = (self.mes5_counter + 1) % 120
-        if self.mes5_counter == 0:
-            self.process.requestQueue.put({'messageNumber': '5'})
 
         for child in self.childs:
             if child.active:

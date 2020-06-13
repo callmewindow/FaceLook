@@ -236,6 +236,7 @@ class BackEndThread(threading.Thread):
                     else:
                         username = None
                     self.localStorage.rewriteRecord(sessinID,records,username,sessionName,managerName,members)
+            self.messageQueue.put({'messageNumber': '5r'})
         # 建立会话并自动加入
         # request格式：{"messageNumber": "6"}
         # message格式：sessionID若为0则表示建立失败

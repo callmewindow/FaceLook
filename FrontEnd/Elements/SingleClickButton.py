@@ -21,10 +21,14 @@ class SingleClickButton(Element):
         self.image = pygame.transform.smoothscale(SingleClickButton.image, size)
         self.image_hover = pygame.transform.smoothscale(SingleClickButton.image_hover, size)
         self.image_select = pygame.transform.smoothscale(SingleClickButton.image_select, size)
+        if func == 'apply':
+            self.icon_notice = pygame.transform.smoothscale(
+                pygame.image.load('./resources/UserWindowUI/mail_notice.png'), icon_size)
         self.location = location
         self.state = 0
         self.func = func
         self.pressed = False
+        self.notice = False
 
     def pos_in(self, pos):
         x = pos[0]
@@ -53,6 +57,7 @@ class SingleClickButton(Element):
                     elif self.func == 'create':
                         self.pressed = True
                     elif self.func == 'apply':
+                        self.notice = False
                         self.pressed = True
 
     def display(self):
@@ -64,6 +69,8 @@ class SingleClickButton(Element):
             self.surface = self.image_select
         surface = self.surface.copy()
         surface.blit(self.icon, ((self.size[0] - self.icon_size[0]) // 2, (self.size[1] - self.icon_size[1]) // 2))
+        if self.func == 'apply' and self.notice:
+            surface.blit(self.icon_notice, ((self.size[0] - self.icon_size[0]) // 2, (self.size[1] - self.icon_size[1]) // 2))
         return surface
 
     def update(self):

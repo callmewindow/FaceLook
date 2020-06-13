@@ -25,6 +25,15 @@ class UserWindow(Window):
         except KeyError:
             print('key error in 4r')
 
+        # 获取会话列表
+        try:
+            if message['messageNumber'] == '5r':
+                self.bg.friend_list.update_info()
+                self.bg.group_list.update_info()
+                return
+        except KeyError:
+            print('key error in 5r')
+
         # 创建会话
         try:
             if message['messageNumber'] == '6r':
@@ -51,11 +60,20 @@ class UserWindow(Window):
         except KeyError:
             print('key error in 8r')
 
+        # 收到聊天消息
+        try:
+            if message['messageNumber'] == '9r':
+                self.process.requestQueue.put({'messageNumber': '5'})
+                return
+        except KeyError:
+            print('key error in 9r')
+
         # 好友申请消息（服务端==>接收方）（仅限接收方在线）
         try:
             if message['messageNumber'] == '11r':
                 data['friend_apply']['requestor'] = message
                 writeData(self.process.data, data)
+                self.bg.main_menubar.apply_button.notice = True
                 return
         except KeyError:
             print('key error in 11r')
@@ -75,6 +93,8 @@ class UserWindow(Window):
             if message['messageNumber'] == '13r':
                 data['friend_apply']['receiver'] = message
                 writeData(self.process.data, data)
+                if message['result'] == 1:
+                    self.process.requestQueue.put({'messageNumber': '4'})
                 return
         except KeyError:
             print('key error in 13r')
@@ -91,12 +111,7 @@ class UserWindow(Window):
         # 删除好友（A==>服务端）
         try:
             if message['messageNumber'] == '15r':
-                for i in range(len(data['friendList'])):
-                    if data['friendList'][i]['username'] == message['username']:
-                        del data['friendList'][i]
-                        break
-                writeData(self.process.data, data)
-                self.bg.friend_list.refresh()
+                self.process.requestQueue.put({'messageNumber': '4'})
                 return
         except KeyError:
             print('key error in 15r')
@@ -104,12 +119,18 @@ class UserWindow(Window):
         # 删除好友（服务端==>B）
         try:
             if message['messageNumber'] == '16r':
-                data['friendList'] = message['friendlist']
-                writeData(self.process.data, data)
-                self.bg.friend_list.refresh()
+                self.process.requestQueue.put({'messageNumber': '4'})
                 return
         except KeyError:
             print('key error in 16r')
+
+        # 退出群聊
+        try:
+            if message['messageNumber'] == '17r':
+                self.process.requestQueue.put({'messageNumber': '5'})
+                return
+        except KeyError:
+            print('key error in 17r')
 
         # 更改个人信息
         try:
@@ -129,6 +150,14 @@ class UserWindow(Window):
                 return
         except KeyError:
             print('key error in 18r')
+
+        # 修改群聊信息
+        try:
+            if message['messageNumber'] == '19r':
+                self.process.requestQueue.put({'messageNumber': '5'})
+                return
+        except KeyError:
+            print('key error in 19r')
 
         # 按昵称搜好友
         try:
