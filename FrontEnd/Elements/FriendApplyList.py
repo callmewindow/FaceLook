@@ -30,53 +30,9 @@ class ReceiverList(Element):
         # 注意 在这之前要发一次14号/8号消息 目前不知道放到哪里去
         # 窗口刚打开时readData一次 这是深拷贝
 
-        # debug
-        # print(self.process)
-        # print(self.process.data)
-
-
-###################################################test
-        # request = {
-        #     'messageNumber':'8'
-        # }
-        # self.process.requestQueue.put(request)
-        # request = {
-        #     'messageNumber':'14'
-        # }
-        # self.process.requestQueue.put(request)
-
-
-
-###################################################test
-
-        # try:
-        #     data = readData(self.process.data)
-        #     print('2')
-        #     data_receiverList = data['friend_apply']['receiverList']
-        #     print('1')
-        #     # data_requestorList = readData(self.process.data)['friend_apply']['requestorList']
-        #     for receiverMessage,i in data_receiverList:
-        #         #receiverMessage = data_receiverList[i]
-        #         self.createChild(ReceiverBlock, (0, i * 130), receiverMessage)
-        # except KeyError:
-        #     print('key error in FriendApply readData')
-
-
-
-
         try:
             data = readData(self.process.data)
-            # test
 
-            # data = readData(self.process.data)
-            # 也可以 data_receiverList = readData(self.process.data)['friend_apply']['receiverList']
-
-            # for i,receiverMessage in data['friend_apply']['receiverList']
-            #     self.createChild(ReceiverBlock, (0, i*130), receiverMessage)
-
-            # for i in range(len(data['friend_apply'][self.list_name])):
-            #     receiverMessage = data['friend_apply'][self.list_name][i]
-            #     self.createChild(ReceiverBlock, (0, i * 130), receiverMessage)
             n = len(data[self.list_name])
             for i in range(len(data[self.list_name])):
                 receiverMessage = data[self.list_name][n-1-i]
@@ -261,13 +217,9 @@ class RequestorList(Element):
         # 注意 在这之前要发一次14号/8号消息 目前不知道放到哪里去
         # 窗口刚打开时readData一次 这是深拷贝
 
-        # debug
-        # print(self.process)
-        # print(self.process.data)
-
-        data = readData(self.process.data)
-
         try:
+            data = readData(self.process.data)
+
             n = len(data[self.list_name])
             for i in range(len(data[self.list_name])):
                 requestorMessage = data[self.list_name][n-1-i]
