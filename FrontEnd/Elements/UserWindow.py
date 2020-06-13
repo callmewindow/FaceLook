@@ -71,8 +71,6 @@ class UserWindow(Window):
         # 好友申请消息（服务端==>接收方）（仅限接收方在线）
         try:
             if message['messageNumber'] == '11r':
-                data['friend_apply']['requestor'] = message
-                writeData(self.process.data, data)
                 self.bg.main_menubar.apply_button.notice = True
                 return
         except KeyError:
@@ -80,7 +78,7 @@ class UserWindow(Window):
 
         # 回复好友申请（接收方==>服务端）
         try:
-            if message['messageNumber'] == '12r' and message['result'] == 1:
+            if message['messageNumber'] == '12r' and message['result'] == '1':
                 self.need_session = True
                 self.needed_username = message['requestorUsername']
                 self.process.requestQueue.put({'messageNumber': '4'})
@@ -91,9 +89,7 @@ class UserWindow(Window):
         # 好友申请回复结果（服务端==>申请方）（仅限申请方在线）
         try:
             if message['messageNumber'] == '13r':
-                data['friend_apply']['receiver'] = message
-                writeData(self.process.data, data)
-                if message['result'] == 1:
+                if message['result'] == '1':
                     self.process.requestQueue.put({'messageNumber': '4'})
                 return
         except KeyError:

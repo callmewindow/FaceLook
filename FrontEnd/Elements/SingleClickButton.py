@@ -58,7 +58,7 @@ class SingleClickButton(Element):
                         self.pressed = True
                     elif self.func == 'apply':
                         self.notice = False
-                        self.pressed = True
+                        self.process.createFriendApplyWindow()
 
     def display(self):
         if self.state == 0:

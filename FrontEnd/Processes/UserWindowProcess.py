@@ -7,6 +7,7 @@ import multiprocessing
 from FrontEnd.Processes.UserInforWindowProcess import createUserInfor
 from FrontEnd.Processes.FriendApplyWindowProcess import createFriendApplyProcess
 
+
 class UserWindowProcess(WindowProcess):
     def __init__(self, data, RQ, MQ, bet):
         self.data = data
