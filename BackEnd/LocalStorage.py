@@ -3,7 +3,7 @@ import datetime
 import os
 import json
 
-PATH = 'C:/Users/dell/Desktop/Codes/FaceLook/'
+PATH = 'C:/Users/{}/Documents/'.format(os.environ.get('USERNAME'))
 
 
 class LocalStorage(object):
