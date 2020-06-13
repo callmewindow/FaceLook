@@ -322,8 +322,8 @@ class BackEndThread(threading.Thread):
                     content = json.loads(message)
                 else:
                     content = message
-            if self.localStorage is not None:
-                self.localStorage.addRecordsDict(sessionID, content)
+            # if self.localStorage is not None:
+            #     self.localStorage.addRecordsDict(sessionID, content)
 
         elif messageNumber == RequestType.SENDMESSAGERET:
             data = request.get('messageField2', None)

@@ -3,7 +3,7 @@ import datetime
 import os
 import json
 
-PATH = 'C:/Users/{}/Documents/'.format(os.environ.get('USERNAME'))
+PATH = 'C:/Users/dell/Desktop/Codes/FaceLook/'
 
 
 class LocalStorage(object):
@@ -43,7 +43,7 @@ class LocalStorage(object):
         return tableItem
 
     def addGroupList(self,sessionID):
-        #添加群聊
+        #添加群聊进入列表
         grouplist = self.groupList.get('list',None)
         if grouplist is not None:
             if self.sessionTable.get(sessionID) is None:
@@ -210,6 +210,21 @@ class LocalStorage(object):
             return None
         else:
             return self.getLastMessage(friendSession)
+    
+    def get_session_content(self,sessionID):
+        result = None
+        tableItem = self.sessionTable.get(sessionID,None)
+        if tableItem is not None:
+            result = {}
+            result['num_of_message'] = tableItem['num_of_message']
+            result['sessionName'] = tableItem['sessionName']
+            result['managerUsername'] = tableItem['managerUsername']
+            result['sessionMembers'] = tableItem['sessionMembers']
+            result['last_time'] = tableItem['last_time']
+            result['last_message'] = tableItem['last_message']
+            result['contents'] = self.messageRecords.get(sessionID)
+        return result
+
             
         
     
