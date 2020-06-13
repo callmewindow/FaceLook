@@ -77,9 +77,9 @@ class ReceiverList(Element):
             # for i in range(len(data['friend_apply'][self.list_name])):
             #     receiverMessage = data['friend_apply'][self.list_name][i]
             #     self.createChild(ReceiverBlock, (0, i * 130), receiverMessage)
-
+            n = len(data[self.list_name])
             for i in range(len(data[self.list_name])):
-                receiverMessage = data[self.list_name][i]
+                receiverMessage = data[self.list_name][n-1-i]
                 self.createChild(ReceiverBlock, (0, i * 130), receiverMessage)
         except KeyError:
             print('key error in FriendApplyList-ReceiverList')

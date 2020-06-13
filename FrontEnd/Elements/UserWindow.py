@@ -54,7 +54,7 @@ class UserWindow(Window):
         # 获取未处理好友申请列表
         try:
             if message['messageNumber'] == '8r':
-                data['friend_apply']['requestorList'] = message['requestorList']
+                data['requestorList'] = message['requestorList']
                 writeData(self.process.data, data)
                 return
         except KeyError:
@@ -102,7 +102,7 @@ class UserWindow(Window):
         # 获取申请结果列表
         try:
             if message['messageNumber'] == '14r':
-                data['friend_apply']['receiverList'] = message['receiverList']
+                data['receiverList'] = message['receiverList']
                 writeData(self.process.data, data)
                 return
         except KeyError:

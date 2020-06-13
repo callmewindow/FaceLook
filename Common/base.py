@@ -95,3 +95,18 @@ def Friend(username, nickname, email, phone, address, avatarURL):
 
 
 
+def ReceiverMessage(receiverUsername, avatarAddress, result, time):
+    return {
+        'receiverUsername':receiverUsername,
+        'avatarAddress':avatarAddress,
+        'result':result,
+        'time':time,
+        }
+
+def RequestorMessage(requestorUsername, avatarAddress, checkMessage, time):
+    return {
+        'requestorUsername':requestorUsername,
+        'avatarAddress':avatarAddress,
+        'checkMessage':checkMessage,
+        'time':time,
+        }
