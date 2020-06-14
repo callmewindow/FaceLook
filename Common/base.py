@@ -5,6 +5,7 @@ from BackEnd import ImageManagement
 import pygame
 from queue import Empty
 from multiprocessing.queues import Empty
+pygame.font.init()
 def panic():
     raise Exception()
 def readData(data):
