@@ -3,8 +3,6 @@ import pygame
 
 
 class Inputbox(Element):
-    pygame.font.init()
-
     def __init__(self, process, location, surface, font, textBias):
         Element.__init__(self, process)
         self.text = ''
