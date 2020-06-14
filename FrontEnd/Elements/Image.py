@@ -1,5 +1,5 @@
+from Common.base import *
 from FrontEnd.Elements.Element import Element
-import pygame
 from BackEnd import ImageManagement
 
 

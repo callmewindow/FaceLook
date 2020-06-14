@@ -1,9 +1,5 @@
-import pygame
+from Common.base import *
 from FrontEnd.Elements.Element import Element
-import win32gui
-import win32con
-import win32api
-import windnd
 class Window(Element):
     def __init__(self,process,caption,size,color,noframe=False):
         Element.__init__(self,process)

@@ -1,6 +1,5 @@
 from FrontEnd.Elements.Element import Element
 from FrontEnd.Processes.SessionWindowProcess import createSession
-import pygame
 from Common.base import *
 class Button(Element):
     source_img = pygame.image.load('./resources/WindowControlUI/user_close.png')

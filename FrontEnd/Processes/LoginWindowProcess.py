@@ -1,8 +1,6 @@
-import pygame
+from Common.base import *
 from FrontEnd.Elements.LoginWindow import LoginWindow
 from FrontEnd.Processes.WindowProcess import WindowProcess
-from Common.base import *
-from queue import Queue
 class LoginWindowProcess(WindowProcess):
     def __init__(self,data,RQ,MQ,bet):  
         WindowProcess.__init__(self,data,RQ,MQ,bet,LoginWindow(self))

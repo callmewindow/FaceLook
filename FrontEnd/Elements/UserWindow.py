@@ -12,6 +12,17 @@ class UserWindow(Window):
         self.need_session = False
         self.needed_username = ''
         self.set_location((1400, 200))
+        self.heartbeat = 0
+
+    def update(self):
+        # keepalive
+        self.heartbeat += 1
+        if self.heartbeat == 3600:
+            self.process.requestQueue.put({'messageNumber': '5'})
+            self.heartbeat = 0
+        for child in self.childs:
+            if child.active:
+                child.update()
 
     def getMessage(self, message):
         data = readData(self.process.data)

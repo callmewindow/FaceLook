@@ -1,6 +1,5 @@
 from FrontEnd.Elements.Window import Window
 from FrontEnd.Elements.LoginWindowBackgrond import LoginWindowBackground as lwb
-import pygame
 from Common.base import *
 import sys
 class LoginWindow(Window):
