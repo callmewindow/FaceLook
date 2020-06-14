@@ -1,19 +1,5 @@
-import pygame
-
-pygame.init()
-pygame.key.set_repeat(500, 40)
-
-from FrontEnd.Processes.UserWindowProcess import UserWindowProcess as UWP
-from FrontEnd.Processes.LoginWindowProcess import LoginWindowProcess as LWP
-from BackEnd.BackEndThread import BackEndThread
-import multiprocessing
-from multiprocessing import Process
-import multiprocessing
-from Common.base import *
-from multiprocessing.managers import BaseManager
-
-
 def test_data(data):
+    from Common.base import User,UserMessage,Session
     avatar = "cd37c244-6558-42de-8fd4-770f75d1be8e"
     meaAvatar = "c1a33c9a-6de2-4ed9-91a1-d632f35865ca"
     mikoAvatar = "9ca418f1-2b37-42e6-962a-2a6e110b45c5"
@@ -46,35 +32,43 @@ def test_data(data):
 
     data['search_result'] = None
 
-
 if __name__ == '__main__':
+    from BackEnd.BackEndThread import BackEndThread
+    import multiprocessing
+    #from time import sleep
     mgr = multiprocessing.Manager()
     inner = {}
-    test_data(inner)
     data = mgr.dict({
         "inner": inner,
     })
-
+    dat = data['inner']
+    test_data(dat)
+    data['inner']=dat
     RQ = multiprocessing.Queue()
     MQ = multiprocessing.Queue()
-    print(RQ)
     bet = BackEndThread(RQ, MQ)
+    
     bet.start()
-
-    # login
-
+    from Common.base import *
+    pygame.init()
+    pygame.key.set_repeat(500, 40)
+    from FrontEnd.Processes.UserWindowProcess import UserWindowProcess as UWP
+    from FrontEnd.Processes.LoginWindowProcess import LoginWindowProcess as LWP
     lwp = LWP(data, RQ, MQ, bet)
-    # print(bet.messageQueue)
-    # print(lwp.messageQueue)
     lwp.run()
 
     lwp.close()
 
-    test_data(data)
-
-    print(data['user']['username'])
+    #test_data(data)
 
     uwp = UWP(data, RQ, MQ, bet)
     uwp.run()
     bet.stop()
     bet.join()
+    
+    
+    
+
+
+
+    

@@ -2,6 +2,9 @@ from sys import exit
 import win32gui,win32con,win32api,windnd
 import pyautogui
 from BackEnd import ImageManagement
+import pygame
+from queue import Empty
+from multiprocessing.queues import Empty
 def panic():
     raise Exception()
 def readData(data):

@@ -1,5 +1,5 @@
 from FrontEnd.Elements.Inputbox import Inputbox
-import pygame
+from Common.base import *
 class Inputbox_default(Inputbox):
     image = pygame.transform.smoothscale(pygame.image.load('./resources/inputbox.png'),(300,50))  
     image.set_alpha(200)  

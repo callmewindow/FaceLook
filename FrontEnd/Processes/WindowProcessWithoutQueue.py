@@ -1,8 +1,4 @@
-import pygame
-from queue import Empty
-pygame.init()
-import pyautogui
-import win32gui
+from Common.base import *
 from FrontEnd.Processes.WindowProcess import WindowProcess
 class WindowProcessWithoutQueue(WindowProcess):
     def run(self):

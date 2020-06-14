@@ -1,7 +1,6 @@
-import pygame
 from FrontEnd.Elements.Element import Element
 from FrontEnd.Elements.logo import logo
-from FrontEnd.Elements.Aqua import Aqua
+#from FrontEnd.Elements.Aqua import Aqua
 from FrontEnd.Elements.Inputbox_default import Inputbox_default
 from FrontEnd.Elements.Inputbox_password import Inputbox_password
 from FrontEnd.Elements.TripleStateButton import TripleStateButton
