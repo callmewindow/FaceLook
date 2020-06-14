@@ -50,9 +50,14 @@ class SwitchListBarSession(Element):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
             for i in range(4):
                 if self.pos_in(event.pos, i):
-                    self.buttonState = [0, 0, 0, 0]
-                    self.buttonState[i] = 2
-                    self.change_to = i
+                    if not i == 0:
+                        # 禁止切换
+                        # self.process.createAlertWindow("功能暂未开放")
+                        pass
+                    else:
+                        self.buttonState = [0, 0, 0, 0]
+                        self.buttonState[i] = 2
+                        self.change_to = i
 
         if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
             event.pos = (event.pos[0] + self.location[0], event.pos[1] + self.location[1])

@@ -36,7 +36,7 @@ send_message_request = {
         'messageNumber':'9',
         'sessionId':'233',
         'from':'MinatoAqua',
-        'to':'Yagoo',
+        'to':None,
         'time':None,
         'content':'本 社 爆 破',
         'kind':'0',

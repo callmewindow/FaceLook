@@ -10,8 +10,8 @@ class IconChangeButton(Element):
     image_hover = pygame.Surface((100, 100))
     image_select = pygame.Surface((100, 100))
     # image.fill((255, 255, 255))
-    image_hover.fill((151, 186, 221))
-    image_select.fill((102, 153, 204))
+    image_hover.fill((251, 155, 184))
+    image_select.fill((251, 114, 153))
 
     def __init__(self, process, location, image, image_select, size):
         Element.__init__(self, process)

@@ -1,39 +1,30 @@
 import pygame
 from FrontEnd.Elements.SessionWindow import SessionWindow
 from FrontEnd.Processes.WindowProcess import WindowProcess
+from FrontEnd.Processes.UserInforWindowProcess import createUserInfor
+from FrontEnd.Processes.GroupInforWindowProcess import createGroupInfor
 from Common.base import *
+import multiprocessing
+
 class SessionWindowProcess(WindowProcess):
-    def __init__(self,sessionID,data,RQ,MQ):     
+    def __init__(self,sessionID,data,RQ,MQ):
         bet = None
         self.data = data
         self.sessionID = sessionID
         WindowProcess.__init__(self, data, RQ, MQ, bet, SessionWindow(self))
-        print(self.data)
-
-    def doAction(self,action):
-        if action.type == "send":
-            bg = self.window.bg
-            inputCon = bg.getInputCon()
-            print(inputCon) # 还是会输出多次
-            self.sendMessage(inputCon)
-            return
     
-    def sendMessage(self,inputCon):
-        # request = {
-        #     'messageNumber':'x',
-        #     'messageField1':username,
-        #     'messageField2':password,
-        #     }
-        # self.requestQueue.put(request)
-        pass
-    
-    # def createSessionWindow(self, sessionID):
-    #     # proc = multiprocessing.Process(target=createSession,
-    #     #                                args=(sessionID, self.data, self.requestQueue, self.messageQueue))
-    #     # proc.start()
-    #     print("生成会话")
-    #     pass
+    # 去除不必要的方法，请求均在window或者background中发出
 
+    def createUserInforWindow(self, userShow):
+        proc = multiprocessing.Process(target=createUserInfor,
+                                       args=(userShow, self.data, self.requestQueue, self.messageQueue))
+        proc.start()
+    
+    def createGroupInforWindow(self, groupShow):
+        proc = multiprocessing.Process(target=createGroupInfor,
+                                       args=(groupShow, self.data, self.requestQueue, self.messageQueue))
+        proc.start()
+    
     def run(self):
         while self.go:
             if self.dragging:

@@ -8,38 +8,40 @@ from FrontEnd.Elements.TextButton import TextButton
 from FrontEnd.Elements.text_variable import text_variable
 from FrontEnd.Elements.InputArea import InputArea
 from FrontEnd.Elements.MessageList import MessageList
-from Common.base import readData
+from FrontEnd.Elements.Alert import Alert
 from Common.base import *
-{
-        'user': {'username': 'hcz', 'nickname': 'HCZ', 'avatarAddress': '116aba69-4727-41ad-948b-d4e6d98381ed', 'invitee': 0, 'phoneNumber': '18501990729', 'email': '792005029@qq.com', 'occupation': 'student', 'location': 'China'},
-        'friendList': [
-            {'username': 'zyx', 'nickname': 'kotori', 'invitee': 1, 'avatarAddress': 'cd37c244-6558-42de-8fd4-770f75d1be8e', 'phoneNumber': '114514', 'email': '1919810', 'occupation': 'senpai', 'location': 'Japan'}
-            ],
-        'groupList': [
-            {'username': 'fankangjun', 'password': 'fankangjun', 'nickname': '群名：反抗军', 'avatarAddress': 'cd37c244-6558-42de-8fd4-770f75d1be8e'}
-            ],
-        'sessions': [
-            {
-                'sessionID': 233,
-                'userMessages': [
-                    {'sender': 'Fubuki', 'time': '2020-5-26 15:13', 'content': 'KONKONKON'},
-                    {'sender': 'Fubuki', 'time': '2020-5-26 15:14', 'content': 'KONKONKON'},
-                    {'sender': 'Fubuki', 'time': '2020-5-26 15:15', 'content': 'KONKONKON'},
-                    {'sender': 'Fubuki', 'time': '2020-5-26 15:16', 'content': 'KONKONKON'},
-                    {'sender': 'Fubuki', 'time': '2020-5-26 15:17', 'content': 'KONKONKON'}
-                    ]
-            }
-        ],
-        'search_result': None
-    }
-class SessionWindowBackground(Element):
 
-    sessionInfor=dict(title="Facelook开发团队")
+class SessionWindowBackground(Element):
+    # type==1 私聊
+    # type==2 群聊
 
     def __init__(self,process):
         Element.__init__(self,process)
         data = readData(self.process.data)
-        # print(data)
+        self.username = data['user']['username']
+        self.sessionID = self.process.sessionID
+        # 从后端获取完整session
+        # self.sessionCon
+        self.sessionCon = {
+            'sessionId': '233',
+            'sessionName': '反抗军',
+            'managerUsername': 'marine',
+            'sessionMembers':['Fubuki','Shion','marine','ztw','matsuri'],
+            'contents':[
+                {'from':'Fubuki','time':'2020-05-26-14-17-20','content':'KONKONKON','kind':'0'},
+                {'from':'Shion','time':'2020-05-26-15-10-25','content':'daimo shion ne','kind':'0'},
+                {'from':'marine','time':'2020-05-26-15-14-12','content':'ahoy!','kind':'0'},
+                {'from':'ztw','time':'2020-05-26-16-02-05','content':'cd37c244-6558-42de-8fd4-770f75d1be8e','kind':'1'},
+                {'from':'matsuri','time':'2020-05-26-17-30-20','content':'washoi!','kind':'0'},
+            ]
+        }
+        if self.sessionCon['sessionName'] == '':
+            self.type = 1
+            self.title = '对方的名字'
+        else:
+            self.type = 2
+            self.title = self.sessionCon['sessionName']
+        
         self.location = (0,0)
         self.surface = pygame.Surface((900,750))
         self.surface.fill((255,255,255))
@@ -48,8 +50,8 @@ class SessionWindowBackground(Element):
         line = pygame.Surface((900,2))
         line.fill((224, 224, 224))
         # self.surface.blit(line,(0,0))
-        titleLeft = (900-12*len(self.sessionInfor.get("title").encode("gbk")))/2
-        self.sessionTitle = self.createChild(text_variable, (int(titleLeft),18), self.sessionInfor.get("title"), 'simhei', 24, (66, 66, 66))
+        titleLeft = (900-12*len(self.title.encode("gbk")))/2
+        self.sessionTitle = self.createChild(text_variable, (int(titleLeft),18), self.title, 'simhei', 24, (66, 66, 66))
         marginTop1 = 60
         self.surface.blit(line,(0,marginTop1-2))
         self.surface.blit(line,(0,marginTop1+50))
@@ -82,18 +84,30 @@ class SessionWindowBackground(Element):
         self.sendButton = self.createChild(TextButton, (810, 690), "发送", 18, (65, 35))
 
         # 渲染消息列表
-        self.messageList = self.createChild(MessageList,(25,120))
-        print(self.messageList.surface.get_rect())
+        self.messageList = self.createChild(MessageList,(25,120),self.sessionCon['contents'])
 
         # 渲染输入框
         self.InputArea = self.createChild(InputArea, (25, marginTop2+50), (850,100), 'simhei', 20, (0,0,0) ,(255,255,255) )
         
+        # 空消息警示框
+        self.showAlert = False
+        self.blankAlert = self.createChild(Alert, (275,250), "不能发送空消息")
 
     def getEvent(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
             event.pos = (event.pos[0] - self.location[0], event.pos[1] - self.location[1])
-        for child in self.childs:
-            child.getEvent(event)
+        # 当在展示警告框的时候，只让警告框捕获事件
+        if self.showAlert:
+            for child in self.childs:
+                # 如果警告框都是diable，则会自动调整展示状态为False
+                self.showAlert = False
+                if isinstance(child, Alert) and child.active:
+                    self.showAlert = True
+                    child.getEvent(event)
+        else:
+            for child in self.childs:
+                if child.active:
+                    child.getEvent(event)
         if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
             event.pos = (event.pos[0] + self.location[0], event.pos[1] + self.location[1])
 
@@ -108,18 +122,46 @@ class SessionWindowBackground(Element):
         if self.closeButton.state == 2:
             self.closeButton.setState(0)
             self.process.stop()
+            self.process.dragging=False
+        
+        # 打开设置窗口
+        if self.settingButton.state == 2:
+            self.process.createUserInforWindow(None)
+            self.settingButton.setState(0)
+            # if self.type == 1:
+            #     # 搜索对应username的用户信息
+            #     tempUser = None
+            #     self.process.createUserInforWindow(tempUser)
+            # elif self.type == 2:
+            #     # 群聊的信息
+            #     tempGroup = self.sessionCon
+            #     self.process.createGroupInforWindow(tempGroup)
+            # else:
+            #     pass
 
         # 发送消息
         if self.sendButton.state == 2:
             self.sendButton.setState(1)
-            self.messageList.changeTest()
-            self.process.doAction(Action("send",None))
-            
-    
-    def getInputCon(self):
-        # 发送消息
-        return "text::"+self.InputArea.getContent()
-
+            # self.messageList.changeTest()
+            if self.InputArea.getContent() == '' or self.InputArea.getContent() == None:
+                # 提醒
+                self.blankAlert.enable()
+                self.showAlert = True
+                pass
+            else:
+                request = {
+                    'messageNumber':'9',
+                    'sessionId':self.process.sessionID,
+                    'from':self.username,
+                    'to':None,
+                    'time':None,
+                    'content':self.InputArea.getContent(),
+                    'kind':'0',
+                }
+                print(request)
+                # 输入框置空
+                self.InputArea.text = ''
+                self.InputArea.text_group = ['']
 
     def update(self):
         for child in self.childs:

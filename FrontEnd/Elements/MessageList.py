@@ -19,25 +19,27 @@ class MessageList(Element):
     topMargin = 0
     msgLen = 0
     
-    def __init__(self, process, location):
+    def __init__(self, process, location, contents):
         Element.__init__(self,process)
         self.location = location
         self.surface = pygame.Surface((850,400))
         self.surface.fill((255,255,255))
         self.rightClickMenu = self.createChild(MessageRightClick, (850,400))
+        # print(contents)
+        # sender0 = dict(uid="847590417", name="王宇轩")
+        # sender1 = dict(uid="123456", name="张宇轩")
+        # sender2 = dict(uid="654321", name="邓诗曼")
+        # MessageList.msg.append(self.createChild(FriendMessage, (0, 0), sender1, "2020/6/5 15:10:12", "image::54907ad7-0749-4ef9-91eb-3d00de047446",self.rightClickMenu))
+        # MessageList.msg.append(self.createChild(FriendMessage, (0, 0), sender0, "2020/6/5 15:15:30", "image::79c192d9-b27e-40db-9e77-0b324ca8f8ee",self.rightClickMenu))
+        # MessageList.msg.append(self.createChild(FriendMessage, (0, 0), sender0, "2020/6/31 15:43:31", "text::好，给100w的facelook币，尽情花费",self.rightClickMenu))
+        # MessageList.msg.append(self.createChild(FriendMessage, (0, 0), sender1, "2020/6/31 15:51:10", "text::上上学期华为云是用啥登录来着\n（熊猫摸耳）",self.rightClickMenu))
+        # MessageList.msg.append(self.createChild(FriendMessage, (0, 0), sender0, "2020/6/5 15:15:30", "image::79c192d9-b27e-40db-9e77-0b324ca8f8ee",self.rightClickMenu))
+        # MessageList.msg.append(self.createChild(FriendMessage, (0, 0), sender2, "2020/6/31 15:54:09", "text::https://devcloud.huaweicloud.com",self.rightClickMenu))
+        # MessageList.msg.append(self.createChild(FriendMessage, (0, 0), sender0, "2020/7/1 15:54:09", "text::图片测试0",self.rightClickMenu))
+        # MessageList.msg.append(self.createChild(FriendMessage, (0, 0), sender0, "2020/6/5 15:15:30", "image::8cefb1d1-6b66-4433-b04e-d7e2874fd555",self.rightClickMenu))
+        for message in contents:
+            MessageList.msg.append(self.createChild(FriendMessage, (0,0), message, self.rightClickMenu))
 
-        sender0 = dict(uid="847590417", name="王宇轩")
-        sender1 = dict(uid="123456", name="张宇轩")
-        sender2 = dict(uid="654321", name="邓诗曼")
-        MessageList.msg.append(self.createChild(FriendMessage, (0, 0), sender1, "2020/6/5 15:10:12", "image::54907ad7-0749-4ef9-91eb-3d00de047446",self.rightClickMenu))
-        MessageList.msg.append(self.createChild(FriendMessage, (0, 0), sender0, "2020/6/5 15:15:30", "image::79c192d9-b27e-40db-9e77-0b324ca8f8ee",self.rightClickMenu))
-        MessageList.msg.append(self.createChild(FriendMessage, (0, 0), sender0, "2020/6/31 15:43:31", "text::好，给100w的facelook币，尽情花费",self.rightClickMenu))
-        MessageList.msg.append(self.createChild(FriendMessage, (0, 0), sender1, "2020/6/31 15:51:10", "text::上上学期华为云是用啥登录来着\n（熊猫摸耳）",self.rightClickMenu))
-        MessageList.msg.append(self.createChild(FriendMessage, (0, 0), sender0, "2020/6/5 15:15:30", "image::79c192d9-b27e-40db-9e77-0b324ca8f8ee",self.rightClickMenu))
-        MessageList.msg.append(self.createChild(FriendMessage, (0, 0), sender2, "2020/6/31 15:54:09", "text::https://devcloud.huaweicloud.com",self.rightClickMenu))
-        MessageList.msg.append(self.createChild(FriendMessage, (0, 0), sender0, "2020/7/1 15:54:09", "text::图片测试0",self.rightClickMenu))
-        MessageList.msg.append(self.createChild(FriendMessage, (0, 0), sender0, "2020/6/5 15:15:30", "image::8cefb1d1-6b66-4433-b04e-d7e2874fd555",self.rightClickMenu))
-        
         MessageList.messages = self.msg
         MessageList.msgLen = len(MessageList.messages)
         for i in range(MessageList.msgLen):
@@ -47,7 +49,6 @@ class MessageList(Element):
         self.fromIndex = -1
         while self.topMargin > 400:
             self.drawMessage("down")
-        
         
     def messageReset(self):
         self.topMargin = 0
@@ -106,9 +107,8 @@ class MessageList(Element):
         if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
             event.pos = (event.pos[0] - self.location[0], event.pos[1] - self.location[1])
         for child in self.childs:
-            child.getEvent(event)
-        # if self.rightClickMenu.active:
-        #     self.rightClickMenu.getEvent(event)
+            if child.active:
+                child.getEvent(event)
         if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
             event.pos = (event.pos[0] + self.location[0], event.pos[1] + self.location[1])
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -127,9 +127,9 @@ class MessageList(Element):
         # self.addTest()
     
     def addTest(self):
-        sender0 = dict(uid="847590417", name="王宇轩")
-        MessageList.messages.append(self.createChild(FriendMessage, (0, 0), sender0, "2020/7/1 15:54:09", "text::更新测试1",self.rightClickMenu))
-        MessageList.messages.append(self.createChild(FriendMessage, (0, 0), sender0, "2020/7/1 15:54:09", "text::更新测试2",self.rightClickMenu))
+        # sender0 = dict(uid="847590417", name="王宇轩")
+        # MessageList.messages.append(self.createChild(FriendMessage, (0, 0), sender0, "2020/7/1 15:54:09", "text::更新测试1",self.rightClickMenu))
+        # MessageList.messages.append(self.createChild(FriendMessage, (0, 0), sender0, "2020/7/1 15:54:09", "text::更新测试2",self.rightClickMenu))
         
         # 处理新增的消息记录
         tempLen = len(MessageList.messages)

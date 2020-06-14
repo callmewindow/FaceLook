@@ -1,7 +1,6 @@
 import pygame
 from FrontEnd.Elements.UserInforWindow import UserInforWindow
 from FrontEnd.Processes.WindowProcess import WindowProcess
-from FrontEnd.Processes.AlertWindowProcess import createAlert
 import multiprocessing
 from Common.base import *
 from queue import Queue
@@ -12,16 +11,11 @@ class UserInforWindowProcess(WindowProcess):
     def __init__(self,userShow,data,RQ,MQ):
         bet = None
         self.data = data
-        # temp = {'username': 'MinatoAqu', 'nickname': 'kotori', 'invitee': 1, 'avatarAddress': 'cd37c244-6558-42de-8fd4-770f75d1be8e', 'phoneNumber': '114514', 'email': '1919810', 'occupation': 'senpai', 'location': 'Japan'}
-        self.userShow = userShow # 传一个完整的user对象即可
+        temp = {'username': 'MinatoAqu', 'nickname': 'kotori', 'invitee': 1, 'avatarAddress': 'cd37c244-6558-42de-8fd4-770f75d1be8e', 'phoneNumber': '114514', 'email': '1919810', 'occupation': 'senpai', 'location': 'Japan'}
+        self.userShow = temp # 传一个完整的user对象即可
         WindowProcess.__init__(self,data,RQ,MQ,bet,UserInforWindow(self))
         # 只有这里需要调用init函数，历史遗留内容
         self.window.bg.init()
-    
-    def createAlertWindow(self, content):
-        proc = multiprocessing.Process(target=createAlert,
-                                       args=(content, self.data, self.requestQueue, self.messageQueue))
-        proc.start()
 
     def run(self):
         while self.go:
