@@ -38,6 +38,8 @@ class WindowProcess():
                     del windowRect
                 if (event.type==pygame.MOUSEBUTTONUP and event.button==pygame.BUTTON_LEFT and self.dragging==True):
                     self.dragging = False
+                if (event.type==pygame.MOUSEMOTION):
+                    self.window.set_focused()
                 self.window.getEvent(event)
             try:
                 message = self.messageQueue.get(block=False)

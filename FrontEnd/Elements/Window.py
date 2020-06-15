@@ -16,7 +16,7 @@ class Window(Element):
         self.alpha = 255
         #self.origin = pygame.Surface.copy(self.surface)
         self.hwnd = pygame.display.get_wm_info()['window']
-        
+        self.set_focused()
     def setDragFilesCallback(self,func):
 
         windnd.hook_dropfiles(self.hwnd,func)
@@ -54,3 +54,5 @@ class Window(Element):
         wr = win32gui.GetWindowRect(self.hwnd)
         PyGdiHANDLE = win32gui.CreateRoundRectRgn(0,0,wr[2]-wr[0],wr[3]-wr[1],pixel,pixel)
         win32gui.SetWindowRgn(self.hwnd,PyGdiHANDLE,False) 
+    def set_focused(self):
+        win32gui.SetWindowPos(self.hwnd,win32con.HWND_TOPMOST,0,0,0,0,win32con.SWP_NOMOVE|win32con.SWP_NOSIZE|win32con.SWP_SHOWWINDOW)
