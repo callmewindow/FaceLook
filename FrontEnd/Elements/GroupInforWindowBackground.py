@@ -11,6 +11,7 @@ from FrontEnd.Elements.Image import Image
 from FrontEnd.Elements.Button import UserCloseButton
 from FrontEnd.Elements.SingleInputBox import InputBox
 from FrontEnd.Elements.AddCheckMessage import AddCheckMessage
+from FrontEnd.Elements.Alert import Alert
 from Common.base import readData
 
 class GroupInforWindowBackground(Element):
@@ -81,6 +82,10 @@ class GroupInforWindowBackground(Element):
         self.returnButton = self.createChild(TripleStateButton, (10, 540), './resources/UserInforWinUI/delete.png', (80, 40))
         self.returnInit(False)
 
+        # 添加警示框
+        self.showAlert = False
+        self.deleteAlert = self.createChild(Alert, (125,200), "此举将会删除双方的好友关系，如果确认请再次点击删除按钮")
+
     def editInfor(self):
         self.nickname1.disable()
         self.nickname2.disable()
@@ -148,9 +153,19 @@ class GroupInforWindowBackground(Element):
     def getEvent(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
             event.pos = (event.pos[0] - self.location[0], event.pos[1] - self.location[1])
-        for child in self.childs:
-            if child.active:
-                child.getEvent(event)
+
+        # 当在展示警告框的时候，只让警告框捕获事件
+        if self.showAlert:
+            for child in self.childs:
+                # 如果警告框都是diable，则会自动调整展示状态为False
+                self.showAlert = False
+                if isinstance(child, Alert) and child.active:
+                    self.showAlert = True
+                    child.getEvent(event)
+        else:
+            for child in self.childs:
+                if child.active:
+                    child.getEvent(event)
         if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
             event.pos = (event.pos[0] + self.location[0], event.pos[1] + self.location[1])
         
@@ -166,7 +181,8 @@ class GroupInforWindowBackground(Element):
             self.deleteButton.setState(0)
             self.counter += 1
             if self.counter == 1:
-                self.process.createAlertWindow("此举将会删除好友关系，如果确认请再次进行操作")
+                self.deleteAlert.enable()
+                self.showAlert = True
             else:
                 self.counter = 0
                 request = {

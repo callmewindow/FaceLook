@@ -13,6 +13,3 @@ class GroupInforWindow(Window):
         Window.__init__(self,process,'群聊信息',(500,600),(63,115,163),True)
         self.bg = self.createChild(GroupInforWindowBackground)
         self.set_rounded_rectangle(10)
-    
-    def getMessage(self,message):
-        self.bg.getMessage(message)

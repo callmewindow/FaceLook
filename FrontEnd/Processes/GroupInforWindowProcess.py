@@ -1,7 +1,6 @@
 import pygame
 from FrontEnd.Elements.GroupInforWindow import GroupInforWindow
 from FrontEnd.Processes.WindowProcess import WindowProcess
-from FrontEnd.Processes.AlertWindowProcess import createAlert
 import multiprocessing
 from Common.base import *
 from queue import Queue
@@ -13,18 +12,11 @@ class GroupInforWindowProcess(WindowProcess):
     def __init__(self,groupShow,data,RQ,MQ):
         bet = None
         self.data = data
-        print(data)
         temp = {'username': 'MinatoAqu', 'nickname': 'kotori', 'invitee': 1, 'avatarAddress': 'cd37c244-6558-42de-8fd4-770f75d1be8e', 'phoneNumber': '114514', 'email': '1919810', 'occupation': 'senpai', 'location': 'Japan'}
         self.groupShow = temp # 传一个完整的user对象即可
         WindowProcess.__init__(self,data,RQ,MQ,bet,GroupInforWindow(self))
         # 只有这里需要调用init函数，历史遗留内容
         self.window.bg.init()
-    
-    # 用来产生提示窗口，只是简单的提示，需要结合后端的self.counter进行计数处理
-    def createAlertWindow(self, content):
-        proc = multiprocessing.Process(target=createAlert,
-                                       args=(content, self.data, self.requestQueue, self.messageQueue))
-        proc.start()
 
     def run(self):
         while self.go:

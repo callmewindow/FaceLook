@@ -31,7 +31,7 @@ class UserInforWindowBackground(Element):
         self.state = -1
         self.tempUser = self.process.userShow
         data = readData(self.process.data)
-        friends = data.get("friendList")
+        friends = data["friendList"]
         self.username = data["user"]["username"]
         if self.tempUser.get("username") == self.username:
             self.state = 0
@@ -82,7 +82,7 @@ class UserInforWindowBackground(Element):
 
         # 添加警示框
         self.showAlert = False
-        self.deleteAlert = self.createChild(Alert, (125,200), "此举将会删除双方的好友关系，如果确认请再次点击删除按钮")
+        self.deleteAlert = self.createChild(Alert, (75,200), "此举将会删除双方的好友关系，如果确认请再次点击删除按钮")
 
     def editInfor(self):
         self.nickname1.disable()

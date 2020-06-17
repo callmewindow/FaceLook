@@ -12,32 +12,54 @@ from FrontEnd.Elements.Alert import Alert
 from Common.base import *
 
 class SessionWindowBackground(Element):
-    # type==1 私聊
+    # type==1 好友私聊
     # type==2 群聊
 
     def __init__(self,process):
         Element.__init__(self,process)
         data = readData(self.process.data)
+        friends = data["friendList"] # 临时使用
         self.username = data['user']['username']
         self.sessionID = self.process.sessionID
         # 从后端获取完整session
         # self.sessionCon
+        # self.sessionCon = {
+        #     'num_of_message': 3, 
+        #     'sessionName': 'zyxandzyx3', 
+        #     'managerUsername': 'zyx', 
+        #     'sessionMembers': ['zyx', 'zyx3'], 
+        #     'last_time': '2020-06-17-22-22-42', 
+        #     'last_message': {'kind': '0', 'from': 'zyx', 'time': '2020-06-17-22-22-42', 'to': 'null', 'content': '最后一个测试消息'}, 
+        #     'contents': [
+        #         {'kind': '0', 'from': 'zyx', 'time': '2020-06-17-22-22-04', 'to': 'null', 'content': '阿萨德'}, 
+        #         {'kind': '0', 'from': 'zyx', 'time': '2020-06-17-22-22-32', 'to': 'null', 'content': '张宇轩nb'}, 
+        #         {'kind': '0', 'from': 'zyx', 'time': '2020-06-17-22-22-42', 'to': 'null', 'content': '最后一个测试消息'}
+        #     ]
+        # }
         self.sessionCon = {
-            'sessionId': '233',
-            'sessionName': '反抗军',
-            'managerUsername': 'marine',
-            'sessionMembers':['Fubuki','Shion','marine','ztw','matsuri'],
-            'contents':[
-                {'from':'Fubuki','time':'2020-05-26-14-17-20','content':'KONKONKON','kind':'0'},
-                {'from':'Shion','time':'2020-05-26-15-10-25','content':'daimo shion ne','kind':'0'},
-                {'from':'marine','time':'2020-05-26-15-14-12','content':'ahoy!','kind':'0'},
-                {'from':'ztw','time':'2020-05-26-16-02-05','content':'cd37c244-6558-42de-8fd4-770f75d1be8e','kind':'1'},
-                {'from':'matsuri','time':'2020-05-26-17-30-20','content':'washoi!','kind':'0'},
+            'num_of_message': 3, 
+            'sessionName': '', 
+            'managerUsername': 'zyx', 
+            'sessionMembers': ['zyx', 'zmx'], 
+            'last_time': '2020-06-17-22-22-42', 
+            'last_message': {'kind': '0', 'from': 'zyx', 'time': '2020-06-17-22-22-42', 'to': 'null', 'content': '最后一个测试消息'}, 
+            'contents': [
+                {'kind': '0', 'from': 'zyx', 'time': '2020-06-17-22-22-04', 'to': 'null', 'content': '阿萨德'}, 
+                {'kind': '0', 'from': 'zyx', 'time': '2020-06-17-22-22-32', 'to': 'null', 'content': '张宇轩nb'}, 
+                {'kind': '0', 'from': 'zyx', 'time': '2020-06-17-22-22-42', 'to': 'null', 'content': '最后一个测试消息'}
             ]
         }
+        # 如果是好友则在这里直接获取好友信息
         if self.sessionCon['sessionName'] == '':
             self.type = 1
-            self.title = '对方的名字'
+            if self.sessionCon['sessionMembers'][0] == self.username:
+                tempUsername = self.sessionCon['sessionMembers'][1]
+            else:
+                tempUsername = self.sessionCon['sessionMembers'][0]
+            for friend in friends:
+                if tempUsername == friend["username"]:
+                    self.sessionFriend = friend
+            self.title = self.sessionFriend['nickname']
         else:
             self.type = 2
             self.title = self.sessionCon['sessionName']
@@ -83,8 +105,8 @@ class SessionWindowBackground(Element):
 
         self.sendButton = self.createChild(TextButton, (810, 690), "发送", 18, (65, 35))
 
-        # 渲染消息列表
-        self.messageList = self.createChild(MessageList,(25,120),self.sessionCon['contents'])
+        # 渲染消息列表，消息的更新在messageList进行
+        self.messageList = self.createChild(MessageList,(25,120))
 
         # 渲染输入框
         self.InputArea = self.createChild(InputArea, (25, marginTop2+50), (850,100), 'simhei', 20, (0,0,0) ,(255,255,255) )
@@ -92,6 +114,7 @@ class SessionWindowBackground(Element):
         # 空消息警示框
         self.showAlert = False
         self.blankAlert = self.createChild(Alert, (275,250), "不能发送空消息")
+
 
     def getEvent(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
@@ -126,18 +149,15 @@ class SessionWindowBackground(Element):
         
         # 打开设置窗口
         if self.settingButton.state == 2:
-            self.process.createUserInforWindow(None)
             self.settingButton.setState(0)
-            # if self.type == 1:
-            #     # 搜索对应username的用户信息
-            #     tempUser = None
-            #     self.process.createUserInforWindow(tempUser)
-            # elif self.type == 2:
-            #     # 群聊的信息
-            #     tempGroup = self.sessionCon
-            #     self.process.createGroupInforWindow(tempGroup)
-            # else:
-            #     pass
+            if self.type == 1:
+                # 直接传递之前在friends里搜索到的用户信息
+                self.process.createUserInforWindow(self.sessionFriend)
+            elif self.type == 2:
+                # 群聊的信息，直接传递即可
+                self.process.createGroupInforWindow(self.sessionCon)
+            else:
+                pass
 
         # 发送消息
         if self.sendButton.state == 2:
@@ -147,18 +167,20 @@ class SessionWindowBackground(Element):
                 # 提醒
                 self.blankAlert.enable()
                 self.showAlert = True
-                pass
             else:
                 request = {
                     'messageNumber':'9',
                     'sessionId':self.process.sessionID,
-                    'from':self.username,
-                    'to':None,
-                    'time':None,
-                    'content':self.InputArea.getContent(),
-                    'kind':'0',
+                    'content':{
+                        'from':self.username,
+                        'to':None,
+                        'time':None,
+                        'content':self.InputArea.getContent(),
+                        'kind':'0',
+                    }
                 }
                 print(request)
+                # self.process.requestQueue.put(request)
                 # 输入框置空
                 self.InputArea.text = ''
                 self.InputArea.text_group = ['']

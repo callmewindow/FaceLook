@@ -5,12 +5,10 @@ from FrontEnd.Elements.MessageRightClick import MessageRightClick
 
 
 class MessageList(Element):
-        #aqua = self.createChild(Aqua,(450,300))
-        # self.session = self.data.getSessionByID(sessionID)
-        # print(self.data)
-        # for msg in self.session.userMessages:
-        #     print(msg.sender,msg.time,msg.content)
-    # msg模拟获取到的process的消息
+    # 针对获取message的类型
+    # type==0 初始化
+    # type==1 更新消息列表
+
     msg = []
 
     messages = []
@@ -19,7 +17,7 @@ class MessageList(Element):
     topMargin = 0
     msgLen = 0
     
-    def __init__(self, process, location, contents):
+    def __init__(self, process, location):
         Element.__init__(self,process)
         self.location = location
         self.surface = pygame.Surface((850,400))
@@ -37,8 +35,8 @@ class MessageList(Element):
         # MessageList.msg.append(self.createChild(FriendMessage, (0, 0), sender2, "2020/6/31 15:54:09", "text::https://devcloud.huaweicloud.com",self.rightClickMenu))
         # MessageList.msg.append(self.createChild(FriendMessage, (0, 0), sender0, "2020/7/1 15:54:09", "text::图片测试0",self.rightClickMenu))
         # MessageList.msg.append(self.createChild(FriendMessage, (0, 0), sender0, "2020/6/5 15:15:30", "image::8cefb1d1-6b66-4433-b04e-d7e2874fd555",self.rightClickMenu))
-        for message in contents:
-            MessageList.msg.append(self.createChild(FriendMessage, (0,0), message, self.rightClickMenu))
+
+        self.getMessages(0)
 
         MessageList.messages = self.msg
         MessageList.msgLen = len(MessageList.messages)
@@ -117,6 +115,30 @@ class MessageList(Element):
             if event.button == pygame.BUTTON_WHEELUP:
                 self.drawMessage("top")
     
+    def getMessages(self,type):
+        # print(self.process.bet.localStorage.get_session_content('11'))
+        sessionCon = {
+            'num_of_message': 3, 
+            'sessionName': 'zyxandzyx3', 
+            'managerUsername': 'zyx', 
+            'sessionMembers': ['zyx', 'zyx3'], 
+            'last_time': '2020-06-17-22-22-42', 
+            'last_message': {'kind': '0', 'from': 'zyx', 'time': '2020-06-17-22-22-42', 'to': 'null', 'content': '最后一个测试消息'}, 
+            'contents': [
+                {'kind': '0', 'from': 'zyx', 'time': '2020-06-17-22-22-04', 'to': 'null', 'content': '阿萨德'}, 
+                {'kind': '0', 'from': 'zyx', 'time': '2020-06-17-22-22-32', 'to': 'null', 'content': '张宇轩nb'}, 
+                {'kind': '0', 'from': 'zyx', 'time': '2020-06-17-22-22-42', 'to': 'null', 'content': '最后一个测试消息'}
+            ]
+        }
+        for message in sessionCon['contents']:
+            MessageList.msg.append(self.createChild(FriendMessage, (0,0), message, self.rightClickMenu))
+        
+        # 如果不是初始化，则需要进行进一步的处理
+        if type == 0:
+            return
+        else:
+            print("更新列表")
+
     def update(self):
         for child in self.childs:
             if child.active:
@@ -124,7 +146,7 @@ class MessageList(Element):
         self.counter = (self.counter+1)%60
         if self.counter < 59: return
         # 直接增加即可，如果更新会每次强制到底部，无法记录位置
-        # self.addTest()
+        self.getMessages(1)
     
     def addTest(self):
         # sender0 = dict(uid="847590417", name="王宇轩")
@@ -134,7 +156,6 @@ class MessageList(Element):
         # 处理新增的消息记录
         tempLen = len(MessageList.messages)
         for i in (MessageList.msgLen, tempLen-1):
-            print(i)
             MessageList.messages[i].disable()
 
         # 如果在底部消息将会自动滚动

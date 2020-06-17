@@ -16,13 +16,16 @@ class SessionWindow(Window):
             request = {
                 'messageNumber':'9',
                 'sessionId':self.process.sessionID,
-                'from':'MinatoAqua',
-                'to':None,
-                'time':None,
-                'content':urls[0],
-                'kind':'1',
+                    'content':{
+                        'from':self.bg.username,
+                        'to':None,
+                        'time':None,
+                        'content':urls[0],
+                        'kind':'1',
+                    }
             }
             print(request)
+            # self.process.requestQueue.put(request)
 
     
     def __init__(self,process):
