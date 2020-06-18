@@ -9,6 +9,7 @@ from FrontEnd.Elements.text_variable import text_variable
 from FrontEnd.Elements.InputArea import InputArea
 from FrontEnd.Elements.MessageList import MessageList
 from FrontEnd.Elements.Alert import Alert
+from BackEnd.LocalStorage import LocalStorage
 from Common.base import *
 
 class SessionWindowBackground(Element):
@@ -20,7 +21,15 @@ class SessionWindowBackground(Element):
         data = readData(self.process.data)
         friends = data["friendList"] # 临时使用
         self.username = data['user']['username']
+        print('用户名', self.username)
         self.sessionID = self.process.sessionID
+
+        # self.localStorage = LocalStorage('zyx')
+        # print(self.localStorage.get_session_content('11'))
+        # print(self.localStorage.get_groups())
+
+        print(self.process.localStorage.get_session_content('11'))
+
         # 从后端获取完整session
         # self.sessionCon
         # self.sessionCon = {
@@ -144,6 +153,9 @@ class SessionWindowBackground(Element):
         # 关闭
         if self.closeButton.state == 2:
             self.closeButton.setState(0)
+            self.process.localStorage = None
+            # if self.localStorage != None:
+            #     self.localStorage.close()
             self.process.stop()
             self.process.dragging=False
         
@@ -170,7 +182,7 @@ class SessionWindowBackground(Element):
             else:
                 request = {
                     'messageNumber':'9',
-                    'sessionId':self.process.sessionID,
+                    'sessionId':'11',
                     'content':{
                         'from':self.username,
                         'to':None,
@@ -184,6 +196,7 @@ class SessionWindowBackground(Element):
                 # 输入框置空
                 self.InputArea.text = ''
                 self.InputArea.text_group = ['']
+                print(self.localStorage.get_session_content('11'))
 
     def update(self):
         for child in self.childs:

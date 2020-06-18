@@ -17,7 +17,7 @@ class UserWindowProcess(WindowProcess):
 
     def createSessionWindow(self, sessionID):
         proc = multiprocessing.Process(target=createSession,
-                                       args=(sessionID, self.data, self.requestQueue, self.messageQueue))
+                                       args=(sessionID, self.data, self.requestQueue, self.messageQueue, self.bet.localStorage))
         proc.start()
 
     def createSearchWindow(self):

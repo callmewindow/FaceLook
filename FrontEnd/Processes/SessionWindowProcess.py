@@ -7,8 +7,9 @@ from Common.base import *
 import multiprocessing
 
 class SessionWindowProcess(WindowProcess):
-    def __init__(self,sessionID,data,RQ,MQ):
+    def __init__(self,sessionID,data,RQ,MQ,ls):
         bet = None
+        self.localStorage = ls
         self.data = data
         self.sessionID = sessionID
         WindowProcess.__init__(self, data, RQ, MQ, bet, SessionWindow(self))
@@ -56,6 +57,6 @@ class SessionWindowProcess(WindowProcess):
             pygame.display.update()
             self.window.FPSClock.tick(self.FPS)
 
-def createSession(sessionID,data,RQ,MQ):
-    swp = SessionWindowProcess(sessionID,data,RQ,MQ)
+def createSession(sessionID,data,RQ,MQ,ls):
+    swp = SessionWindowProcess(sessionID,data,RQ,MQ,ls)
     swp.run()
