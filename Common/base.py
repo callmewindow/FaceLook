@@ -5,15 +5,11 @@ from BackEnd import ImageManagement
 import pygame
 from queue import Empty
 from multiprocessing.queues import Empty
+from Common.dataFunction import *
 pygame.font.init()
 def panic():
     raise Exception()
-def readData(data):
-    return data['inner']
-def writeData(data,data_copy):
-    data['write_lock'].acquire()
-    data['inner'] = data_copy
-    data['write_lock'].release()
+
 
 
 class ActionType():

@@ -3,6 +3,9 @@ def lockData(data):
 def unlockData(data):
     data['write_lock'].release()
 def readData(data):
-    return data['inner']
+    lockData(data)
+    dat = data['inner']
+    unlockData(data)
+    return dat
 def writeData(data,data_copy):
     data['inner'] = data_copy
