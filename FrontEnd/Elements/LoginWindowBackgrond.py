@@ -74,7 +74,7 @@ class LoginWindowBackground(Element):
         self.aqualoading.disable()
         self.loadingText.disable()
         self.messageText.setText(failureMessage)
-
+    '''
     def getMessage(self, message):
         result = message.get('result', None)
         info = message.get('information', None)
@@ -106,13 +106,18 @@ class LoginWindowBackground(Element):
                 self.set_failure(info)
             return
         print('[Warning]Message', message, 'abandoned.')
-
+    '''
+    
     def update(self):
         if self.state == login_state.loading:
-            self.counter += 1
-            loading_time = self.counter // 60
-            self.loadingText.setText('登录中...耗时{}秒'.format(loading_time))
-            self.loadingText.alignCenter((300, 350))
-            if loading_time >= 30:
-                self.set_failure('登录超时！请检查网络状况。')
+            if readData(self.data)['user']['online']:
+                self.set_success()
+            else:
+                self.counter += 1
+                loading_time = self.counter // 60
+                self.loadingText.setText('登录中...耗时{}秒'.format(loading_time))
+                self.loadingText.alignCenter((300, 350))
+                if loading_time >= 30:
+                    self.set_failure('登录超时！请检查网络状况。')
+                
         Element.update(self)

@@ -1,6 +1,3 @@
-import pygame
-
-
 class Element:
     def __init__(self, process):
         self.childs = []
@@ -9,7 +6,7 @@ class Element:
         self.surface = None
         self.process = process
         self.active = True
-
+        self.fadeable = False
     def getEvent(self, event):
         for child in self.childs:
             if child.active:
@@ -21,6 +18,8 @@ class Element:
         return child
 
     def update(self):
+        if self.fadeable:
+            self.fade()
         for child in self.childs:
             if child.active:
                 child.update()
@@ -43,4 +42,6 @@ class Element:
         self.active = False
 
     def getMessage(self, message):
+        pass
+    def fade(self):
         pass
