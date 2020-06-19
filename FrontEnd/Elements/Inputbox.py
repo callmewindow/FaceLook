@@ -64,7 +64,7 @@ class Inputbox(Element):
             if self.posin(event.pos):
                 self.focused = True
                 self.changed = True
-                self.counter = 1
+                self.counter = 30
 
                 # if self.surface != None:
                 #    self.surface.set_alpha(200)

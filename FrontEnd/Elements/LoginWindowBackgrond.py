@@ -8,6 +8,7 @@ from FrontEnd.Elements.CandyButton import CandyButton
 from FrontEnd.Elements.AquaLoading import AquaLoading
 from FrontEnd.Elements.text_default import text_default
 from FrontEnd.Elements.Button import CloseButton, MinimizeButton
+from FrontEnd.Elements.SingleInputBox import InputBox
 from Common.base import *
 from time import sleep
 
@@ -26,12 +27,14 @@ class LoginWindowBackground(Element):
         self.location = (0, 0)
         self.state = 0
         self.counter = 0
-        self.surface = pygame.transform.smoothscale(pygame.image.load('./resources/bg.png'), (800, 450))
+        self.surface = pygame.transform.smoothscale(pygame.image.load('./resources/LoginWindowUI/loginbg.png'), (600, 450))
         # aqua = self.createChild(Aqua,(450,300))
-        self.logo = self.createChild(logo, (100, 50))
-        self.usernameInputbox = self.createChild(Inputbox_default, (150, 175))
-        self.passwordInputbox = self.createChild(Inputbox_password, (150, 250))
-        self.candy = self.createChild(CandyButton, (250, 350))
+        self.logo = self.createChild(logo, (84, 50))
+        self.usernameInputbox = self.createChild(Inputbox_default, (140, 175))
+        self.passwordInputbox = self.createChild(Inputbox_password, (140, 260))
+        #self.usernameInputbox = self.createChild(InputBox,(150,175),300,'simhei',30,(0,0,0),(255,255,255))
+        #self.passwordInputbox = self.createChild(InputBox,(150,250),300,'simhei',30,(0,0,0),(255,255,255))
+        self.candy = self.createChild(CandyButton, (140, 345))
         self.aqualoading = self.createChild(AquaLoading, (230, 145))
         self.loadingText = self.createChild(text_default, (263, 325), '登录中...', (0, 0, 0))
         self.loadingText.alignCenter((300, 350))

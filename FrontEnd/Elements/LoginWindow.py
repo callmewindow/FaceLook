@@ -9,7 +9,7 @@ class LoginWindow(Window):
 
     def __init__(self,process):
         Window.__init__(self,process,'Login',(600,450),(255,255,255),True)
-        self.set_rounded_rectangle(20)
+        self.set_rounded_rectangle(40)
         self.bg = self.createChild(lwb)
         self.setDragFilesCallback(self.DragFilesCallback)
     def getMessage(self,message):

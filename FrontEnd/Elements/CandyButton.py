@@ -1,43 +1,47 @@
 from FrontEnd.Elements.Element import Element
-from FrontEnd.Processes.SessionWindowProcess import createSession
-import pygame
 from Common.base import *
 class CandyButton(Element):
-    source_img = pygame.image.load('./resources/candy.png')
-    image = pygame.transform.smoothscale(source_img,(100,50))
-    bigImage = pygame.transform.smoothscale(source_img,(120,60))
+    source_img = pygame.image.load('./resources/LoginWindowUI/login_button.png')
+    image = pygame.transform.smoothscale(source_img,(320,55))
+    #bigImage = pygame.transform.smoothscale(source_img,(120,60))
     del source_img
     def __init__(self,process,location):
         Element.__init__(self,process)
-        self.surface = CandyButton.image        
-        self.smallSize = (100,50)
-        self.smallLocation = location
-        self.bigSize = (140,70)
-        self.bigLocation = (location[0]-10,location[1]-5)        
+        self.surface = self.image        
         self.location = location
-        self.size = self.smallSize
+        self.state = 0
+        self.size = (320,55)
+        self.max_alpha = 255
+        self.min_alpha = 200
+        self.transform_frame = 11
+        self.delta_alpha = int((self.max_alpha-self.min_alpha)/self.transform_frame)
     def posin(self,pos):
         x = pos[0]
         y = pos[1]
         if self.location[0]<=x and x<=self.location[0]+self.size[0] and self.location[1]<=y and y<=self.location[1]+self.size[1]:
             return True
         return False
-    def getEvent(self,event):
-        if event.type == pygame.constants.MOUSEMOTION:
+    def update(self):
+        if self.state == 1:
+            if self.counter<self.transform_frame:
+                self.counter = self.counter+1
+                alpha = self.max_alpha - self.delta_alpha*self.counter
+                self.surface.set_alpha(alpha)
+        elif self.state == 0:
+            if self.counter>0:
+                self.counter = self.counter-1
+                alpha = self.max_alpha - self.delta_alpha*self.counter
+                self.surface.set_alpha(alpha)
+    def getEvent(self, event):
+        if event.type == pygame.MOUSEMOTION:
             if self.posin(event.pos):
-                self.size = self.bigSize
-                self.location = self.bigLocation
-                self.surface = CandyButton.bigImage
+                self.state = 1
             else:
-                self.size = self.smallSize
-                self.location = self.smallLocation
-                self.surface = CandyButton.image
-            return
-        if event.type == pygame.constants.MOUSEBUTTONDOWN and event.button == pygame.constants.BUTTON_LEFT:
-            if self.posin(event.pos):
-                self.process.addAction(Action(ActionType.LOGIN,None))
-        if event.type == pygame.constants.MOUSEBUTTONDOWN and event.button == pygame.constants.BUTTON_RIGHT:
-            self.process.window.set_alpha(self.process.window.alpha-10)
+                self.state = 0
+        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT and self.posin(event.pos):
+            self.process.addAction(Action(ActionType.LOGIN,None))
+
+
 
             
         

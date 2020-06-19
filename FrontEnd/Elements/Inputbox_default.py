@@ -1,11 +1,10 @@
 from FrontEnd.Elements.Inputbox import Inputbox
 from Common.base import *
 class Inputbox_default(Inputbox):
-    image = pygame.transform.smoothscale(pygame.image.load('./resources/inputbox.png'),(300,50))  
-    image.set_alpha(200)  
+    image = pygame.transform.smoothscale(pygame.image.load('./resources/LoginWindowUI/username_inputbox.png'),(320,55))   
     font = pygame.font.SysFont('simhei',30)
     def __init__(self,process,location):
-        Inputbox.__init__(self,process,location,Inputbox_default.image,Inputbox_default.font,(30,13))
+        Inputbox.__init__(self,process,location,Inputbox_default.image,Inputbox_default.font,(50,13))
         #surface = pygame.Surface((300,50))
         #surface.fill((255,255,255))                
         #Inputbox.__init__(self,process,location,surface,Inputbox_default.font,(0,0))

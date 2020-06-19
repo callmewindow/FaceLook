@@ -1,16 +1,14 @@
 from FrontEnd.Elements.Inputbox import Inputbox
 import pygame
 class Inputbox_password(Inputbox):
-    image = pygame.transform.smoothscale(pygame.image.load('./resources/inputbox.png'),(300,50))  
-    image.set_alpha(200)  
+    image = pygame.transform.smoothscale(pygame.image.load('./resources/LoginWindowUI/password_inputbox.png'),(320,55))   
     font = pygame.font.SysFont('simhei',30)
     def __init__(self,process,location):
-        Inputbox.__init__(self,process,location,Inputbox_password.image,Inputbox_password.font,(30,13))
+        Inputbox.__init__(self,process,location,Inputbox_password.image,Inputbox_password.font,(50,15))
         #surface = pygame.Surface((300,50))
         #surface.fill((255,255,255))                
         #Inputbox.__init__(self,process,location,surface,Inputbox_default.font,(0,0))
         #self.surface.set_alpha(150)
-        pygame.key.set_text_input_rect(pygame.Rect(300,300,400,400))
     def posin(self,pos):
         x = pos[0]
         y = pos[1]
