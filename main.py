@@ -40,13 +40,14 @@ if __name__ == '__main__':
     inner = {}
     data = mgr.dict({
         "inner": inner,
+        "write_lock":multiprocessing.Lock()
     })
     dat = data['inner']
     test_data(dat)
     data['inner']=dat
     RQ = multiprocessing.Queue()
     MQ = multiprocessing.Queue()
-    bet = BackEndThread(RQ, MQ)
+    bet = BackEndThread(RQ, MQ, data)
     
     bet.start()
     from Common.base import *

@@ -78,7 +78,7 @@ class MessageType():
 
 
 class BackEndThread(threading.Thread):
-    def __init__(self, requestQueue, messageQueue):
+    def __init__(self, requestQueue, messageQueue, data):
         threading.Thread.__init__(self)
         self.requestQueue = requestQueue
         self.messageQueue = messageQueue
@@ -88,6 +88,7 @@ class BackEndThread(threading.Thread):
         self.username = None
         self.localStorage = None
         self.task = []
+        self.data = data
 
     def run(self):
         self.client = init(self.requestQueue)
