@@ -39,7 +39,7 @@ class LoginWindowBackground(Element):
         self.loadingText = self.createChild(text_default, (263, 325), '登录中...', (0, 0, 0))
         self.loadingText.alignCenter((300, 350))
         self.messageText = self.createChild(text_default, (0, 0), '登录失败！', (0, 0, 0))
-        self.messageText.alignCenter((300, 325))
+        self.messageText.alignCenter((300, 332))
         self.aqualoading.disable()
         self.loadingText.disable()
         self.messageText.disable()

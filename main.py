@@ -40,7 +40,7 @@ if __name__ == '__main__':
     inner = {}
     data = mgr.dict({
         "inner": inner,
-        "write_lock":multiprocessing.Lock()
+        "write_lock":mgr.Lock()
     })
     dat = data['inner']
     test_data(dat)
