@@ -1,9 +1,9 @@
 from Common.base import *
 from FrontEnd.Elements.LoginWindow import LoginWindow
-from FrontEnd.Processes.WindowProcess import WindowProcess
-class LoginWindowProcess(WindowProcess):
+from FrontEnd.Processes.WindowProcessWithoutQueue import WindowProcessWithoutQueue
+class LoginWindowProcess(WindowProcessWithoutQueue):
     def __init__(self,data,RQ,MQ,bet):  
-        WindowProcess.__init__(self,data,RQ,MQ,bet,LoginWindow(self))
+        WindowProcessWithoutQueue.__init__(self,data,RQ,MQ,bet,LoginWindow(self))
         self.title_rect = (0,0,650,100)
     def doAction(self,action):
         if action.type == ActionType.LOGIN:

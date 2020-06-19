@@ -47,6 +47,7 @@ if __name__ == '__main__':
     data['inner']=dat
     RQ = multiprocessing.Queue()
     MQ = multiprocessing.Queue()
+    print(data['write_lock'])
     bet = BackEndThread(RQ, MQ, data)
     
     bet.start()

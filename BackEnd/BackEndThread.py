@@ -89,11 +89,12 @@ class BackEndThread(threading.Thread):
         self.localStorage = None
         self.task = []
         self.data = data
+        
 
     def run(self):
         self.client = init(self.requestQueue)
         sleep(1)
-
+        print(self.data['write_lock'])
         while self.go:
             request = None
             try:
