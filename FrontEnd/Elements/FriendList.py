@@ -21,8 +21,8 @@ class FriendBlock(Element):
         self.user = user
         try:
             self.avatar = self.createChild(Avatar, (20, 20), (60, 60), user['avatarAddress'])
-            self.nickname = self.createChild(CustomText, (100, 24), 'simhei', 20, (0, 0, 0), user['nickname'], 190)
-            self.last_message = self.createChild(CustomText, (100, 60), 'simhei', 18, (128, 128, 128), '暂无消息' if user['latestMessage']['content'] == '' else user['latestMessage']['content'], 190)
+            self.nickname = self.createChild(CustomText, (100, 20), 'simhei', 20, (0, 0, 0), user['nickname'], 190)
+            self.last_message = self.createChild(CustomText, (100, 56), 'simhei', 18, (128, 128, 128), '暂无消息' if user['latestMessage']['content'] == '' else user['latestMessage']['content'], 190)
             self.last_date = self.createChild(CustomText, (300, 40), 'simhei', 16, (128, 128, 128), ' ' if user['latestMessage']['time'] == '' else user['latestMessage']['time'][5:10])
             self.last_time = self.createChild(CustomText, (300, 60), 'simhei', 16, (128, 128, 128), ' ' if user['latestMessage']['time'] == '' else user['latestMessage']['time'][11:13] + ':' + user['latestMessage']['time'][14:16])
         except KeyError:
@@ -134,7 +134,7 @@ class GroupBlock(Element):
         self.group = group
         try:
             self.nickname = self.createChild(CustomText, (25, 24), 'simhei', 20, (0, 0, 0), group['sessionName'], 260)
-            self.last_message = self.createChild(CustomText, (25, 60), 'simhei', 18, (128, 128, 128), '暂无消息' if group['latestMessage']['content'] == '' else group['latestMessage']['content'], 260)
+            self.last_message = self.createChild(CustomText, (25, 56), 'simhei', 18, (128, 128, 128), '暂无消息' if group['latestMessage']['content'] == '' else group['latestMessage']['content'], 260)
             self.last_date = self.createChild(CustomText, (300, 40), 'simhei', 16, (128, 128, 128), ' ' if group['latestMessage']['time'] == '' else group['latestMessage']['time'][5:10])
             self.last_time = self.createChild(CustomText, (300, 60), 'simhei', 16, (128, 128, 128), ' ' if group['latestMessage']['time'] == '' else group['latestMessage']['time'][11:13] + ':' + group['latestMessage']['time'][14:16])
         except KeyError:
@@ -227,14 +227,15 @@ class FriendList(Element):
         self.refresh(list_)
 
     def refresh(self, list_):
+        base = 0 if len(self.childs) == 0 else self.childs[0].location[1]
         self.childs.clear()
         try:
             for i in range(len(list_)):
                 user = list_[i]
                 if self.type_ == 0:
-                    self.createChild(FriendBlock, (0, i * 100), user)
+                    self.createChild(FriendBlock, (0, i * 100 + base), user)
                 else:
-                    self.createChild(GroupBlock, (0, i * 100), user)
+                    self.createChild(GroupBlock, (0, i * 100 + base), user)
         except KeyError:
             print('key error in FriendList')
 
