@@ -239,7 +239,7 @@ class LocalStorage(object):
         if sessionID is not None:
             tableItem = self.sessionTable.get(sessionID, None)
             if tableItem == None:
-                return None
+                return {'kind': '', 'from': '', 'time': '', 'to': '', 'content': ''}
             else:
                 return tableItem.get('last_message')
         else:
@@ -259,7 +259,7 @@ class LocalStorage(object):
         if username is not None:
             friendSession = self.friendTable.get(username, None)
             if friendSession is None:
-                return None
+                return {'kind': '', 'from': '', 'time': '', 'to': '', 'content': ''}
             else:
                 return self.get_session_last_message(friendSession)
         else:

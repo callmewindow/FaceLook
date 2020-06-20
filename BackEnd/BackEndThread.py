@@ -270,9 +270,9 @@ class BackEndThread(threading.Thread):
                         sessionName = session.get('sessionName', None)
                         managerName = session.get('managerUsername', None)
                         members = session.get('sessionMembers', None)
-                        recordsj = session.get('contents', None)
+                        records = session.get('contents', None)
                         if records is not None:
-                            records = json.loads(recordsj)
+                            records = json.loads(records)
                         if managerName is None and members is not None:
                             # 私聊
                             for name in members:
