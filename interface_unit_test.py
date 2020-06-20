@@ -65,6 +65,19 @@ def edit_profile():
 def get_notice():
     r = get_notice_request
     sendRequest(r)
+def reset_userInfor():
+    r = {
+        'messageNumber':'18',
+        'username':None,
+        'password':None,
+        'nickname':'Elaine',
+        'avatarAddress':'02862688-be78-42e9-9c51-2e06f534074c',
+        'phoneNumber':'233',
+        'email':'123@email.com',
+        'occupation':'student',
+        'location':'China'
+        }
+    sendRequest(r)
 def exit():
     bet.stop()
     bet.join()
