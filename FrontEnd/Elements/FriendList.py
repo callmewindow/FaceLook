@@ -1,7 +1,6 @@
 from FrontEnd.Elements.Element import Element
 from FrontEnd.Elements.CustomText import CustomText
 from FrontEnd.Elements.Image import Image
-from Common.base import readData
 import pygame
 
 
@@ -23,13 +22,9 @@ class FriendBlock(Element):
         try:
             self.avatar = self.createChild(Image, (12, 12), (75, 75), user['avatarAddress'])
             self.nickname = self.createChild(CustomText, (100, 24), 'simhei', 22, (0, 0, 0), user['nickname'], 190)
-            mes = self.process.bet.localStorage.get_friend_last_message(user['username'])
-            self.last_message = self.createChild(CustomText, (100, 60), 'simhei', 16, (128, 128, 128),
-                                                 ' 暂无消息' if mes is None else mes['content'], 190)
-            self.last_date = self.createChild(CustomText, (300, 40), 'simhei', 16, (128, 128, 128),
-                                              ' ' if mes is None else mes['time'][5:10])
-            self.last_time = self.createChild(CustomText, (300, 60), 'simhei', 16, (128, 128, 128),
-                                              ' ' if mes is None else mes['time'][11:13] + ':' + mes['time'][14:16])
+            self.last_message = self.createChild(CustomText, (100, 60), 'simhei', 16, (128, 128, 128), '暂无消息' if user['latestMessage']['content'] == '' else user['latestMessage']['content'], 190)
+            self.last_date = self.createChild(CustomText, (300, 40), 'simhei', 16, (128, 128, 128), ' ' if user['latestMessage']['time'] == '' else user['latestMessage']['time'][5:10])
+            self.last_time = self.createChild(CustomText, (300, 60), 'simhei', 16, (128, 128, 128), ' ' if user['latestMessage']['time'] == '' else user['latestMessage']['time'][11:13] + ':' + user['latestMessage']['time'][14:16])
         except KeyError:
             print('key error in FriendBlock')
         self.surface = FriendBlock.image
@@ -75,7 +70,6 @@ class FriendBlock(Element):
                     self.state = 2
                     self.surface = FriendBlock.image_onClick
                     if self.pos_in_avatar(event.pos):
-                        self.process.requestQueue.put({'messageNumber': '4'})
                         self.process.createInfoWindow(self.user)
                     else:
                         if self.doubleclick_start:
@@ -113,14 +107,14 @@ class FriendBlock(Element):
             return True
         return False
 
-    def update_info(self):
+    '''def update_info(self):
         try:
             mes = self.process.bet.localStorage.get_friend_last_message(self.user['username'])
             self.last_message.set_text(' 暂无消息' if mes is None else mes['content'])
             self.last_date.set_text(' ' if mes is None else mes['time'][5:10])
             self.last_time.set_text(' ' if mes is None else mes['time'][11:13] + ':' + mes['time'][14:16])
         except KeyError:
-            print('key error in update FriendBlock')
+            print('key error in update FriendBlock')'''
 
 
 class GroupBlock(Element):
@@ -140,13 +134,9 @@ class GroupBlock(Element):
         self.group = group
         try:
             self.nickname = self.createChild(CustomText, (25, 24), 'simhei', 22, (0, 0, 0), group['sessionName'], 260)
-            mes = self.process.bet.localStorage.get_session_last_message(group['sessionID'])
-            self.last_message = self.createChild(CustomText, (25, 60), 'simhei', 16, (128, 128, 128),
-                                                 ' 暂无消息' if mes is None else mes['content'], 260)
-            self.last_date = self.createChild(CustomText, (300, 40), 'simhei', 16, (128, 128, 128),
-                                              ' ' if mes is None else mes['time'][5:10])
-            self.last_time = self.createChild(CustomText, (300, 60), 'simhei', 16, (128, 128, 128),
-                                              ' ' if mes is None else mes['time'][11:13] + ':' + mes['time'][14:16])
+            self.last_message = self.createChild(CustomText, (25, 60), 'simhei', 16, (128, 128, 128), '暂无消息' if group['latestMessage']['content'] == '' else group['latestMessage']['content'], 260)
+            self.last_date = self.createChild(CustomText, (300, 40), 'simhei', 16, (128, 128, 128), ' ' if group['latestMessage']['time'] == '' else group['latestMessage']['time'][5:10])
+            self.last_time = self.createChild(CustomText, (300, 60), 'simhei', 16, (128, 128, 128), ' ' if group['latestMessage']['time'] == '' else group['latestMessage']['time'][11:13] + ':' + group['latestMessage']['time'][14:16])
         except KeyError:
             print('key error in GroupBlock')
         self.surface = GroupBlock.image
@@ -204,7 +194,7 @@ class GroupBlock(Element):
             return True
         return False
 
-    def update_info(self):
+    '''def update_info(self):
         try:
             for i in self.process.bet.localStorage.get_groups():
                 if i['sessionID'] == self.group['sessionID']:
@@ -214,7 +204,7 @@ class GroupBlock(Element):
             self.last_date.set_text(' ' if mes is None else mes['time'][5:10])
             self.last_time.set_text(' ' if mes is None else mes['time'][11:13] + ':' + mes['time'][14:16])
         except KeyError:
-            print('key error in update GroupBlock')
+            print('key error in update GroupBlock')'''
 
 
 class FriendList(Element):
@@ -224,7 +214,7 @@ class FriendList(Element):
     image = pygame.Surface((350, 500))
     image.fill((255, 255, 255))
 
-    def __init__(self, process, location, type_):
+    def __init__(self, process, location, type_, list_):
         Element.__init__(self, process)
         self.location = location
         self.surface = FriendList.image
@@ -234,27 +224,23 @@ class FriendList(Element):
         self.type_ = type_
         self.frozen = False
         self.sort_counter = 0
-        self.refresh()
+        self.refresh(list_)
 
-    def refresh(self):
+    def refresh(self, list_):
         self.childs.clear()
-        data = readData(self.process.data)
         try:
-            if self.type_ == 0:
-                for i in range(len(data['friendList'])):
-                    user = data['friendList'][i]
+            for i in range(len(list_)):
+                user = list_[i]
+                if self.type_ == 0:
                     self.createChild(FriendBlock, (0, i * 100), user)
-            else:
-                group_list = self.process.bet.localStorage.get_groups()
-                for i in range(len(group_list)):
-                    group = group_list[i]
-                    self.createChild(GroupBlock, (0, i * 100), group)
+                else:
+                    self.createChild(GroupBlock, (0, i * 100), user)
         except KeyError:
             print('key error in FriendList')
 
-    def update_info(self):
+    '''def update_info(self):
         for child in self.childs:
-            child.update_info()
+            child.update_info()'''
 
     def display(self):
         surface = self.surface.copy()

@@ -1,6 +1,5 @@
-import pygame
 from FrontEnd.Elements.UserWindow import UserWindow
-from FrontEnd.Processes.WindowProcess import WindowProcess
+from FrontEnd.Processes.WindowProcessWithoutQueue import WindowProcessWithoutQueue
 from FrontEnd.Processes.SessionWindowProcess import createSession
 from FrontEnd.Processes.SearchWindowProcess import createSearch
 import multiprocessing
@@ -8,11 +7,11 @@ from FrontEnd.Processes.UserInforWindowProcess import createUserInfor
 from FrontEnd.Processes.FriendApplyWindowProcess import createFriendApplyProcess
 
 
-class UserWindowProcess(WindowProcess):
+class UserWindowProcess(WindowProcessWithoutQueue):
     def __init__(self, data, RQ, MQ, bet):
         self.data = data
         self.bet = bet
-        WindowProcess.__init__(self, data, RQ, MQ, bet, UserWindow(self))
+        WindowProcessWithoutQueue.__init__(self, data, RQ, MQ, bet, UserWindow(self))
         self.sessions = []
 
     def createSessionWindow(self, sessionID):

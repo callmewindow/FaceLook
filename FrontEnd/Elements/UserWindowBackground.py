@@ -7,6 +7,7 @@ from FrontEnd.Elements.SearchResult import SearchResult
 from FrontEnd.Elements.MainMenubar import MainMenubar
 from FrontEnd.Elements.CreateGroup import CreateGroup
 from FrontEnd.Elements.Button import UserCloseButton, UserMinimizeButton
+from Common.dataFunction import *
 import pygame
 
 
@@ -18,18 +19,25 @@ class UserWindowBackground(Element):
         self.surface.fill((255, 255, 255))
         self.location = (0, 0)
         self.displayed_list = 0
-        self.self_info = self.createChild(SelfInfo, (0, 0))
+        data = readData(self.process.data)
+        self.self_info = self.createChild(SelfInfo, (0, 0), data['user'])
         self.closeButton = self.createChild(UserCloseButton, (315, 8))
         self.minimizeButton = self.createChild(UserMinimizeButton, (280, 8))
         self.search_bar = self.createChild(SearchBar, (0, 119))
         self.switch_list_bar = self.createChild(SwitchListBar, (0, 155))
         self.search_result = self.createChild(SearchResult, (0, 155))
-        self.friend_list = self.createChild(FriendList, (0, 200), 0)
-        self.group_list = self.createChild(FriendList, (350, 200), 1)
+        self.friend_list = self.createChild(FriendList, (0, 200), 0, data['friendList']['list'])
+        self.group_list = self.createChild(FriendList, (350, 200), 1, data['groupList']['list'])
         self.search_result.refresh('', self.friend_list, self.group_list)
         self.create_group = self.createChild(CreateGroup, (25, 550))
         self.main_menubar = self.createChild(MainMenubar, (0, 700))
-        self.mes5_counter = 0
+        self.update_counter = 0
+        self.ver = {
+            'user': -1,
+            'friend_list': -1,
+            'group_list': -1,
+            'friend_request': -1,
+        }
 
     def getEvent(self, event):
         if self.search_bar.input.focused and event.type == pygame.KEYDOWN and event.key in [pygame.K_RETURN,
@@ -49,6 +57,22 @@ class UserWindowBackground(Element):
                 child.getEvent(event)
 
     def update(self):
+        self.update_counter = (self.update_counter + 1) % 60
+        if self.update_counter == 0:
+            data = readData(self.process.data)
+            if data['user']['version'] > self.ver['user']:
+                self.ver['user'] = data['user']['version']
+                self.self_info.refresh(data['user'])
+            if data['friendList']['version'] > self.ver['friend_list']:
+                self.ver['friend_list'] = data['friendList']['version']
+                self.friend_list.refresh(data['friendList']['list'])
+            if data['groupList']['version'] > self.ver['group_list']:
+                self.ver['group_list'] = data['groupList']['version']
+                self.group_list.refresh(data['groupList']['list'])
+            if data['requestorMessage']['version'] > self.ver['friend_request']:
+                self.ver['friend_request'] = data['requestorMessage']['version']
+                self.main_menubar.apply_button.notice = True
+
         if self.switch_list_bar.changed:
             self.friend_list.enable()
             self.group_list.enable()
