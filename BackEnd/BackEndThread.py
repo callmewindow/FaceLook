@@ -163,6 +163,9 @@ class BackEndThread(threading.Thread):
                 'result': result,
             }
             self.messageQueue.put(message)
+            writeData(self.data, data)
+            self.requestQueue.put({'messageNumber': '5'})
+            self.requestQueue.put({'messageNumber': '4'})
             # if result != '0' and self.username is not None:
             #     self.localStorage = LocalStorage(self.username)
         # 注册
