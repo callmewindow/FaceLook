@@ -1,7 +1,5 @@
 from FrontEnd.Elements.Window import Window
 from FrontEnd.Elements.UserWindowBackground import UserWindowBackground
-from Common.base import readData, writeData
-from time import sleep
 
 
 class UserWindow(Window):
@@ -24,7 +22,7 @@ class UserWindow(Window):
             if child.active:
                 child.update()
 
-    def getMessage(self, message):
+    '''def getMessage(self, message):
         data = readData(self.process.data)
 
         # 获取好友列表
@@ -218,4 +216,4 @@ class UserWindow(Window):
                 data['search_username'] = message['userlist']
                 writeData(self.process.data, data)
         except KeyError:
-            print('key error in 21r')
+            print('key error in 21r')'''
