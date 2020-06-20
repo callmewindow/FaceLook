@@ -132,8 +132,9 @@ class LocalStorage(object):
                 if len(records) > 0:
                     tableItem['last_time'] = records[len(records) - 1].get('time', None)
                     tableItem['last_message'] = records[len(records) - 1]
-        except Exception:
-            print("error in local storage")
+        except Exception as e:
+            print("error in local storage:")
+            print(e)
 
     def rewriteRecord(self, sessionID, records, username=None, sessionName=None, managerUsername=None, sessionMembers=[]):
         # 用records覆盖某会话的存储
@@ -167,8 +168,9 @@ class LocalStorage(object):
             if len(records) > 0:
                 tableItem['last_time'] = records[len(records) - 1].get('time', None)
                 tableItem['last_message'] = records[len(records) - 1]
-        except Exception:
-            print("error in local storage")
+        except Exception as e:
+            print("error in local storage:")
+            print(e)
 
     def getSessionNum(self):
         # 获取该用户本地存储中的会话个数
@@ -241,7 +243,7 @@ class LocalStorage(object):
             if tableItem == None:
                 return {'kind': '', 'from': '', 'time': '', 'to': '', 'content': ''}
             else:
-                return tableItem.get('last_message')
+                return tableItem.get('last_message', {'kind': '', 'from': '', 'time': '', 'to': '', 'content': ''})
         else:
             return None
 
