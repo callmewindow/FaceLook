@@ -227,14 +227,15 @@ class FriendList(Element):
         self.refresh(list_)
 
     def refresh(self, list_):
+        base = 0 if len(self.childs) == 0 else self.childs[0].location[1]
         self.childs.clear()
         try:
             for i in range(len(list_)):
                 user = list_[i]
                 if self.type_ == 0:
-                    self.createChild(FriendBlock, (0, i * 100), user)
+                    self.createChild(FriendBlock, (0, i * 100 + base), user)
                 else:
-                    self.createChild(GroupBlock, (0, i * 100), user)
+                    self.createChild(GroupBlock, (0, i * 100 + base), user)
         except KeyError:
             print('key error in FriendList')
 
