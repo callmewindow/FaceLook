@@ -164,6 +164,7 @@ class BackEndThread(threading.Thread):
             writeData(self.data, data)
             unlockData(self.data)
             self.requestQueue.put({'messageNumber': '5'})
+            sleep(1)
             self.requestQueue.put({'messageNumber': '4'})
 
         # 注册

@@ -55,7 +55,7 @@ class LocalStorage(object):
                 'managerUsername': None,
                 'sessionMembers': [],
                 'last_time': None,
-                'last_message': None
+                'last_message': {'kind': '', 'from': '', 'time': '', 'to': '', 'content': ''}
             }
             tableItem = self.sessionTable.get(sessionID, None)
         return tableItem
@@ -104,7 +104,7 @@ class LocalStorage(object):
             tableItem = self.sessionTable.get(sessionID, None)
             if tableItem is None:
                 if username is None:
-                    self.addGroupList(sessionID,sessionName)
+                    self.addGroupList(sessionID, sessionName)
                 elif username is not None:
                     self.setFriendForeignKey(sessionID, username)
                 self.messageRecords[sessionID] = []
@@ -115,7 +115,7 @@ class LocalStorage(object):
                     'managerUsername': managerUsername,
                     'sessionMembers': sessionMembers,
                     'last_time': None,
-                    'last_message': None
+                    'last_message': {'kind': '', 'from': '', 'time': '', 'to': '', 'content': ''}
                 }
                 tableItem = self.sessionTable.get(sessionID, None)
             if type(records) == dict:
@@ -147,7 +147,7 @@ class LocalStorage(object):
             tableItem = self.sessionTable.get(sessionID, None)
             if tableItem == None:
                 if username is None:
-                    self.addGroupList(sessionID)
+                    self.addGroupList(sessionID, sessionName)
                 else:
                     self.setFriendForeignKey(sessionID, username)
                 self.sessionTable['num_of_session'] = self.sessionTable.get('num_of_session', 0) + 1
@@ -158,7 +158,7 @@ class LocalStorage(object):
                 'managerUsername': managerUsername,
                 'sessionMembers': sessionMembers,
                 'last_time': None,
-                'last_message': None
+                'last_message': {'kind': '', 'from': '', 'time': '', 'to': '', 'content': ''}
             }
             tableItem = self.sessionTable.get(sessionID, None)
             for record in records:
@@ -245,7 +245,7 @@ class LocalStorage(object):
             else:
                 return tableItem.get('last_message', {'kind': '', 'from': '', 'time': '', 'to': '', 'content': ''})
         else:
-            return None
+            return {'kind': '', 'from': '', 'time': '', 'to': '', 'content': ''}
 
     def getFriendLastTime(self, username):
         if username is not None:
@@ -265,7 +265,7 @@ class LocalStorage(object):
             else:
                 return self.getSessionLastMessage(friendSession)
         else:
-            return None
+            return {'kind': '', 'from': '', 'time': '', 'to': '', 'content': ''}
 
     def getSessionContent(self, sessionID):
         if sessionID is not None:
