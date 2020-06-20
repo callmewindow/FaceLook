@@ -251,7 +251,7 @@ class LocalStorage(object):
             if friendSession is None:
                 return None
             else:
-                return self.get_session_last_time(friendSession)
+                return self.getSessionLastTime(friendSession)
         else:
             return None
 
@@ -261,7 +261,7 @@ class LocalStorage(object):
             if friendSession is None:
                 return {'kind': '', 'from': '', 'time': '', 'to': '', 'content': ''}
             else:
-                return self.get_session_last_message(friendSession)
+                return self.getSessionLastMessage(friendSession)
         else:
             return None
 
