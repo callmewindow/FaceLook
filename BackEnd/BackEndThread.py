@@ -163,7 +163,9 @@ class BackEndThread(threading.Thread):
                 'result': result,
             }
             self.messageQueue.put(message)
+            lockData(self.data)
             writeData(self.data, data)
+            unlockData((self.data))
             self.requestQueue.put({'messageNumber': '5'})
             self.requestQueue.put({'messageNumber': '4'})
             # if result != '0' and self.username is not None:
