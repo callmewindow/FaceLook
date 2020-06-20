@@ -1,6 +1,6 @@
 from FrontEnd.Elements.Element import Element
 from FrontEnd.Elements.CustomText import CustomText
-from FrontEnd.Elements.Image import Image
+from FrontEnd.Elements.Avatar import Avatar
 import pygame
 
 
@@ -18,7 +18,7 @@ class SelfInfo(Element):
         self.covered = False
         self.user = user
         try:
-            self.avatar = self.createChild(Image, (27, 27), (75, 75), self.user['avatarAddress'])
+            self.avatar = self.createChild(Avatar, (27, 27), (75, 75), self.user['avatarAddress'])
             self.nickname = self.createChild(CustomText, (120, 50), 'simhei', 26, (0, 0, 0), self.user['nickname'], 200)
         except KeyError:
             print('key error in selfinfo')

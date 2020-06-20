@@ -1,6 +1,6 @@
 from FrontEnd.Elements.Element import Element
 from FrontEnd.Elements.CustomText import CustomText
-from FrontEnd.Elements.Image import Image
+from FrontEnd.Elements.Avatar import Avatar
 import pygame
 
 
@@ -14,15 +14,15 @@ class FriendBlock(Element):
     image_onHover.fill((245, 245, 245))
     image_onClick = pygame.Surface((350, 100))
     image_onClick.fill((240, 240, 240))
-    avatar_cover = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/news.png'), (75, 75))
+    avatar_cover = pygame.transform.smoothscale(pygame.image.load('./resources/UserWindowUI/news.png'), (60, 60))
 
     def __init__(self, process, location, user):
         Element.__init__(self, process)
         self.user = user
         try:
-            self.avatar = self.createChild(Image, (12, 12), (75, 75), user['avatarAddress'])
-            self.nickname = self.createChild(CustomText, (100, 24), 'simhei', 22, (0, 0, 0), user['nickname'], 190)
-            self.last_message = self.createChild(CustomText, (100, 60), 'simhei', 16, (128, 128, 128), '暂无消息' if user['latestMessage']['content'] == '' else user['latestMessage']['content'], 190)
+            self.avatar = self.createChild(Avatar, (20, 20), (60, 60), user['avatarAddress'])
+            self.nickname = self.createChild(CustomText, (100, 24), 'simhei', 20, (0, 0, 0), user['nickname'], 190)
+            self.last_message = self.createChild(CustomText, (100, 60), 'simhei', 18, (128, 128, 128), '暂无消息' if user['latestMessage']['content'] == '' else user['latestMessage']['content'], 190)
             self.last_date = self.createChild(CustomText, (300, 40), 'simhei', 16, (128, 128, 128), ' ' if user['latestMessage']['time'] == '' else user['latestMessage']['time'][5:10])
             self.last_time = self.createChild(CustomText, (300, 60), 'simhei', 16, (128, 128, 128), ' ' if user['latestMessage']['time'] == '' else user['latestMessage']['time'][11:13] + ':' + user['latestMessage']['time'][14:16])
         except KeyError:
@@ -46,8 +46,8 @@ class FriendBlock(Element):
     def pos_in_avatar(self, pos):
         x = pos[0]
         y = pos[1]
-        if self.location[0] + 12 < x < self.location[0] + 12 + 75 \
-                and self.location[1] + 12 < y < self.location[1] + 12 + 75:
+        if self.location[0] + 20 < x < self.location[0] + 20 + 60 \
+                and self.location[1] + 20 < y < self.location[1] + 20 + 60:
             return True
 
     def getEvent(self, event):
@@ -99,7 +99,7 @@ class FriendBlock(Element):
             if child.active:
                 surface.blit(child.display(), child.location)
         if self.covered:
-            surface.blit(FriendBlock.avatar_cover, (12, 12))
+            surface.blit(FriendBlock.avatar_cover, (20, 20))
         return surface
 
     def is_displayed(self):
@@ -133,8 +133,8 @@ class GroupBlock(Element):
         Element.__init__(self, process)
         self.group = group
         try:
-            self.nickname = self.createChild(CustomText, (25, 24), 'simhei', 22, (0, 0, 0), group['sessionName'], 260)
-            self.last_message = self.createChild(CustomText, (25, 60), 'simhei', 16, (128, 128, 128), '暂无消息' if group['latestMessage']['content'] == '' else group['latestMessage']['content'], 260)
+            self.nickname = self.createChild(CustomText, (25, 24), 'simhei', 20, (0, 0, 0), group['sessionName'], 260)
+            self.last_message = self.createChild(CustomText, (25, 60), 'simhei', 18, (128, 128, 128), '暂无消息' if group['latestMessage']['content'] == '' else group['latestMessage']['content'], 260)
             self.last_date = self.createChild(CustomText, (300, 40), 'simhei', 16, (128, 128, 128), ' ' if group['latestMessage']['time'] == '' else group['latestMessage']['time'][5:10])
             self.last_time = self.createChild(CustomText, (300, 60), 'simhei', 16, (128, 128, 128), ' ' if group['latestMessage']['time'] == '' else group['latestMessage']['time'][11:13] + ':' + group['latestMessage']['time'][14:16])
         except KeyError:
