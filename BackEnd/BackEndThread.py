@@ -4,6 +4,7 @@ from multiprocessing.queues import Empty
 from time import sleep
 from BackEnd.SolverThreads import *
 from BackEnd.LocalStorage import *
+from Common.dataFunction import *
 # from SolverThreads import *
 # from LocalStorage import *
 
@@ -99,7 +100,6 @@ class BackEndThread(threading.Thread):
             request = None
             try:
                 request = self.requestQueue.get(block=False)
-                #print('this request:',request)
             except Empty:
                 pass
             except Exception as e:
@@ -129,27 +129,42 @@ class BackEndThread(threading.Thread):
             self.task.append(thread)
         elif messageNumber == RequestType.LOGINRET:
             result = request.get('messageField1', None)
-            data = request.get('messageField3', None)
+            info = request.get('messageField2', None)
+            dataj = request.get('messageField3', None)
             user = {}
-            if result != '0':
-                user = json.loads(data)
-                self.username = user.get('username', None)
+            try:
+                data = readData(self.data)
+                if result != '0':
+                    user = json.loads(dataj)
+                    self.username = user.get('username', None)
+                    data['user'] = {
+                        'version': user.get('version', 0)+1,
+                        'username': user.get('username', None),
+                        'nickname': user.get('nickname', None),
+                        'avatarAddress': user.get('avatarAddress', None),
+                        'invitee': user.get('invitee', None),
+                        'phoneNumber': user.get('phoneNumber', None),
+                        'email': user.get('email', None),
+                        'occupation': user.get('occupation', None),
+                        'location': user.get('location', None),
+                        'login_result': result,
+                        'login_information': info,
+                    }
+                elif result == '0':
+                    data['user'] = {
+                        'version': user.get('version', 0) + 1,
+                        'login_result': result,
+                        'login_information': info,
+                    }
+            except KeyError:
+                print('key error in 2r')
             message = {
                 'messageNumber': MessageType.LOGINRET,
                 'result': result,
-                'information': request.get('messageField2', None),
-                'username': user.get('username', None),
-                'nickname': user.get('nickname', None),
-                'avatarAddress': user.get('avatarAddress', None),
-                'invitee': user.get('invitee', None),
-                'phoneNumber': user.get('phoneNumber', None),
-                'email': user.get('email', None),
-                'occupation': user.get('occupation', None),
-                'location': user.get('location', None)
             }
             self.messageQueue.put(message)
-            if result != '0' and self.username != None:
-                self.localStorage = LocalStorage(self.username)
+            # if result != '0' and self.username is not None:
+            #     self.localStorage = LocalStorage(self.username)
         # 注册
         # request格式：{"username": "hcz", "password": "123456", "nickname": "quq", "messageNumber": "3"}
         # message格式：见下方
