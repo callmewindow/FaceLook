@@ -38,7 +38,7 @@ if __name__ == '__main__':
     mgr = multiprocessing.Manager()
     inner = {
     'user': {
-        'version': '0',
+        'version': 0,
         'username': '',
         'nickname': '',
         'avatarAddress': '',
@@ -51,37 +51,37 @@ if __name__ == '__main__':
     },
 
     'friendList': {
-        'version': '0',
+        'version': 0,
         'list': []
     },
 
     'groupList': {
-        'version': '0',
+        'version': 0,
         'list': []
     },
 
     'usernameResult': {
-        'version': '0',
+        'version': 0,
         'list': []
     },
 
     'nicknameResult': {
-        'version': '0',
+        'version': 0,
         'list': []
     },
     
     'receiverList':{
-        'version':'0',
+        'version':0,
         'list':[]
     },
 
     'requestorList':{
-        'version':'0',
+        'version':0,
         'list':[]
     },
     
     'receiverMessage':{
-        'version':'0',
+        'version':0,
         'receiverUsername':'',
         'avatarAddress':'',
         'result':'',
@@ -89,7 +89,7 @@ if __name__ == '__main__':
     },
     
     'requestorMessage':{
-        'version':'0',
+        'version':0,
         'requestorUsername':'',
         'avatarAddress':'',
         'checkMessage':'',
@@ -97,7 +97,7 @@ if __name__ == '__main__':
     },
     
     'sessionList':{
-        'version': '0',
+        'version': 0,
         'list':[]
     }
 }
@@ -120,7 +120,9 @@ if __name__ == '__main__':
     lwp.run()
 
     lwp.close()
-
+    
+    if data['inner']['user']['login_result']!='1':
+        exit()
     #test_data(data)
 
     uwp = UWP(data, RQ, MQ, bet)
