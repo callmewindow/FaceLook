@@ -3,12 +3,10 @@ from FrontEnd.Elements.logo import logo
 #from FrontEnd.Elements.Aqua import Aqua
 from FrontEnd.Elements.Inputbox_default import Inputbox_default
 from FrontEnd.Elements.Inputbox_password import Inputbox_password
-from FrontEnd.Elements.TripleStateButton import TripleStateButton
 from FrontEnd.Elements.CandyButton import CandyButton
 from FrontEnd.Elements.AquaLoading import AquaLoading
-from FrontEnd.Elements.text_default import text_default
+from FrontEnd.Elements.text_default import text_default,LoadingText
 from FrontEnd.Elements.Button import CloseButton, MinimizeButton
-from FrontEnd.Elements.SingleInputBox import InputBox
 from Common.base import *
 from time import sleep
 
@@ -36,7 +34,7 @@ class LoginWindowBackground(Element):
         #self.passwordInputbox = self.createChild(InputBox,(150,250),300,'simhei',30,(0,0,0),(255,255,255))
         self.candy = self.createChild(CandyButton, (140, 345))
         self.aqualoading = self.createChild(AquaLoading, (230, 145))
-        self.loadingText = self.createChild(text_default, (263, 325), '登录中...', (0, 0, 0))
+        self.loadingText = self.createChild(LoadingText, (263, 325), '测试文字', (0, 0, 0))
         self.loadingText.alignCenter((300, 350))
         self.messageText = self.createChild(text_default, (0, 0), '登录失败！', (0, 0, 0))
         self.messageText.alignCenter((300, 332))
@@ -62,6 +60,8 @@ class LoginWindowBackground(Element):
         self.state = 2
         self.counter = 0
         self.loadingText.setText('登录成功！正在加载资源...')
+        sleep(1)
+        self.process.stop()
 
     def set_failure(self, failureMessage):
         self.state = 3
@@ -110,14 +110,24 @@ class LoginWindowBackground(Element):
     
     def update(self):
         if self.state == login_state.loading:
-            if readData(self.data)['user']['online']:
-                self.set_success()
-            else:
-                self.counter += 1
-                loading_time = self.counter // 60
-                self.loadingText.setText('登录中...耗时{}秒'.format(loading_time))
-                self.loadingText.alignCenter((300, 350))
-                if loading_time >= 30:
-                    self.set_failure('登录超时！请检查网络状况。')
+            self.counter += 1
+            loading_time = self.counter // 60
+            if self.counter%60 == 0:
+                if readData(self.process.data).get('user') == None:
+                    panic('[Fatal Error]data has no attribute user.')
+                login_result = readData(self.process.data)['user'].get('login_result')
+                if login_result == '1':
+                    self.set_success()
+                elif login_result == '0':
+                    failureMessage = readData(self.process.data)['user'].get('login_information')
+                    if failureMessage == None:
+                        failureMessage = '未知错误。'
+                    self.set_failure(failureMessage)
+                elif login_result == '-1':
+                    if loading_time >= 30:
+                        self.set_failure('登录超时！请检查网络状况。')
+                else:
+                    panic('[Fatal Error]Unknown data.user.login_result value {}.'.format(login_result))
+                
                 
         Element.update(self)

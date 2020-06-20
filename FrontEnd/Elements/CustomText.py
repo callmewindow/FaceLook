@@ -20,7 +20,7 @@ class CustomText(Element):
         self.text = text
         if self.width_limit != 0:
             self.limit()
-        self.surface = self.font.render(text, True, self.color)
+        self.surface = self.font.render(self.text, True, self.color)
 
     def set_color(self, color):
         self.color = color

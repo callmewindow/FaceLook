@@ -35,19 +35,78 @@ def test_data(data):
 if __name__ == '__main__':
     from BackEnd.BackEndThread import BackEndThread
     import multiprocessing
-    #from time import sleep
     mgr = multiprocessing.Manager()
-    inner = {}
+    inner = {
+    'user': {
+        'version': 0,
+        'username': '',
+        'nickname': '',
+        'avatarAddress': '',
+        'phoneNumber': '',
+        'email': '',
+        'occupation': '',
+        'invitee': '',
+        'login_result':'-1',
+        'login_information':'',
+    },
+
+    'friendList': {
+        'version': 0,
+        'list': []
+    },
+
+    'groupList': {
+        'version': 0,
+        'list': []
+    },
+
+    'usernameResult': {
+        'version': 0,
+        'list': []
+    },
+
+    'nicknameResult': {
+        'version': 0,
+        'list': []
+    },
+    
+    'receiverList':{
+        'version':0,
+        'list':[]
+    },
+
+    'requestorList':{
+        'version':0,
+        'list':[]
+    },
+    
+    'receiverMessage':{
+        'version':0,
+        'receiverUsername':'',
+        'avatarAddress':'',
+        'result':'',
+        'time':'',
+    },
+    
+    'requestorMessage':{
+        'version':0,
+        'requestorUsername':'',
+        'avatarAddress':'',
+        'checkMessage':'',
+        'time':'',
+    },
+    
+    'sessionList':{
+        'version': 0,
+        'list':[]
+    }
+}
     data = mgr.dict({
         "inner": inner,
         "write_lock":mgr.Lock()
     })
-    dat = data['inner']
-    test_data(dat)
-    data['inner']=dat
     RQ = multiprocessing.Queue()
     MQ = multiprocessing.Queue()
-    print(data['write_lock'])
     bet = BackEndThread(RQ, MQ, data)
     
     bet.start()
@@ -61,7 +120,9 @@ if __name__ == '__main__':
     lwp.run()
 
     lwp.close()
-
+    
+    if data['inner']['user']['login_result']!='1':
+        exit()
     #test_data(data)
 
     uwp = UWP(data, RQ, MQ, bet)
