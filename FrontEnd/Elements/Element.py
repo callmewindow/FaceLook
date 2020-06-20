@@ -6,6 +6,7 @@ class Element:
         self.surface = None
         self.process = process
         self.active = True
+        self.data_version = 0
     def getEvent(self, event):
         for child in self.childs:
             if child.active:
