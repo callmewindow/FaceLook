@@ -62,6 +62,8 @@ class LoginWindowBackground(Element):
         self.state = 2
         self.counter = 0
         self.loadingText.setText('登录成功！正在加载资源...')
+        sleep(1)
+        self.process.stop()
 
     def set_failure(self, failureMessage):
         self.state = 3
@@ -110,14 +112,26 @@ class LoginWindowBackground(Element):
     
     def update(self):
         if self.state == login_state.loading:
-            if readData(self.data)['user']['online']:
-                self.set_success()
-            else:
-                self.counter += 1
-                loading_time = self.counter // 60
-                self.loadingText.setText('登录中...耗时{}秒'.format(loading_time))
-                self.loadingText.alignCenter((300, 350))
-                if loading_time >= 30:
-                    self.set_failure('登录超时！请检查网络状况。')
+            self.counter += 1
+            loading_time = self.counter // 60
+            self.loadingText.setText('登录中...耗时{}秒'.format(loading_time))
+            self.loadingText.alignCenter((300, 350))
+            if self.counter%60 == 0:
+                if readData(self.process.data).get('user') == None:
+                    panic('[Fatal Error]data has no attribute user.')
+                login_result = readData(self.process.data)['user'].get('login_result')
+                if login_result == '1':
+                    self.set_success()
+                elif login_result == '0':
+                    failureMessage = readData(self.process.data)['user'].get('login_infomation')
+                    if failureMessage == None:
+                        failureMessage = '未知错误。'
+                    self.set_failure(failureMessage)
+                elif login_result == '-1':
+                    if loading_time >= 30:
+                        self.set_failure('登录超时！请检查网络状况。')
+                else:
+                    panic('[Fatal Error]Unknown data.user.login_result value {}.'.format(login_result))
+                
                 
         Element.update(self)

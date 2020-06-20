@@ -7,8 +7,9 @@ from queue import Empty
 from multiprocessing.queues import Empty
 from Common.dataFunction import *
 pygame.font.init()
-def panic():
-    raise Exception()
+def panic(info):
+    print(info)
+    exit()
 
 
 
