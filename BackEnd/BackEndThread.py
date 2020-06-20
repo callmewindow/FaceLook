@@ -1,10 +1,12 @@
-import threading 
+import threading
 import queue
 from multiprocessing.queues import Empty
 from time import sleep
 from BackEnd.SolverThreads import *
 from BackEnd.LocalStorage import *
 from Common.dataFunction import *
+
+
 # from SolverThreads import *
 # from LocalStorage import *
 
@@ -45,7 +47,7 @@ class RequestType():
     GETFRIENDREGISTERRESULTRETLISTRET = '14r'
     DELETEFRIEND = '15'
     DELETEFRIENDRET = '15r'
-    BEDELETEDFRIENDRET = '16r'#被删除好友
+    BEDELETEDFRIENDRET = '16r'  # 被删除好友
     EXITSESSION = '17'
     UPDATEPERSONALINFORMATION = '18'
     UPDATEPERSONALINFORMATIONRET = '18r'
@@ -83,14 +85,14 @@ class BackEndThread(threading.Thread):
         threading.Thread.__init__(self)
         self.requestQueue = requestQueue
         self.messageQueue = messageQueue
-        self.threadList = list()
         self.go = True
         self.client = None
         self.username = None
-        self.localStorage = None
+        self.localStorage = LocalStorage()
         self.task = []
         self.data = data
-        
+        self.need_session = False
+        self.needed_username = ''
 
     def run(self):
         self.client = init(self.requestQueue)
@@ -109,7 +111,8 @@ class BackEndThread(threading.Thread):
             sleep(0.1)
 
     def handleRequest(self, request):
-        messageNumber = request.get('messageNumber',None)
+        messageNumber = request.get('messageNumber', None)
+
         if messageNumber == RequestType.INIT:
             print("连接已建立")
         # 注销
@@ -131,45 +134,38 @@ class BackEndThread(threading.Thread):
             result = request.get('messageField1', None)
             info = request.get('messageField2', None)
             dataj = request.get('messageField3', None)
-            user = {}
             try:
                 data = readData(self.data)
                 if result != '0':
                     user = json.loads(dataj)
                     self.username = user.get('username', None)
-                    data['user'] = {
-                        'version': user.get('version', 0)+1,
-                        'username': user.get('username', None),
-                        'nickname': user.get('nickname', None),
-                        'avatarAddress': user.get('avatarAddress', None),
-                        'invitee': user.get('invitee', None),
-                        'phoneNumber': user.get('phoneNumber', None),
-                        'email': user.get('email', None),
-                        'occupation': user.get('occupation', None),
-                        'location': user.get('location', None),
-                        'login_result': result,
-                        'login_information': info,
-                    }
+                    data['user']['version'] += 1
+                    data['user']['username'] = user.get('username', None)
+                    data['user']['nickname'] = user.get('nickname', None)
+                    data['user']['avatarAddress'] = user.get('avatarAddress', None)
+                    data['user']['invitee'] = user.get('invitee', None)
+                    data['user']['phoneNumber'] = user.get('phoneNumber', None)
+                    data['user']['email'] = user.get('email', None)
+                    data['user']['occupation'] = user.get('occupation', None)
+                    data['user']['location'] = user.get('location', None)
+                    data['user']['login_result'] = result
+                    data['user']['login_information'] = info
                 elif result == '0':
-                    data['user'] = {
-                        'version': user.get('version', 0) + 1,
-                        'login_result': result,
-                        'login_information': info,
-                    }
-            except KeyError:
-                print('key error in 2r')
-            message = {
-                'messageNumber': MessageType.LOGINRET,
-                'result': result,
-            }
-            self.messageQueue.put(message)
+                    data['user']['version'] += 1
+                    data['user']['login_result'] = result
+                    data['user']['login_information'] = info
+            except KeyError as e:
+                print('key error in 2r:')
+                print(e)
+            except Exception as o:
+                print('other error in 2r:')
+                print(o)
             lockData(self.data)
             writeData(self.data, data)
-            unlockData((self.data))
+            unlockData(self.data)
             self.requestQueue.put({'messageNumber': '5'})
             self.requestQueue.put({'messageNumber': '4'})
-            # if result != '0' and self.username is not None:
-            #     self.localStorage = LocalStorage(self.username)
+
         # 注册
         # request格式：{"username": "hcz", "password": "123456", "nickname": "quq", "messageNumber": "3"}
         # message格式：见下方
@@ -179,28 +175,39 @@ class BackEndThread(threading.Thread):
             thread.start()
             self.task.append(thread)
         elif messageNumber == RequestType.REGISTERRET:
-            result = request.get('messageField1',None)
-            data = request.get('messageField3', None)
-            user = {}
-            if result != '0':
-                user = json.loads(data)
-                self.username = user.get('username', None)
-            message = {
-                'messageNumber': MessageType.REGISTERRET,
-                'result': request.get('messageField1',None),
-                'information': request.get('messageField2',None),
-                'username': user.get('username', None),
-                'nickname': user.get('nickname', None),
-                'invitee': user.get('invitee', None),
-                'avatarAddress': user.get('avatarAddress', None),
-                'phoneNumber': user.get('phoneNumber', None),
-                'email': user.get('email', None),
-                'occupation': user.get('occupation', None),
-                'location': user.get('location', None)
-            }
-            self.messageQueue.put(message)
-            if result != '0' and self.username != None:
-                self.localStorage = LocalStorage(self.username)
+            result = request.get('messageField1', None)
+            info = request.get('messageField2', None),
+            dataj = request.get('messageField3', None)
+            try:
+                data = readData(self.data)
+                if result != '0':
+                    user = json.loads(dataj)
+                    self.username = user.get('username', None)
+                    data['user']['version'] += 1
+                    data['user']['username'] = user.get('username', None)
+                    data['user']['nickname'] = user.get('nickname', None)
+                    data['user']['avatarAddress'] = user.get('avatarAddress', None)
+                    data['user']['invitee'] = user.get('invitee', None)
+                    data['user']['phoneNumber'] = user.get('phoneNumber', None)
+                    data['user']['email'] = user.get('email', None)
+                    data['user']['occupation'] = user.get('occupation', None)
+                    data['user']['location'] = user.get('location', None)
+                    data['user']['login_result'] = result
+                    data['user']['login_information'] = info
+                elif result == '0':
+                    data['user']['version'] += 1
+                    data['user']['login_result'] = result
+                    data['user']['login_information'] = info
+            except KeyError as e:
+                print('key error in 3r:')
+                print(e)
+            except Exception as o:
+                print('other error in 3r:')
+                print(o)
+            lockData(self.data)
+            writeData(self.data, data)
+            unlockData(self.data)
+
         # 获取好友列表
         # request格式：{"messageNumber": "4"}
         # message格式：num表示好友个数，friendlist为一个dict列表，字段分别为username和nickname
@@ -211,22 +218,35 @@ class BackEndThread(threading.Thread):
             self.task.append(thread)
         elif messageNumber == RequestType.GETFRIENDLISTRET:
             friendNum = request.get('messageField1', None)
-            data = request.get('messageField2', None)
-            friendlist = json.loads(data)
-            result = []
-            if type(friendlist) == list and friendNum != '0':
-                for friend in friendlist:
-                    temp = {'username': friend.get('username', None), 'nickname': friend.get('nickname', None),
-                            'invitee': friend.get('invitee', None), 'avatarAddress': friend.get('avatarAddress', None),
+            dataj = request.get('messageField2', None)
+            try:
+                friendlist = json.loads(dataj)
+                result = []
+                data = readData(self.data)
+                if type(friendlist) == list and friendNum != '0':
+                    for friend in friendlist:
+                        temp = {
+                            'username': friend.get('username', None), 'nickname': friend.get('nickname', None),
+                            'invitee': friend.get('invitee', None),
+                            'avatarAddress': friend.get('avatarAddress', None),
                             'phoneNumber': friend.get('phoneNumber', None), 'email': friend.get('email', None),
-                            'occupation': friend.get('occupation', None), 'location': friend.get('location', None)}
-                    result.append(temp)
-            message = {
-                'messageNumber': MessageType.GETFRIENDLISTRET,
-                'num': friendNum,
-                'friendlist': result
-            }
-            self.messageQueue.put(message)
+                            'occupation': friend.get('occupation', None), 'location': friend.get('location', None),
+                            'sessionId': self.localStorage.getFriendSession(friend.get('username', None)),
+                            'latestMessage': self.localStorage.getFriendLastMessage(friend.get('username', None))
+                            }
+                        result.append(temp)
+                data['friendList']['version'] += 1
+                data['friendList']['list'] = result
+            except KeyError as e:
+                print('key error in 4r:')
+                print(e)
+            except Exception as o:
+                print('other error in 4r:')
+                print(o)
+            lockData(self.data)
+            writeData(self.data, data)
+            unlockData(self.data)
+
         # 获取历史消息
         # request格式：{"messageNumber": "5"}
         # 无message
@@ -236,29 +256,55 @@ class BackEndThread(threading.Thread):
             thread.start()
             self.task.append(thread)
         elif messageNumber == RequestType.GETHISTORYRET:
-            sessionNum = request.get('messageField1',None)
-            data = request.get('messageField2',None)
-            sessionlist = json.loads(data)
-            if type(sessionlist)== list and sessionNum != '0' and self.localStorage is not None:
-                for session in sessionlist:
-                    sessinID = session.get('sessionId',None)
-                    if sessinID is None:
-                        continue
-                    sessionName = session.get('sessionName',None)
-                    managerName = session.get('managerUsername',None)
-                    members = session.get('sessionMembers',None)
-                    records = session.get('contents',None)
-                    if records is not None:
-                        records = json.loads(records)
-                    if managerName is None and members is not None:
-                        #私聊
-                        for name in members:
-                            if name != self.username:
-                                username = name
-                    else:
-                        username = None
-                    self.localStorage.rewriteRecord(sessinID,records,username,sessionName,managerName,members)
-            self.messageQueue.put({'messageNumber': '5r'})
+            sessionNum = request.get('messageField1', None)
+            dataj = request.get('messageField2', None)
+            try:
+                data = readData(self.data)
+                resultlist = []
+                sessionlist = json.loads(dataj)
+                if type(sessionlist) == list and sessionNum != '0' and self.localStorage is not None:
+                    for session in sessionlist:
+                        sessionID = session.get('sessionId', None)
+                        if sessionID is None:
+                            continue
+                        sessionName = session.get('sessionName', None)
+                        managerName = session.get('managerUsername', None)
+                        members = session.get('sessionMembers', None)
+                        recordsj = session.get('contents', None)
+                        if records is not None:
+                            records = json.loads(recordsj)
+                        if managerName is None and members is not None:
+                            # 私聊
+                            for name in members:
+                                if name != self.username:
+                                    username = name
+                        else:
+                            username = None
+                        #更新本地
+                        self.localStorage.rewriteRecord(sessionID, records, username, sessionName, managerName, members)
+                        #更新data中的sessionList
+                        temp = {
+                            'sessionId': sessionID,
+                            'numOfMessage': self.localStorage.getMessageNum(sessionID),
+                            'sessionName': sessionName,
+                            'managerUsername': managerName,
+                            'sessionMembers': members,
+                            'contents': records
+                        }
+                        resultlist.append(temp)
+                data['groupList']['version'] += 1
+                data['groupList']['list'] = self.localStorage.getGroups()
+                data['sessionList']['version'] += 1
+                data['sessionList']['list'] = resultlist
+            except KeyError as e:
+                print('key error in 5r:')
+                print(e)
+            except Exception as o:
+                print('other error in 5r:')
+                print(o)
+            lockData(self.data)
+            writeData(self.data, data)
+            unlockData(self.data)
         # 建立会话并自动加入
         # request格式：{"messageNumber": "6"}
         # message格式：sessionID若为0则表示建立失败
@@ -269,13 +315,19 @@ class BackEndThread(threading.Thread):
             self.task.append(thread)
         elif messageNumber == RequestType.CREATESESSIONRET:
             sessionID = request.get('messageField1', None)
-            message = {
-                'messageNumber': MessageType.CREATESESSIONRET,
-                'sessionId': sessionID
-            }
-            self.messageQueue.put(message)
-            # if sessionID != 0 and self.localStorage is not None:
-            #     self.localStorage.addSession(sessionID)
+            if self.need_session:
+                # 如果need_session，即刚刚通过了一个好友请求，那么把这个好友加入刚申请到的无名session中，发5号请求刷新列表
+                self.need_session = False
+                self.requestQueue.put({
+                        'messageNumber': '7',
+                        'username': self.needed_username,
+                        'sessionId': sessionID
+                    })
+                self.requestQueue.put({'messageNumber': '5'})
+            else:
+                # 否则说明刚申请到的session是群聊，那么只发5号请求刷新列表
+                self.requestQueue.put({'messageNumber': '5'})
+
         # 邀请他人加入会话
         # request格式：{"messageNumber": "7","username":"dsm","sessionId":"2"}   (sessionID也可兼容)
         # message格式：见下方
@@ -285,11 +337,9 @@ class BackEndThread(threading.Thread):
             thread.start()
             self.task.append(thread)
         elif messageNumber == RequestType.JOINSESSIONRET:
-            message = {
-                'messageNumber': MessageType.JOINSESSIONRET,
-                'result': request.get('messageField1', None)
-            }
-            self.messageQueue.put(message)
+            if request.get('messageField1', None) != '1':
+                print("邀请加入失败")
+
         # 获取好友请求列表
         # request格式：{"messageNumber": "8"}
         # message格式：
@@ -299,29 +349,36 @@ class BackEndThread(threading.Thread):
             thread.start()
             self.task.append(thread)
         elif messageNumber == RequestType.GETFRIENDREGISTERRET:
-            registerNum = request.get('messageField1',None)
-            data = request.get('messageField2',None)
-            registerlist = json.loads(data)
-            result = []
-            if type(registerlist) == list and registerNum != '0':
-                for register in registerlist:
-                    time = register.get('time', None)
-                    if time is not None:
-                        Time = time.split('-', 6)
-                        time = Time[0] + "年" + Time[1] + "月" + Time[2] + "日"
-                    temp = {'requestorUsername': register.get('requestorUsername', None),
-                            'checkMessage': register.get('checkMessage', None),
-                            'avatarAddress': register.get('avatarAddress', None),
-                            'time': time}
-                    result.append(temp)
-            message = {
-                'messageNumber':MessageType.GETFRIENDREGISTERRET,
-                'requestorNum': registerNum,
-                'requestorList': result
-            }
-            self.messageQueue.put(message)
+            registerNum = request.get('messageField1', None)
+            dataj = request.get('messageField2', None)
+            try:
+                registerlist = json.loads(dataj)
+                result = []
+                data = readData(self.data)
+                if type(registerlist) == list and registerNum != '0':
+                    for register in registerlist:
+                        time = register.get('time', None)
+                        if time is not None:
+                            Time = time.split('-', 6)
+                            time = Time[0] + "年" + Time[1] + "月" + Time[2] + "日"
+                        temp = {'requestorUsername': register.get('requestorUsername', None),
+                                'checkMessage': register.get('checkMessage', None),
+                                'avatarAddress': register.get('avatarAddress', None),
+                                'time': time}
+                        result.append(temp)
+                data['receiverList']['version'] += 1
+                data['receiverList']['list'] = result
+            except KeyError as e:
+                print('key error in 8r:')
+                print(e)
+            except Exception as o:
+                print('other error in 8r:')
+                print(o)
+            lockData(self.data)
+            writeData(self.data, data)
+            unlockData(self.data)
 
-        #发送/接收消息
+        # 发送/接收消息
         # request使用eg：注意时间格式
         # record = {'from':'hcz','to':None,'time':datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S'),'content':'hello dsm'}
         # request = {"messageNumber": "9",'sessionID':'2','message':json.dumps(record)} 
@@ -331,36 +388,8 @@ class BackEndThread(threading.Thread):
             thread.setDaemon(True)
             thread.start()
             self.task.append(thread)
-            sessionID = request.get('messageField1', None)
-            if sessionID is None:
-                sessionID = request.get('sessionId', None)
-                if sessionID is None:
-                    sessionID = request.get('sessionID')
-            message = request.get('messageField2', None)
-            if message is None:
-                message = request.get('content', None)
-            if message is not None:
-                if type(message) is not dict:
-                    content = json.loads(message)
-                else:
-                    content = message
-            # if self.localStorage is not None:
-            #     self.localStorage.addRecordsDict(sessionID, content)
-
         elif messageNumber == RequestType.SENDMESSAGERET:
-            data = request.get('messageField2', None)
-            if data is not None:
-                content = json.loads(data)
-            sessionID = request.get('messageField1', None)
-            username = request.get('messageField3',None)
-            message = {
-                'messageNumber': MessageType.SENDMESSAGERET,
-                'sessionId': sessionID,
-                'content': content
-            }
-            self.messageQueue.put(message)
-            if self.localStorage is not None:
-                self.localStorage.addRecordsDict(sessionID, content, username)
+            self.requestQueue.put({'messageNumber': '5'})
 
         # 添加好友，发送好友申请 {'messageNumber':'10'}
         # request格式:{"toUserName":"lex", "checkMessage":"我是你爸爸"， "messageNumber":"10"}
@@ -375,23 +404,18 @@ class BackEndThread(threading.Thread):
         # request无
         # message格式：
         elif messageNumber == RequestType.RECEIVEFRIENDREGISTERRET:
-            Request = request.get('messageField1', None)
-            print(Request)
-            dictRequest = {}
-            if Request is not None:
-                dictRequest = json.loads(Request)
-            time = dictRequest.get('time', None)
-            if time is not None:
-                Time = time.split('-', 6)
-                time = Time[0] + "年" + Time[1] + "月" + Time[2] + "日"
-            message = {
-                'messageNumber': MessageType.RECEIVEFRIENDREGISTERRET,
-                'requestorUsername': dictRequest.get('requestorUsername', None),
-                'avatarAddress': dictRequest.get('avatarAddress', None),
-                'checkMessage': dictRequest.get('checkMessage', None),
-                'time': time
-            }
-            self.messageQueue.put(message)
+            try:
+                data = readData(self.data)
+                data['requestorMessage']['version'] += 1
+            except KeyError as e:
+                print('key error in 11r:')
+                print(e)
+            except Exception as o:
+                print('other error in 11r:')
+                print(o)
+            lockData(self.data)
+            writeData(self.data, data)
+            unlockData(self.data)
 
         # 回复好友申请
         # request格式：{"fromUsername":"hololive", "result":1, "messageNumber":"12"}
@@ -402,33 +426,32 @@ class BackEndThread(threading.Thread):
             thread.setDaemon(True)
             thread.start()
             self.task.append(thread)
-            # 顺便把result还给前端
-            message = {
-                'requestorUsername': request.get('requestorUsername', None),
-                'messageNumber': MessageType.RESPONDFRIENDREGISTERRET,
-                'result': request.get('result', None)
-            }
-            self.messageQueue.put(message)
+            # 顺便把result处理一下
+            result = request.get('result', None)
+            if result == '1':
+                self.need_session = True
+                self.needed_username = request['requestorUsername']
+                self.requestQueue.put({'messageNumber': '4'})
+
         # 用户接收到添加好友申请结果 {'messageNumber':'13r'}
         # request无
         # message格式如下
         elif messageNumber == RequestType.GETFRIENDREGISTERRESULTRET:
-            Result = request.get('messageField1', None)
-            dictResult = {}
-            if Result is not None:
-                dictResult = json.loads(Result)
-            time = dictResult.get('time', None)
-            if time is not None:
-                Time = time.split('-', 6)
-                time = Time[0] + "年" + Time[1] + "月" + Time[2] + "日"
-            message = {
-                'messageNumber': MessageType.GETFRIENDREGISTERRESULTRET,
-                'receiverUsername': dictResult.get('receiverUsername', None),
-                'avatarAddress': dictResult.get('avatarAddress', None),
-                'result': dictResult.get('result', None),
-                'time': time
-            }
-            self.messageQueue.put(message)
+            result = request.get('messageField1', None)
+            if result == '1':
+                self.requestQueue.put({'messageNumber': '4'})
+            try:
+                data = readData(self.data)
+                data['receiverMessage']['version'] += 1
+            except KeyError as e:
+                print('key error in 13r:')
+                print(e)
+            except Exception as o:
+                print('other error in 13r:')
+                print(o)
+            lockData(self.data)
+            writeData(self.data, data)
+            unlockData(self.data)
 
         # 获取申请结果列表
         # request格式：{'messageNumber':'14'}
@@ -440,25 +463,32 @@ class BackEndThread(threading.Thread):
         elif messageNumber == RequestType.GETFRIENDREGISTERRESULTRETLISTRET:
             registerResultNum = request.get('messageField1', None)
             data = request.get('messageField2', None)
-            registerResultList = json.loads(data)
-            result = []
-            if type(registerResultList) == list and registerResultNum != '0':
-                for registerResult in registerResultList:
-                    time = registerResult.get('time', None)
-                    if time is not None:
-                        Time = time.split('-', 6)
-                        time = Time[0] + "年" + Time[1] + "月" + Time[2] + "日"
-                    temp = {'receiverUsername': registerResult.get('receiverUsername', None),
-                            'avatarAddress': registerResult.get('avatarAddress', None),
-                            'result': registerResult.get('result', None),
-                            'time': time}
-                    result.append(temp)
-            message = {
-                'messageNumber': MessageType.GETFRIENDREGISTERRESULTRETLISTRET,
-                'receiverNum': registerResultNum,
-                'receiverList': result
-            }
-            self.messageQueue.put(message)
+            try:
+                registerResultList = json.loads(data)
+                result = []
+                data = readData(self.data)
+                if type(registerResultList) == list and registerResultNum != '0':
+                    for registerResult in registerResultList:
+                        time = registerResult.get('time', None)
+                        if time is not None:
+                            Time = time.split('-', 6)
+                            time = Time[0] + "年" + Time[1] + "月" + Time[2] + "日"
+                        temp = {'receiverUsername': registerResult.get('receiverUsername', None),
+                                'avatarAddress': registerResult.get('avatarAddress', None),
+                                'result': registerResult.get('result', None),
+                                'time': time}
+                        result.append(temp)
+                data['receiverList']['version'] += 1
+                data['receiverList'] = result
+            except KeyError as e:
+                print('key error in 14r:')
+                print(e)
+            except Exception as o:
+                print('other error in 14r:')
+                print(o)
+            lockData(self.data)
+            writeData(self.data, data)
+            unlockData(self.data)
 
         # 删除好友
         # request格式：{'username': 'hamzy', 'messageNumber':'15'}
@@ -467,38 +497,21 @@ class BackEndThread(threading.Thread):
             thread.setDaemon(True)
             thread.start()
             self.task.append(thread)
-            # 顺便把消息给前端发回去
-            message = {
-                'messageNumber': MessageType.DELETEFRIENDRET,
-                'username': request.get('username', None)
-            }
-            self.messageQueue.put(message)
+            self.requestQueue.put({'messageNumber': '4'})
+
         # 删除好友回复
         # request格式：{'username': 'hamzy', 'messageNumber':'16r'}
         elif messageNumber == RequestType.BEDELETEDFRIENDRET:
-            friendNum = request.get('messageField1', None)
-            data = request.get('messageField2', None)
-            friendlist = json.loads(data)
-            result = []
-            if type(friendlist) == list and friendNum != '0':
-                for friend in friendlist:
-                    temp = {'username': friend.get('username', None), 'nickname': friend.get('nickname', None),
-                            'invitee': friend.get('invitee', None), 'avatarAddress': friend.get('avatarAddress', None),
-                            'phoneNumber': friend.get('phoneNumber', None), 'email': friend.get('email', None),
-                            'occupation': friend.get('occupation', None), 'location': friend.get('location', None)}
-                    result.append(temp)
-            message = {
-                'messageNumber': MessageType.BEDELETEDFRIENDRET,
-                'num': friendNum,
-                'friendlist': result
-            }
-            self.messageQueue.put(message)
+            self.requestQueue.put({'messageNumber': '4'})
+
         # 退出群聊 {'messageNumber':'17'}
         elif messageNumber == RequestType.EXITSESSION:
             thread = ExitSession(self.client, request)
             thread.setDaemon(True)
             thread.start()
             self.task.append(thread)
+            self.process.requestQueue.put({'messageNumber': '5'})
+
         # 更改个人信息 {'messageNumber':'18'}
         elif messageNumber == RequestType.UPDATEPERSONALINFORMATION:
             thread = UpdatePersonalInformation(self.client, request)
@@ -506,27 +519,36 @@ class BackEndThread(threading.Thread):
             thread.start()
             self.task.append(thread)
         elif messageNumber == RequestType.UPDATEPERSONALINFORMATIONRET:
-            data = request.get('messageField1', None)
-            user = json.loads(data)
-            message = {
-                'messageNumber': MessageType.UPDATEPERSONALINFORMATIONRET,
-                'username': None,
-                'password': None,
-                'nickname': user.get('nickname', None),
-                'avatarAddress': user.get('avatarAddress', None),
-                'invitee': user.get('invitee', None),
-                'phoneNumber': user.get('phoneNumber', None),
-                'email': user.get('email', None),
-                'occupation': user.get('occupation', None),
-                'location': user.get('location', None)
-            }
-            self.messageQueue.put(message)
+            dataj = request.get('messageField1', None)
+            try:
+                user = json.loads(dataj)
+                data = readData(self.data)
+                data['user']['version'] += 1
+                data['user']['nickname'] = user.get('nickname', None)
+                data['user']['avatarAddress'] = user.get('avatarAddress', None)
+                data['user']['invitee'] = user.get('invitee', None)
+                data['user']['phoneNumber'] = user.get('phoneNumber', None)
+                data['user']['email'] = user.get('email', None)
+                data['user']['occupation'] = user.get('occupation', None)
+                data['user']['location'] = user.get('location', None)
+            except KeyError as e:
+                print('key error in 18r:')
+                print(e)
+            except Exception as o:
+                print('other error in 18r:')
+                print(o)
+            lockData(self.data)
+            writeData(self.data, data)
+            unlockData(self.data)
+
         # 更改群聊信息 {'messageNumber':'19'}
         elif messageNumber == RequestType.UPDATESESSIONINFORMATION:
             thread = UpdateSessionInformation(self.client, request)
             thread.setDaemon(True)
             thread.start()
             self.task.append(thread)
+            self.process.requestQueue.put({'messageNumber': '5'})
+
         # 通过nickname搜索 {'messageNumber':'20'}
         # requset
         # message
@@ -537,23 +559,32 @@ class BackEndThread(threading.Thread):
             self.task.append(thread)
         elif messageNumber == RequestType.SEARCHBYNICKNAMERET:
             resultNum = request.get('messageField1', None)
-            data = request.get('messageField2', None)
-            userList = json.loads(data)
-            # print(userList)
+            dataj = request.get('messageField2', None)
             result = []
-            if type(userList) == list and resultNum != '0':
-                for userResult in userList:
-                    temp = {'username': userResult.get('username', None), 'nickname': userResult.get('nickname', None),
-                            'invitee': userResult.get('invitee', None), 'avatarAddress': userResult.get('avatarAddress', None),
-                            'phoneNumber': userResult.get('phoneNumber', None), 'email': userResult.get('email', None),
-                            'occupation': userResult.get('occupation', None), 'location': userResult.get('location', None)}
-                    result.append(temp)
-            message = {
-                'messageNumber': MessageType.SEARCHBYNICKNAMERET,
-                'num': resultNum,
-                'userlist': result
-            }
-            self.messageQueue.put(message)
+            try:
+                data = readData(self.data)
+                userList = json.loads(dataj)
+                if type(userList) == list and resultNum != '0':
+                    for userResult in userList:
+                        temp = {'username': userResult.get('username', None), 'nickname': userResult.get('nickname', None),
+                                'invitee': userResult.get('invitee', None),
+                                'avatarAddress': userResult.get('avatarAddress', None),
+                                'phoneNumber': userResult.get('phoneNumber', None), 'email': userResult.get('email', None),
+                                'occupation': userResult.get('occupation', None),
+                                'location': userResult.get('location', None)}
+                        result.append(temp)
+                data['nicknameResult']['version'] += 1
+                data['nicknameResult']['list'] = result
+            except KeyError as e:
+                print('key error in 20r:')
+                print(e)
+            except Exception as o:
+                print('other error in 20r:')
+                print(o)
+            lockData(self.data)
+            writeData(self.data, data)
+            unlockData(self.data)
+
         # 通过username搜索 {'messageNumber':'21'}
         elif messageNumber == RequestType.SEARCHBYUSERNAME:
             thread = SearchByUsername(self.client, request)
@@ -562,38 +593,43 @@ class BackEndThread(threading.Thread):
             self.task.append(thread)
         elif messageNumber == RequestType.SEARCHBYUSERNAMERET:
             resultNum = request.get('messageField1', None)
-            data = request.get('messageField2', None)
-            user = {}
-            if resultNum != '0':
-                user = json.loads(data)
-            result = []
-            if type(user) == dict and resultNum != '0':
-                temp = {'username': user.get('username', None), 'nickname': user.get('nickname', None),
-                        'invitee': user.get('invitee', None), 'avatarAddress': user.get('avatarAddress', None),
-                        'phoneNumber': user.get('phoneNumber', None), 'email': user.get('email', None),
-                        'occupation': user.get('occupation', None), 'location': user.get('location', None)}
-                result.append(temp)
-            message = {
-                'messageNumber': MessageType.SEARCHBYUSERNAMERET,
-                'num': resultNum,
-                'userlist': result
-            }
-            self.messageQueue.put(message)
+            dataj = request.get('messageField2', None)
+            try:
+                data = readData(self.data)
+                user = {}
+                if resultNum != '0':
+                    user = json.loads(dataj)
+                result = []
+                if type(user) == dict and resultNum != '0':
+                    temp = {'username': user.get('username', None), 'nickname': user.get('nickname', None),
+                            'invitee': user.get('invitee', None), 'avatarAddress': user.get('avatarAddress', None),
+                            'phoneNumber': user.get('phoneNumber', None), 'email': user.get('email', None),
+                            'occupation': user.get('occupation', None), 'location': user.get('location', None)}
+                    result.append(temp)
+                data['usernameResult']['version'] += 1
+                data['usernameResult']['list'] = result
+            except KeyError as e:
+                print('key error in 21r:')
+                print(e)
+            except Exception as o:
+                print('other error in 21r:')
+                print(o)
+            lockData(self.data)
+            writeData(self.data, data)
+            unlockData(self.data)
         else:
             self.stop()
-        
+
     def stop(self):
         quitLogin = {"messageNumber": "0"}
         self.requestQueue.put(quitLogin)
         for tk in self.task:
-            tk.join(timeout = 1)
+            tk.join(timeout=1)
         if self.client is not None:
             self.client.closeServer()
         else:
             print("尚未建立连接")
         self.go = False
-        if self.localStorage != None:
-            self.localStorage.close()
 
     def requestFailure(self):
         pass
