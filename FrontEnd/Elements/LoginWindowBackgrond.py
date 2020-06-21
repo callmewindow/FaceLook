@@ -7,6 +7,7 @@ from FrontEnd.Elements.CandyButton import CandyButton
 from FrontEnd.Elements.AquaLoading import AquaLoading
 from FrontEnd.Elements.text_default import text_default,LoadingText
 from FrontEnd.Elements.Button import CloseButton, MinimizeButton
+from FrontEnd.Processes.RegisterWindowProcess import createRegisterWindowProcess
 from Common.base import *
 from time import sleep
 
@@ -16,8 +17,32 @@ class login_state():
     loading = 1
     success = 2
     failure = 3
-
-
+class GoRegister(Element):
+    image = pygame.image.load('./resources/LoginWindowUI/register.png')
+    image_underlined = pygame.image.load('./resources/LoginWindowUI/register_underlined.png')
+    def __init__(self,process,location):
+        Element.__init__(self,process)
+        self.location = location
+        self.surface = self.image
+        self.size = self.image.get_size()
+    def posin(self,pos):
+        x = pos[0]
+        y = pos[1]
+        if self.location[0]<=x and x<=self.location[0]+self.size[0] and self.location[1]<=y and y<=self.location[1]+self.size[1]:
+            return True
+        return False
+    def getEvent(self, event):
+        if event.type == pygame.constants.MOUSEBUTTONDOWN and event.button == pygame.constants.BUTTON_LEFT and self.posin(event.pos):
+            import multiprocessing
+            proc = multiprocessing.Process(target=createRegisterWindowProcess,
+                                       args=(self.process.data, self.process.requestQueue, self.process.messageQueue))
+            proc.start()
+        if event.type == pygame.constants.MOUSEMOTION:
+            if self.posin(event.pos):
+                self.surface = self.image_underlined
+            else:
+                self.surface = self.image
+            return
 class LoginWindowBackground(Element):
 
     def __init__(self, process):
@@ -38,10 +63,13 @@ class LoginWindowBackground(Element):
         self.loadingText.alignCenter((300, 350))
         self.messageText = self.createChild(text_default, (0, 0), '登录失败！', (0, 0, 0))
         self.messageText.alignCenter((300, 332))
+        self.goRegister = self.createChild(GoRegister,((600-114)/2,400))
+        
         self.aqualoading.disable()
         self.loadingText.disable()
         self.messageText.disable()
-
+        
+        
         self.closeButton = self.createChild(CloseButton, (600 - 40, 4))
         self.minimizeButton = self.createChild(MinimizeButton, (600 - 40 * 2, 4))
 
@@ -53,6 +81,7 @@ class LoginWindowBackground(Element):
         self.passwordInputbox.disable()
         self.candy.disable()
         self.messageText.disable()
+        self.goRegister.disable()
         self.aqualoading.enable()
         self.loadingText.enable()
 
@@ -71,6 +100,7 @@ class LoginWindowBackground(Element):
         self.passwordInputbox.enable()
         self.candy.enable()
         self.messageText.enable()
+        self.goRegister.enable()
         self.aqualoading.disable()
         self.loadingText.disable()
         self.messageText.setText(failureMessage)

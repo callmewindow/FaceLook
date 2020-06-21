@@ -41,8 +41,6 @@ class CandyButton(Element):
                 self.state = 0
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT and self.posin(event.pos):
             self.process.addAction(Action(ActionType.LOGIN,None))
-        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_RIGHT and self.posin(event.pos):
-            createHinter(self.process,'一个彩蛋')
 
 
 
