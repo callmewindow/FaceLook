@@ -25,6 +25,7 @@ class FriendBlock(Element):
             self.last_message = self.createChild(CustomText, (100, 56), 'simhei', 18, (128, 128, 128), '暂无消息' if user['latestMessage']['content'] == '' else user['latestMessage']['content'], 190)
             self.last_date = self.createChild(CustomText, (300, 40), 'simhei', 16, (128, 128, 128), ' ' if user['latestMessage']['time'] == '' else user['latestMessage']['time'][5:10])
             self.last_time = self.createChild(CustomText, (300, 60), 'simhei', 16, (128, 128, 128), ' ' if user['latestMessage']['time'] == '' else user['latestMessage']['time'][11:13] + ':' + user['latestMessage']['time'][14:16])
+            self.compared_time = '0' if user['latestMessage']['time'] == '' else user['latestMessage']['time']
         except KeyError:
             print('key error in FriendBlock')
         self.surface = FriendBlock.image
@@ -137,6 +138,7 @@ class GroupBlock(Element):
             self.last_message = self.createChild(CustomText, (25, 56), 'simhei', 18, (128, 128, 128), '暂无消息' if group['latestMessage']['content'] == '' else group['latestMessage']['content'], 260)
             self.last_date = self.createChild(CustomText, (300, 40), 'simhei', 16, (128, 128, 128), ' ' if group['latestMessage']['time'] == '' else group['latestMessage']['time'][5:10])
             self.last_time = self.createChild(CustomText, (300, 60), 'simhei', 16, (128, 128, 128), ' ' if group['latestMessage']['time'] == '' else group['latestMessage']['time'][11:13] + ':' + group['latestMessage']['time'][14:16])
+            self.compared_time = '0' if group['latestMessage']['time'] == '' else group['latestMessage']['time']
         except KeyError:
             print('key error in GroupBlock')
         self.surface = GroupBlock.image
@@ -229,8 +231,9 @@ class FriendList(Element):
     def refresh(self, list_):
         base = 0 if len(self.childs) == 0 else self.childs[0].location[1]
         self.childs.clear()
+        len_ = len(list_)
         try:
-            for i in range(len(list_)):
+            for i in range(len_):
                 user = list_[i]
                 if self.type_ == 0:
                     self.createChild(FriendBlock, (0, i * 100 + base), user)
@@ -238,6 +241,11 @@ class FriendList(Element):
                     self.createChild(GroupBlock, (0, i * 100 + base), user)
         except KeyError:
             print('key error in FriendList')
+        for i in range(len_ - 1):
+            for j in range(len_ - i - 1):
+                if self.childs[j].compared_time < self.childs[j + 1].compared_time:
+                    self.childs[j].location, self.childs[j + 1].location = self.childs[j + 1].location, self.childs[j].location
+                    self.childs[j], self.childs[j + 1] = self.childs[j + 1], self.childs[j]
 
     '''def update_info(self):
         for child in self.childs:
