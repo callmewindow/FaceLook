@@ -36,7 +36,7 @@ class UserWindowBackground(Element):
             'user': -1,
             'friend_list': -1,
             'group_list': -1,
-            'friend_request': -1,
+            'friend_request': 0,
         }
 
     def getEvent(self, event):
