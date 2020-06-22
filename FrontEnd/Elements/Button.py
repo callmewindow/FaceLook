@@ -75,8 +75,48 @@ class UserMinimizeButton(UserCloseButton):
     def onClick(self):
         self.process.minimize()
         self.process.dragging = False
-    
 
+
+class GrayCloseButton(Button):
+    source_img = pygame.image.load('./resources/WindowControlUI/close.png')
+    image = pygame.transform.smoothscale(source_img, (24, 24))
+    bigImage = pygame.transform.smoothscale(source_img, (30, 30))
+
+    def __init__(self, process, location):
+        Button.__init__(self, process, location)
+        self.surface = self.image
+        self.smallSize = (24, 24)
+        self.smallLocation = location
+        self.bigSize = (30, 30)
+        self.bigLocation = (location[0] - (self.bigSize[0] - self.smallSize[0]) / 2,
+                            location[1] - (self.bigSize[1] - self.smallSize[1]) / 2)
+        self.location = location
+        self.size = self.smallSize
+
+    def onClick(self):
+        self.process.stop()
+        self.process.dragging = False
+
+
+class GrayMinimizeButton(Button):
+    source_img = pygame.image.load('./resources/WindowControlUI/move.png')
+    image = pygame.transform.smoothscale(source_img, (24, 24))
+    bigImage = pygame.transform.smoothscale(source_img, (30, 30))
+
+    def __init__(self, process, location):
+        Button.__init__(self, process, location)
+        self.surface = self.image
+        self.smallSize = (24, 24)
+        self.smallLocation = location
+        self.bigSize = (30, 30)
+        self.bigLocation = (location[0] - (self.bigSize[0] - self.smallSize[0]) / 2,
+                            location[1] - (self.bigSize[1] - self.smallSize[1]) / 2)
+        self.location = location
+        self.size = self.smallSize
+
+    def onClick(self):
+        self.process.minimize()
+        self.process.dragging = False
 
             
         
