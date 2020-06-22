@@ -8,6 +8,7 @@ from FrontEnd.Elements.TextButton import TextButton
 from FrontEnd.Elements.text_variable import text_variable
 from FrontEnd.Elements.InputArea import InputArea
 from FrontEnd.Elements.MessageList import MessageList
+from FrontEnd.Elements.InviteGroupMember import InviteGroupMember
 from FrontEnd.Elements.Alert import Alert
 from Common.dataFunction import *
 
@@ -99,10 +100,12 @@ class SessionWindowBackground(Element):
         self.imageAlert = self.createChild(Alert, (275,250), "请将图片拖拽到输入框以完成图片的发送")
         self.inviteAlert = self.createChild(Alert, (275,250), "当前群聊不允许群成员邀请好友入群")
 
-        if type == 1:
-            self.addButton.disable()
+        # 群成员邀请框
+        self.inviteMember = self.createChild(InviteGroupMember, (600, marginTop1+40), friends)
+        self.inviteMember.disable()
 
-        self.update_counter = 0
+        if self.type == 1:
+            self.addButton.disable()
 
 
     def getEvent(self, event):
@@ -150,11 +153,12 @@ class SessionWindowBackground(Element):
         # 打开邀请群成员的的窗口
         if self.addButton.state == 2:
             self.addButton.setState(0)
-            # 判断是否允许群成员邀请（偷懒判断）
-            if '官方' in self.sessionCon['sessionName']:
+            # 判断是否允许群成员邀请（偷懒判断），不是群主也是官方群则不能邀请
+            if self.username != self.sessionCon['managerUsername'] and '官方' in self.sessionCon['sessionName']:
                 self.inviteAlert.enable()
+                self.showAlert = True
             else:
-                pass
+                self.inviteMember.enable()
         
         # 打开图片发送提示
         if self.pictureButton.state == 2:
@@ -205,7 +209,9 @@ class SessionWindowBackground(Element):
                     if session['sessionId'] == self.sessionId:
                         self.sessionCon = session
                         break
-                self.sessionTitle.setText(self.sessionCon['sessionName'])
+                # 是群聊才更新群名称
+                if self.type == 2:
+                    self.sessionTitle.setText(self.sessionCon['sessionName'])
                 self.messageList.getMessages(1,self.sessionCon['contents'])
         
         
