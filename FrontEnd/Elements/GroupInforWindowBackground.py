@@ -1,6 +1,11 @@
+from time import sleep
+
 import pygame
 from Common.base import *
 from FrontEnd.Elements.Element import Element
+from FrontEnd.Elements.GroupInforButton import GroupInforButton
+from FrontEnd.Elements.GroupMemberList import GroupMemberList
+from FrontEnd.Elements.PicButton import PicButton
 from FrontEnd.Elements.SelfInfo import SelfInfo
 from FrontEnd.Elements.text_variable import text_variable
 from FrontEnd.Elements.InforBar import InforBar
@@ -8,7 +13,8 @@ from FrontEnd.Elements.ModifyBar import ModifyBar
 from FrontEnd.Elements.TripleStateButton import TripleStateButton
 from FrontEnd.Elements.TextButton import TextButton
 from FrontEnd.Elements.Image import Image
-from FrontEnd.Elements.Button import UserCloseButton
+from FrontEnd.Elements.Button import UserCloseButton, CloseButton, MinimizeButton, UserMinimizeButton, \
+    GrayMinimizeButton, GrayCloseButton
 from FrontEnd.Elements.SingleInputBox import InputBox
 from FrontEnd.Elements.AddCheckMessage import AddCheckMessage
 from FrontEnd.Elements.Alert import Alert
@@ -19,221 +25,290 @@ class GroupInforWindowBackground(Element):
     # state == 1 好友
     # state == 2 陌生人
 
-    topbg = pygame.Surface((500, 200))
-    topbg.fill((251, 114, 153))
-    
+    image_left = pygame.Surface((300,720))
+    image_left.fill((238,99,149))
+
     def __init__(self, process):
         Element.__init__(self, process)
-        self.surface = pygame.Surface((500, 600))
+
+        self.groupShow = self.process.groupShow  # 数据传入
+        # print(self.groupShow)
+
+        self.surface = pygame.Surface((920, 720))
         self.surface.fill((255, 255, 255))
         self.location = (0, 0)
-        # 获取自己的用户名和展示的用户
-        self.state = -1
-        self.tempGroup = self.process.groupShow
-        data = readData(self.process.data)
-        friends = data.get("friendList")
-        self.username = data["user"]["username"]
-        if self.tempGroup.get("username") == self.username:
-            self.state = 0
-        else:
-            self.state = 2 # 先默认认为是陌生人
-            for friend in friends:
-                if self.tempGroup.get("username") == friend["username"]:
-                    self.state = 1 # 有重复的则是好友
+        self.surface.blit(self.image_left,(0,0))
 
-    def init(self):
-        # 群聊应该只用保留几个就好，然后再列表展示用户名，来几个按钮就没什么了
+        self.closeButton = self.createChild(GrayCloseButton, (920 - 50, 15))
+        self.minimizeButton = self.createChild(GrayMinimizeButton, (920 - 50 * 2, 15))
 
-        # 绘制上半部分内容
-        self.surface.blit(self.topbg, (0, 0))
-        self.avatar = self.createChild(Image, (0, 0), (200, 200), self.tempGroup.get("avatarAddress"))
-        self.nickname1 = self.createChild(text_variable, (235, 40),self.tempGroup.get("nickname"), 'simhei', 30, (0,0,0))
-        self.editButton = self.createChild(TripleStateButton, (420, 185), './resources/UserInforWinUI/edit.png', (40, 40))
-        self.closeButton = self.createChild(UserCloseButton, (450, 15))
+        # self.groupAvatar = self.createChild(Image,(75,100),(150,150),'./resources/GroupInforWindowUI/qunliaotouxiang.png')  #####
+        self.groupAvatar = self.createChild(GroupInforButton, (75, 100), '', (53, 11), 0, (150, 150),
+                                           './resources/GroupInforWindowUI/qunliaotouxiang.png',
+                                           './resources/GroupInforWindowUI/qunliaotouxiang.png',
+                                           './resources/GroupInforWindowUI/qunliaotouxiang.png')  #####
 
-        # 添加具体信息
-        topY = 230
-        self.username = self.createChild(InforBar, (150, topY), "用户名", self.tempGroup.get("username"), 20)
-        self.nickname2 = self.createChild(InforBar, (150, topY+40), "昵称", self.tempGroup.get("nickname"), 20)
-        self.phonenum = self.createChild(InforBar, (150, topY+80), "手机号", self.tempGroup.get("phoneNumber"), 20)
-        self.mail = self.createChild(InforBar, (150, topY+120), "邮箱", self.tempGroup.get("email"), 20)
-        self.major = self.createChild(InforBar, (150, topY+160), "职业", self.tempGroup.get("occupation"), 20)
-        self.address = self.createChild(InforBar, (150, topY+200), "所在地", self.tempGroup.get("location"), 20)
-        getInvite = self.tempGroup.get("invitee")
-        if getInvite == 1:
-            self.inviteeT = "允许"
-        else:
-            self.inviteeT = "不允许"
-        self.invitee = self.createChild(InforBar, (150, topY+240), "邀请入群", self.inviteeT, 20)
-        
-        # 添加功能按钮
-        self.checkMessage = self.createChild(AddCheckMessage, (0, 220))
-        self.addButton = self.createChild(TripleStateButton, (10, 540), './resources/UserInforWinUI/add.png', (80, 40))
-        self.deleteButton = self.createChild(TripleStateButton, (410, 540), './resources/UserInforWinUI/delete.png', (80, 40))
+        #self.avatar = self.createChild(Image, (0, 0), (200, 200), self.tempUser.get("avatarAddress"))
+        # self.groupName = self.createChild(text_variable,(90,300),self.groupShow['sessionName'],'simhei',30,(55,55,55))  ######
+        n = len(self.groupShow['sessionName'])
+        self.groupName = self.createChild(text_variable, ((300-30*n)/2, 300), self.groupShow['sessionName'], 'simhei', 30, (255, 255, 255))  ######
+        self.quitButton = self.createChild(GroupInforButton,(75,500),'退出群聊',(31,11),22,(150,48),
+                                           './resources/GroupInforWindowUI/quit_button_hover.png',
+                                           './resources/GroupInforWindowUI/quit_button.png',
+                                           './resources/GroupInforWindowUI/quit_button_hover.png')  #####
+        self.userListButton = self.createChild(GroupInforButton,(300,56),'成员',(41,2),30,(140,44),
+                                               './resources/GroupInforWindowUI/userlist_button.png',
+                                               './resources/GroupInforWindowUI/userlist_button.png',
+                                               './resources/GroupInforWindowUI/userlist_button.png',)
+        self.line = self.createChild(GroupInforButton, (35+300, 100), 'line',(0,0),0,(550,1),
+                                               './resources/GroupInforWindowUI/line.png',
+                                               './resources/GroupInforWindowUI/line.png',
+                                               './resources/GroupInforWindowUI/line.png',)
+        self.inviteBg = self.createChild(GroupInforButton, (455 + 300, 56), '允许群成员邀请', (25, 13), 15, (130, 44),
+                                     './resources/GroupInforWindowUI/invite_bg.png',
+                                     './resources/GroupInforWindowUI/invite_bg.png',
+                                     './resources/GroupInforWindowUI/invite_bg.png', )
+        self.inviteButton = self.createChild(GroupInforButton, (455 + 300, 70), '', (0, 0), 0, (15, 15),
+                                         './resources/GroupInforWindowUI/invite_button.png',
+                                         './resources/GroupInforWindowUI/invite_button_select.png',
+                                         './resources/GroupInforWindowUI/invite_button_select.png', )
+        self.title = self.createChild(GroupInforButton, (19 + 300, 105), '   群成员         群主         操作', (0, 10), 18, (582, 38),
+                                             './resources/GroupInforWindowUI/title.png',
+                                             './resources/GroupInforWindowUI/title.png',
+                                             './resources/GroupInforWindowUI/title.png', )
+        self.groupUserList = self.createChild(GroupMemberList, (300, 143), self.groupShow)
+        # print(self.groupShow['sessionMembers'])
 
-        # 添加修改信息的内容
-        self.nickname2M = self.createChild(ModifyBar, (150, topY+40), "昵称", self.tempGroup.get("nickname"), 20)
-        self.phonenumM = self.createChild(ModifyBar, (150, topY+80), "手机号", self.tempGroup.get("phoneNumber"), 20)
-        self.mailM = self.createChild(ModifyBar, (150, topY+120), "邮箱", self.tempGroup.get("email"), 20)
-        self.majorM = self.createChild(ModifyBar, (150, topY+160), "职业", self.tempGroup.get("occupation"), 20)
-        self.addressM = self.createChild(ModifyBar, (150, topY+200), "所在地", self.tempGroup.get("location"), 20)
-        self.inviteeM = self.createChild(ModifyBar, (150, topY+240), "邀请入群", self.inviteeT, 20)
-        self.modifyButton = self.createChild(TextButton, (410, 540), "保存", 18, (80, 40))
-        self.returnButton = self.createChild(TripleStateButton, (10, 540), './resources/UserInforWinUI/delete.png', (80, 40))
-        self.returnInit(False)
+        # # 获取自己的用户名和展示的用户
+        # self.state = -1
 
-        # 添加警示框
-        self.showAlert = False
-        self.deleteAlert = self.createChild(Alert, (125,200), "此举将会删除双方的好友关系，如果确认请再次点击删除按钮")
+        # data = readData(self.process.data)
+        # friends = data.get("friendList")
+        # self.username = data["user"]["username"]
+        # if self.tempGroup.get("username") == self.username:
+        #     self.state = 0
+        # else:
+        #     self.state = 2 # 先默认认为是陌生人
+        #     for friend in friends:
+        #         if self.tempGroup.get("username") == friend["username"]:
+        #             self.state = 1 # 有重复的则是好友
 
-    def editInfor(self):
-        self.nickname1.disable()
-        self.nickname2.disable()
-        self.phonenum.disable()
-        self.mail.disable()
-        self.major.disable()
-        self.address.disable()
-        self.invitee.disable()
-        self.editButton.disable()
-        self.addButton.disable()
-        self.deleteButton.disable()
-        
-        self.nickname2M.enable()
-        self.phonenumM.enable()
-        self.mailM.enable()
-        self.majorM.enable()
-        self.addressM.enable()
-        self.inviteeM.enable()
-        self.modifyButton.enable()
-        self.returnButton.enable()
+    # def init(self):
+    #     # 群聊应该只用保留几个就好，然后再列表展示用户名，来几个按钮就没什么了
+    #
+    #     # 绘制上半部分内容
+    #    # self.surface.blit(self.topbg, (0, 0))
+    #     self.avatar = self.createChild(Image, (0, 0), (200, 200), self.tempGroup.get("avatarAddress"))
+    #     self.nickname1 = self.createChild(text_variable, (235, 40),self.tempGroup.get("nickname"), 'simhei', 30, (0,0,0))
+    #     self.editButton = self.createChild(TripleStateButton, (420, 185), './resources/UserInforWinUI/edit.png', (40, 40))
+    #     self.closeButton = self.createChild(UserCloseButton, (450, 15))
+    #
+    #     # 添加具体信息
+    #     topY = 230
+    #     self.username = self.createChild(InforBar, (150, topY), "用户名", self.tempGroup.get("username"), 20)
+    #     self.nickname2 = self.createChild(InforBar, (150, topY+40), "昵称", self.tempGroup.get("nickname"), 20)
+    #     self.phonenum = self.createChild(InforBar, (150, topY+80), "手机号", self.tempGroup.get("phoneNumber"), 20)
+    #     self.mail = self.createChild(InforBar, (150, topY+120), "邮箱", self.tempGroup.get("email"), 20)
+    #     self.major = self.createChild(InforBar, (150, topY+160), "职业", self.tempGroup.get("occupation"), 20)
+    #     self.address = self.createChild(InforBar, (150, topY+200), "所在地", self.tempGroup.get("location"), 20)
+    #     getInvite = self.tempGroup.get("invitee")
+    #     if getInvite == 1:
+    #         self.inviteeT = "允许"
+    #     else:
+    #         self.inviteeT = "不允许"
+    #     self.invitee = self.createChild(InforBar, (150, topY+240), "邀请入群", self.inviteeT, 20)
+    #
+    #     # 添加功能按钮
+    #     self.checkMessage = self.createChild(AddCheckMessage, (0, 220))
+    #     self.addButton = self.createChild(TripleStateButton, (10, 540), './resources/UserInforWinUI/add.png', (80, 40))
+    #     self.deleteButton = self.createChild(TripleStateButton, (410, 540), './resources/UserInforWinUI/delete.png', (80, 40))
+    #
+    #     # 添加修改信息的内容
+    #     self.nickname2M = self.createChild(ModifyBar, (150, topY+40), "昵称", self.tempGroup.get("nickname"), 20)
+    #     self.phonenumM = self.createChild(ModifyBar, (150, topY+80), "手机号", self.tempGroup.get("phoneNumber"), 20)
+    #     self.mailM = self.createChild(ModifyBar, (150, topY+120), "邮箱", self.tempGroup.get("email"), 20)
+    #     self.majorM = self.createChild(ModifyBar, (150, topY+160), "职业", self.tempGroup.get("occupation"), 20)
+    #     self.addressM = self.createChild(ModifyBar, (150, topY+200), "所在地", self.tempGroup.get("location"), 20)
+    #     self.inviteeM = self.createChild(ModifyBar, (150, topY+240), "邀请入群", self.inviteeT, 20)
+    #     self.modifyButton = self.createChild(TextButton, (410, 540), "保存", 18, (80, 40))
+    #     self.returnButton = self.createChild(TripleStateButton, (10, 540), './resources/UserInforWinUI/delete.png', (80, 40))
+    #     self.returnInit(False)
+    #
+    #     # 添加警示框
+    #     self.showAlert = False
+    #     self.deleteAlert = self.createChild(Alert, (125,200), "此举将会删除双方的好友关系，如果确认请再次点击删除按钮")
 
-    def returnInit(self, modify):
-        if not modify:
-            self.nickname2M.disable()
-            self.phonenumM.disable()
-            self.mailM.disable()
-            self.majorM.disable()
-            self.addressM.disable()
-            self.inviteeM.disable()
-            self.modifyButton.disable()
-            self.returnButton.disable()
+    # def editInfor(self):
+    #     self.nickname1.disable()
+    #     self.nickname2.disable()
+    #     self.phonenum.disable()
+    #     self.mail.disable()
+    #     self.major.disable()
+    #     self.address.disable()
+    #     self.invitee.disable()
+    #     self.editButton.disable()
+    #     self.addButton.disable()
+    #     self.deleteButton.disable()
+    #
+    #     self.nickname2M.enable()
+    #     self.phonenumM.enable()
+    #     self.mailM.enable()
+    #     self.majorM.enable()
+    #     self.addressM.enable()
+    #     self.inviteeM.enable()
+    #     self.modifyButton.enable()
+    #     self.returnButton.enable()
 
-            self.nickname1.enable()
-            self.nickname2.enable()
-            self.phonenum.enable()
-            self.mail.enable()
-            self.major.enable()
-            self.address.enable()
-            self.invitee.enable()
-            self.editButton.enable()
-            self.addButton.enable()
-            self.deleteButton.enable()
-        else: # 修改用户信息
-            self.nickname2M.disable()
-            self.phonenumM.disable()
-            self.mailM.disable()
-            self.majorM.disable()
-            self.addressM.disable()
-            self.inviteeM.disable()
-            self.modifyButton.disable()
-            self.returnButton.disable()
-
-            self.nickname1.setText(self.nickname2M.inputBox.get_text())
-            self.nickname1.enable()
-            self.nickname2.setContent(self.nickname2M.inputBox.get_text())
-            self.phonenum.setContent(self.phonenumM.inputBox.get_text())
-            self.mail.setContent(self.mailM.inputBox.get_text())
-            self.major.setContent(self.majorM.inputBox.get_text())
-            self.address.setContent(self.addressM.inputBox.get_text())
-            self.invitee.setContent(self.inviteeM.inputBox.get_text())
-            self.editButton.enable()
-            self.addButton.enable()
-            self.deleteButton.enable()
+    # def returnInit(self, modify):
+    #     if not modify:
+    #         self.nickname2M.disable()
+    #         self.phonenumM.disable()
+    #         self.mailM.disable()
+    #         self.majorM.disable()
+    #         self.addressM.disable()
+    #         self.inviteeM.disable()
+    #         self.modifyButton.disable()
+    #         self.returnButton.disable()
+    #
+    #         self.nickname1.enable()
+    #         self.nickname2.enable()
+    #         self.phonenum.enable()
+    #         self.mail.enable()
+    #         self.major.enable()
+    #         self.address.enable()
+    #         self.invitee.enable()
+    #         self.editButton.enable()
+    #         self.addButton.enable()
+    #         self.deleteButton.enable()
+    #     else: # 修改用户信息
+    #         self.nickname2M.disable()
+    #         self.phonenumM.disable()
+    #         self.mailM.disable()
+    #         self.majorM.disable()
+    #         self.addressM.disable()
+    #         self.inviteeM.disable()
+    #         self.modifyButton.disable()
+    #         self.returnButton.disable()
+    #
+    #         self.nickname1.setText(self.nickname2M.inputBox.get_text())
+    #         self.nickname1.enable()
+    #         self.nickname2.setContent(self.nickname2M.inputBox.get_text())
+    #         self.phonenum.setContent(self.phonenumM.inputBox.get_text())
+    #         self.mail.setContent(self.mailM.inputBox.get_text())
+    #         self.major.setContent(self.majorM.inputBox.get_text())
+    #         self.address.setContent(self.addressM.inputBox.get_text())
+    #         self.invitee.setContent(self.inviteeM.inputBox.get_text())
+    #         self.editButton.enable()
+    #         self.addButton.enable()
+    #         self.deleteButton.enable()
 
     def getEvent(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
+        if event.type in [pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.MOUSEMOTION]:
             event.pos = (event.pos[0] - self.location[0], event.pos[1] - self.location[1])
-
-        # 当在展示警告框的时候，只让警告框捕获事件
-        if self.showAlert:
-            for child in self.childs:
-                # 如果警告框都是diable，则会自动调整展示状态为False
-                self.showAlert = False
-                if isinstance(child, Alert) and child.active:
-                    self.showAlert = True
-                    child.getEvent(event)
-        else:
-            for child in self.childs:
-                if child.active:
-                    child.getEvent(event)
-        if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
-            event.pos = (event.pos[0] + self.location[0], event.pos[1] + self.location[1])
-        
-        # 一些操作，群聊的操作包括：邀请好友、踢出成员、退出群聊和解散（解散就等于群主退出群聊）、查看用户信息（直接createUserInfor）
-        # 添加好友
-        if self.addButton.state == 2:
-            self.addButton.setState(0)
-            self.checkMessage.set_username(self.username)
-            self.checkMessage.enable()
-
-        # 删除好友
-        if self.deleteButton.state == 2:
-            self.deleteButton.setState(0)
-            self.counter += 1
-            if self.counter == 1:
-                self.deleteAlert.enable()
-                self.showAlert = True
-            else:
-                self.counter = 0
+            if self.quitButton.state == 2 and self.quitButton.isClick == False:
+                noticeWindow = self.createChild(GroupInforButton,(250,200),'您已退出本群聊',(120,120),20,(450,300),
+                                                './resources/GroupInforWindowUI/noticebg.png',
+                                                './resources/GroupInforWindowUI/noticebg.png',
+                                                './resources/GroupInforWindowUI/noticebg.png',)
+                print('quit group session')
                 request = {
-                    'messageNumber':'15',
-                    'username':self.tempGroup.get('username'),
+                    'messageNumber': '17',
+                    'sessionId': self.groupShow['sessionId'],
                 }
-                self.process.requestQueue.put(request)
 
-        # 准备修改信息
-        if self.editButton.state == 2:
-            self.editButton.setState(0)
-            self.editInfor()
-        # 不修改信息
-        if self.returnButton.state == 2:
-            self.returnButton.setState(0)
-            self.returnInit(False)
-        # 保存修改信息
-        if self.modifyButton.state == 2:
-            self.modifyButton.setState(0)
-            if self.inviteeM.inputBox.get_text() == "允许":
-                tempInvite = 1
-            else:
-                tempInvite = 0
-            request = {
-                'messageNumber':'18',
-                'nickname': self.nickname2M.inputBox.get_text(),
-                'avatarAddress': self.avatar.url,
-                'invitee': tempInvite,
-                'phoneNumber': self.phonenumM.inputBox.get_text(),
-                'email': self.mailM.inputBox.get_text(),
-                'occupation': self.majorM.inputBox.get_text(),
-                'location':self.addressM.inputBox.get_text()
-            }
-            print(request)
-            # self.process.requestQueue.put(request)
-            self.returnInit(True)
+                self.process.requestQueue.put(request)
+                print(request)
+                print(self.groupShow)
+                self.quitButton.isClick = True
+                #self.process.stop()
+        for child in self.childs:
+            if child.active:
+                child.getEvent(event)
+        if event.type in [pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.MOUSEMOTION]:
+            event.pos = (event.pos[0] + self.location[0], event.pos[1] + self.location[1])
+
+
+        # # 当在展示警告框的时候，只让警告框捕获事件
+        # if self.showAlert:
+        #     for child in self.childs:
+        #         # 如果警告框都是diable，则会自动调整展示状态为False
+        #         self.showAlert = False
+        #         if isinstance(child, Alert) and child.active:
+        #             self.showAlert = True
+        #             child.getEvent(event)
+        # else:
+        #     for child in self.childs:
+        #         if child.active:
+        #             child.getEvent(event)
+        # if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
+        #     event.pos = (event.pos[0] + self.location[0], event.pos[1] + self.location[1])
+        #
+        # # 一些操作，群聊的操作包括：邀请好友、踢出成员、退出群聊和解散（解散就等于群主退出群聊）、查看用户信息（直接createUserInfor）
+        # # 添加好友
+        # if self.addButton.state == 2:
+        #     self.addButton.setState(0)
+        #     self.checkMessage.set_username(self.username)
+        #     self.checkMessage.enable()
+        #
+        # # 删除好友
+        # if self.deleteButton.state == 2:
+        #     self.deleteButton.setState(0)
+        #     self.counter += 1
+        #     if self.counter == 1:
+        #         self.deleteAlert.enable()
+        #         self.showAlert = True
+        #     else:
+        #         self.counter = 0
+        #         request = {
+        #             'messageNumber':'15',
+        #             'username':self.tempGroup.get('username'),
+        #         }
+        #         self.process.requestQueue.put(request)
+        #
+        # # 准备修改信息
+        # if self.editButton.state == 2:
+        #     self.editButton.setState(0)
+        #     self.editInfor()
+        # # 不修改信息
+        # if self.returnButton.state == 2:
+        #     self.returnButton.setState(0)
+        #     self.returnInit(False)
+        # # 保存修改信息
+        # if self.modifyButton.state == 2:
+        #     self.modifyButton.setState(0)
+        #     if self.inviteeM.inputBox.get_text() == "允许":
+        #         tempInvite = 1
+        #     else:
+        #         tempInvite = 0
+        #     request = {
+        #         'messageNumber':'18',
+        #         'nickname': self.nickname2M.inputBox.get_text(),
+        #         'avatarAddress': self.avatar.url,
+        #         'invitee': tempInvite,
+        #         'phoneNumber': self.phonenumM.inputBox.get_text(),
+        #         'email': self.mailM.inputBox.get_text(),
+        #         'occupation': self.majorM.inputBox.get_text(),
+        #         'location':self.addressM.inputBox.get_text()
+        #     }
+        #     print(request)
+        #     # self.process.requestQueue.put(request)
+        #     self.returnInit(True)
+
 
     def update(self):
-        # 这里群聊需要判断是不是群主，类似设定状态即可
-        # 判断是否是自己
-        if self.state == 0:
-            self.addButton.disable()
-            self.deleteButton.disable()
-        else:
-            # 判断是否是好友
-            if self.state == 1:
-                self.editButton.disable()
-                self.addButton.disable()
-            else:
-                self.editButton.disable()
-                self.deleteButton.disable()
+        # # 这里群聊需要判断是不是群主，类似设定状态即可
+        # # 判断是否是自己
+        # if self.state == 0:
+        #     self.addButton.disable()
+        #     self.deleteButton.disable()
+        # else:
+        #     # 判断是否是好友
+        #     if self.state == 1:
+        #         self.editButton.disable()
+        #         self.addButton.disable()
+        #     else:
+        #         self.editButton.disable()
+        #         self.deleteButton.disable()
         for child in self.childs:
             if child.active:
                 child.update()
