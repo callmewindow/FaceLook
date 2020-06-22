@@ -518,9 +518,8 @@ class BackEndThread(threading.Thread):
             thread.setDaemon(True)
             thread.start()
             self.task.append(thread)
-            self.process.requestQueue.put({'messageNumber': '5'})
         elif messageNumber == RequestType.EXITSESSIONRET:
-            pass
+            self.requestQueue.put({'messageNumber': '5'})
 
         # 更改个人信息 {'messageNumber':'18'}
         elif messageNumber == RequestType.UPDATEPERSONALINFORMATION:
@@ -557,10 +556,8 @@ class BackEndThread(threading.Thread):
             thread.setDaemon(True)
             thread.start()
             self.task.append(thread)
-            self.process.requestQueue.put({'messageNumber': '5'})
-
         elif messageNumber == RequestType.UPDATESESSIONINFORMATIONRET:
-            pass
+            self.requestQueue.put({'messageNumber': '5'})
 
         # 通过nickname搜索 {'messageNumber':'20'}
         # requset
@@ -637,9 +634,8 @@ class BackEndThread(threading.Thread):
             thread.setDaemon(True)
             thread.start()
             self.task.append(thread)
-            self.process.requestQueue.put({'messageNumber': '5'})
         elif messageNumber == RequestType.KICKOUTRET:
-            pass
+            self.requestQueue.put({'messageNumber': '5'})
         else:
             self.stop()
 
