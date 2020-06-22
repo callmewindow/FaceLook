@@ -9,8 +9,7 @@ from FrontEnd.Elements.text_variable import text_variable
 from FrontEnd.Elements.InputArea import InputArea
 from FrontEnd.Elements.MessageList import MessageList
 from FrontEnd.Elements.Alert import Alert
-from BackEnd.LocalStorage import LocalStorage
-from Common.base import *
+from Common.dataFunction import *
 
 class SessionWindowBackground(Element):
     # type==1 好友私聊
@@ -19,47 +18,20 @@ class SessionWindowBackground(Element):
     def __init__(self,process):
         Element.__init__(self,process)
         data = readData(self.process.data)
-        friends = data["friendList"] # 临时使用
         self.username = data['user']['username']
-        print('用户名', self.username)
-        self.sessionID = self.process.sessionID
+        self.sessionId = self.process.sessionId
+        friends = data["friendList"]['list'] # 临时使用
+        self.sessionCon = {}
+        self.sessionVer = -1
+        allSession = data['sessionList']['list']
+        # 获取完整session
+        for session in allSession:
+            if session['sessionId'] == self.sessionId:
+                self.sessionCon = session
+                break
 
-        # self.localStorage = LocalStorage('zyx')
-        # print(self.localStorage.get_session_content('11'))
-        # print(self.localStorage.get_groups())
-
-        print(self.process.localStorage.get_session_content('11'))
-
-        # 从后端获取完整session
-        # self.sessionCon
-        # self.sessionCon = {
-        #     'num_of_message': 3, 
-        #     'sessionName': 'zyxandzyx3', 
-        #     'managerUsername': 'zyx', 
-        #     'sessionMembers': ['zyx', 'zyx3'], 
-        #     'last_time': '2020-06-17-22-22-42', 
-        #     'last_message': {'kind': '0', 'from': 'zyx', 'time': '2020-06-17-22-22-42', 'to': 'null', 'content': '最后一个测试消息'}, 
-        #     'contents': [
-        #         {'kind': '0', 'from': 'zyx', 'time': '2020-06-17-22-22-04', 'to': 'null', 'content': '阿萨德'}, 
-        #         {'kind': '0', 'from': 'zyx', 'time': '2020-06-17-22-22-32', 'to': 'null', 'content': '张宇轩nb'}, 
-        #         {'kind': '0', 'from': 'zyx', 'time': '2020-06-17-22-22-42', 'to': 'null', 'content': '最后一个测试消息'}
-        #     ]
-        # }
-        self.sessionCon = {
-            'num_of_message': 3, 
-            'sessionName': '', 
-            'managerUsername': 'zyx', 
-            'sessionMembers': ['zyx', 'zmx'], 
-            'last_time': '2020-06-17-22-22-42', 
-            'last_message': {'kind': '0', 'from': 'zyx', 'time': '2020-06-17-22-22-42', 'to': 'null', 'content': '最后一个测试消息'}, 
-            'contents': [
-                {'kind': '0', 'from': 'zyx', 'time': '2020-06-17-22-22-04', 'to': 'null', 'content': '阿萨德'}, 
-                {'kind': '0', 'from': 'zyx', 'time': '2020-06-17-22-22-32', 'to': 'null', 'content': '张宇轩nb'}, 
-                {'kind': '0', 'from': 'zyx', 'time': '2020-06-17-22-22-42', 'to': 'null', 'content': '最后一个测试消息'}
-            ]
-        }
         # 如果是好友则在这里直接获取好友信息
-        if self.sessionCon['sessionName'] == '':
+        if self.sessionCon['sessionName'] == None:
             self.type = 1
             if self.sessionCon['sessionMembers'][0] == self.username:
                 tempUsername = self.sessionCon['sessionMembers'][1]
@@ -101,6 +73,7 @@ class SessionWindowBackground(Element):
         self.closeButton = self.createChild(TripleStateButton, (770+90, 14), './resources/WindowControlUI/close.png', controlBtnSize)
         
         # 其他功能按钮
+        self.addButton = self.createChild(TripleStateButton, (770, marginTop1+8), './resources/SessionWinUI/icons/round_add.png', (34, 34))
         self.settingButton = self.createChild(TripleStateButton, (830, marginTop1+8), './resources/SessionWinUI/icons/setting.png', (34, 34))
         
         leftMargin = 30
@@ -115,7 +88,7 @@ class SessionWindowBackground(Element):
         self.sendButton = self.createChild(TextButton, (810, 690), "发送", 18, (65, 35))
 
         # 渲染消息列表，消息的更新在messageList进行
-        self.messageList = self.createChild(MessageList,(25,120))
+        self.messageList = self.createChild(MessageList,(25,120),self.sessionCon['contents'])
 
         # 渲染输入框
         self.InputArea = self.createChild(InputArea, (25, marginTop2+50), (850,100), 'simhei', 20, (0,0,0) ,(255,255,255) )
@@ -123,6 +96,13 @@ class SessionWindowBackground(Element):
         # 空消息警示框
         self.showAlert = False
         self.blankAlert = self.createChild(Alert, (275,250), "不能发送空消息")
+        self.imageAlert = self.createChild(Alert, (275,250), "请将图片拖拽到输入框以完成图片的发送")
+        self.inviteAlert = self.createChild(Alert, (275,250), "当前群聊不允许群成员邀请好友入群")
+
+        if type == 1:
+            self.addButton.disable()
+
+        self.update_counter = 0
 
 
     def getEvent(self, event):
@@ -145,7 +125,6 @@ class SessionWindowBackground(Element):
 
         # 最小化
         if self.smallButton.state == 2:
-            # self.process.minimize()
             self.smallButton.setState(0)
             self.process.dragging=False
             self.process.minimize()
@@ -153,9 +132,6 @@ class SessionWindowBackground(Element):
         # 关闭
         if self.closeButton.state == 2:
             self.closeButton.setState(0)
-            self.process.localStorage = None
-            # if self.localStorage != None:
-            #     self.localStorage.close()
             self.process.stop()
             self.process.dragging=False
         
@@ -170,6 +146,21 @@ class SessionWindowBackground(Element):
                 self.process.createGroupInforWindow(self.sessionCon)
             else:
                 pass
+        
+        # 打开邀请群成员的的窗口
+        if self.addButton.state == 2:
+            self.addButton.setState(0)
+            # 判断是否允许群成员邀请（偷懒判断）
+            if '官方' in self.sessionCon['sessionName']:
+                self.inviteAlert.enable()
+            else:
+                pass
+        
+        # 打开图片发送提示
+        if self.pictureButton.state == 2:
+            self.pictureButton.setState(0)
+            self.imageAlert.enable()
+            self.showAlert = True
 
         # 发送消息
         if self.sendButton.state == 2:
@@ -182,7 +173,7 @@ class SessionWindowBackground(Element):
             else:
                 request = {
                     'messageNumber':'9',
-                    'sessionId':'11',
+                    'sessionId':self.sessionId,
                     'content':{
                         'from':self.username,
                         'to':None,
@@ -191,17 +182,32 @@ class SessionWindowBackground(Element):
                         'kind':'0',
                     }
                 }
-                print(request)
-                # self.process.requestQueue.put(request)
+                self.process.requestQueue.put(request)
                 # 输入框置空
                 self.InputArea.text = ''
                 self.InputArea.text_group = ['']
-                print(self.localStorage.get_session_content('11'))
 
     def update(self):
         for child in self.childs:
             if child.active:
                 child.update()
+        
+        self.counter = (self.counter+1)%60
+        if self.counter < 59: return
+        else:
+            data = readData(self.process.data)
+            # 定时更新session信息
+            if data['sessionList']['version'] > self.sessionVer:
+                self.sessionVer = data['sessionList']['version']
+                allSession = data['sessionList']['list']
+                # 获取完整session
+                for session in allSession:
+                    if session['sessionId'] == self.sessionId:
+                        self.sessionCon = session
+                        break
+                self.sessionTitle.setText(self.sessionCon['sessionName'])
+                self.messageList.getMessages(1,self.sessionCon['contents'])
+        
         
         
         

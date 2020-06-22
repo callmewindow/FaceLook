@@ -7,11 +7,11 @@ from Common.base import *
 import multiprocessing
 
 class SessionWindowProcess(WindowProcess):
-    def __init__(self,sessionID,data,RQ,MQ,ls):
+    def __init__(self,sessionId,data,RQ,MQ,ls):
         bet = None
         self.localStorage = ls
         self.data = data
-        self.sessionID = sessionID
+        self.sessionId = '11'
         WindowProcess.__init__(self, data, RQ, MQ, bet, SessionWindow(self))
     
     # 去除不必要的方法，请求均在window或者background中发出

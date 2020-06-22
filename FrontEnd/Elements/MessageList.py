@@ -3,13 +3,10 @@ from FrontEnd.Elements.Element import Element
 from FrontEnd.Elements.FriendMessage import FriendMessage
 from FrontEnd.Elements.MessageRightClick import MessageRightClick
 
-
 class MessageList(Element):
     # 针对获取message的类型
     # type==0 初始化
     # type==1 更新消息列表
-
-    msg = []
 
     messages = []
     fromIndex = 0
@@ -17,28 +14,16 @@ class MessageList(Element):
     topMargin = 0
     msgLen = 0
     
-    def __init__(self, process, location):
+    def __init__(self, process, location, contents):
         Element.__init__(self,process)
+        
         self.location = location
         self.surface = pygame.Surface((850,400))
         self.surface.fill((255,255,255))
         self.rightClickMenu = self.createChild(MessageRightClick, (850,400))
-        # print(contents)
-        # sender0 = dict(uid="847590417", name="王宇轩")
-        # sender1 = dict(uid="123456", name="张宇轩")
-        # sender2 = dict(uid="654321", name="邓诗曼")
-        # MessageList.msg.append(self.createChild(FriendMessage, (0, 0), sender1, "2020/6/5 15:10:12", "image::54907ad7-0749-4ef9-91eb-3d00de047446",self.rightClickMenu))
-        # MessageList.msg.append(self.createChild(FriendMessage, (0, 0), sender0, "2020/6/5 15:15:30", "image::79c192d9-b27e-40db-9e77-0b324ca8f8ee",self.rightClickMenu))
-        # MessageList.msg.append(self.createChild(FriendMessage, (0, 0), sender0, "2020/6/31 15:43:31", "text::好，给100w的facelook币，尽情花费",self.rightClickMenu))
-        # MessageList.msg.append(self.createChild(FriendMessage, (0, 0), sender1, "2020/6/31 15:51:10", "text::上上学期华为云是用啥登录来着\n（熊猫摸耳）",self.rightClickMenu))
-        # MessageList.msg.append(self.createChild(FriendMessage, (0, 0), sender0, "2020/6/5 15:15:30", "image::79c192d9-b27e-40db-9e77-0b324ca8f8ee",self.rightClickMenu))
-        # MessageList.msg.append(self.createChild(FriendMessage, (0, 0), sender2, "2020/6/31 15:54:09", "text::https://devcloud.huaweicloud.com",self.rightClickMenu))
-        # MessageList.msg.append(self.createChild(FriendMessage, (0, 0), sender0, "2020/7/1 15:54:09", "text::图片测试0",self.rightClickMenu))
-        # MessageList.msg.append(self.createChild(FriendMessage, (0, 0), sender0, "2020/6/5 15:15:30", "image::8cefb1d1-6b66-4433-b04e-d7e2874fd555",self.rightClickMenu))
 
-        self.getMessages(0)
+        self.getMessages(0,contents)
 
-        MessageList.messages = self.msg
         MessageList.msgLen = len(MessageList.messages)
         for i in range(MessageList.msgLen):
             MessageList.messages[i].disable()
@@ -114,58 +99,61 @@ class MessageList(Element):
                 self.drawMessage("down")
             if event.button == pygame.BUTTON_WHEELUP:
                 self.drawMessage("top")
-    
-    def getMessages(self,type):
-        # print(self.process.bet.localStorage.get_session_content('11'))
-        sessionCon = {
-            'num_of_message': 3, 
-            'sessionName': 'zyxandzyx3', 
-            'managerUsername': 'zyx', 
-            'sessionMembers': ['zyx', 'zyx3'], 
-            'last_time': '2020-06-17-22-22-42', 
-            'last_message': {'kind': '0', 'from': 'zyx', 'time': '2020-06-17-22-22-42', 'to': 'null', 'content': '最后一个测试消息'}, 
-            'contents': [
-                {'kind': '0', 'from': 'zyx', 'time': '2020-06-17-22-22-04', 'to': 'null', 'content': '阿萨德'}, 
-                {'kind': '0', 'from': 'zyx', 'time': '2020-06-17-22-22-32', 'to': 'null', 'content': '张宇轩nb'}, 
-                {'kind': '0', 'from': 'zyx', 'time': '2020-06-17-22-22-42', 'to': 'null', 'content': '最后一个测试消息'}
-            ]
-        }
-        for message in sessionCon['contents']:
-            MessageList.msg.append(self.createChild(FriendMessage, (0,0), message, self.rightClickMenu))
-        
-        # 如果不是初始化，则需要进行进一步的处理
+
+    def getMessages(self,type,contents=None):
         if type == 0:
-            return
+            # 初始化
+            self.sessionContents = contents
+            for message in self.sessionContents:
+                MessageList.messages.append(self.createChild(FriendMessage, (0,0), message, self.rightClickMenu))
         else:
-            print("更新列表")
+            # 更新消息列表
+            self.sessionContents = contents
+            tempLen = len(self.sessionContents)
+            if tempLen == MessageList.msgLen:
+                # 如果消息列表没更新则返回
+                return
+            for i in range(MessageList.msgLen, tempLen):
+                MessageList.messages.append(self.createChild(FriendMessage, (0,0), self.sessionContents[i], self.rightClickMenu))
+                MessageList.messages[i].disable()
+            
+            # tempLen = len(MessageList.messages)
+            # for i in (MessageList.msgLen, tempLen-1):
+
+            # 如果在底部消息将会自动滚动
+            if self.toIndex >= MessageList.msgLen-1 and self.topMargin <= 400:
+                MessageList.msgLen = tempLen
+                self.topMargin = 444
+                self.fromIndex = -1
+                while self.topMargin > 400:
+                    self.drawMessage("down")
+            
+            # 保证消息长度的更新
+            MessageList.msgLen = tempLen
 
     def update(self):
         for child in self.childs:
             if child.active:
                 child.update()
-        self.counter = (self.counter+1)%60
-        if self.counter < 59: return
-        # 直接增加即可，如果更新会每次强制到底部，无法记录位置
-        self.getMessages(1)
     
-    def addTest(self):
-        # sender0 = dict(uid="847590417", name="王宇轩")
-        # MessageList.messages.append(self.createChild(FriendMessage, (0, 0), sender0, "2020/7/1 15:54:09", "text::更新测试1",self.rightClickMenu))
-        # MessageList.messages.append(self.createChild(FriendMessage, (0, 0), sender0, "2020/7/1 15:54:09", "text::更新测试2",self.rightClickMenu))
+    # def addTest(self):
+    #     # sender0 = dict(uid="847590417", name="王宇轩")
+    #     # MessageList.messages.append(self.createChild(FriendMessage, (0, 0), sender0, "2020/7/1 15:54:09", "text::更新测试1",self.rightClickMenu))
+    #     # MessageList.messages.append(self.createChild(FriendMessage, (0, 0), sender0, "2020/7/1 15:54:09", "text::更新测试2",self.rightClickMenu))
         
-        # 处理新增的消息记录
-        tempLen = len(MessageList.messages)
-        for i in (MessageList.msgLen, tempLen-1):
-            MessageList.messages[i].disable()
+    #     # 处理新增的消息记录
+    #     tempLen = len(MessageList.messages)
+    #     for i in (MessageList.msgLen, tempLen-1):
+    #         MessageList.messages[i].disable()
 
-        # 如果在底部消息将会自动滚动
-        if self.toIndex >= MessageList.msgLen-1 and self.topMargin <= 400:
-            MessageList.msgLen = tempLen
-            self.topMargin = 444
-            self.fromIndex = -1
-            while self.topMargin > 400:
-                self.drawMessage("down")
+    #     # 如果在底部消息将会自动滚动
+    #     if self.toIndex >= MessageList.msgLen-1 and self.topMargin <= 400:
+    #         MessageList.msgLen = tempLen
+    #         self.topMargin = 444
+    #         self.fromIndex = -1
+    #         while self.topMargin > 400:
+    #             self.drawMessage("down")
         
-        # 保证消息长度的更新
-        MessageList.msgLen = tempLen
+    #     # 保证消息长度的更新
+    #     MessageList.msgLen = tempLen
 
