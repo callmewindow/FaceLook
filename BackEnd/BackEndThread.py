@@ -290,7 +290,7 @@ class BackEndThread(threading.Thread):
                         self.localStorage.rewriteRecord(sessionID, records, username, sessionName, managerName, members)
                         #更新data中的sessionList
                         temp = {
-                            'sessionId': sessionID,
+                            'sessionId': str(sessionID),
                             'numOfMessage': self.localStorage.getMessageNum(sessionID),
                             'sessionName': sessionName,
                             'managerUsername': managerName,
