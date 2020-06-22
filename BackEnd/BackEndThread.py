@@ -49,6 +49,7 @@ class RequestType():
     DELETEFRIENDRET = '15r'
     BEDELETEDFRIENDRET = '16r'  # 被删除好友
     EXITSESSION = '17'
+    EXITSESSIONRET = '17r'
     UPDATEPERSONALINFORMATION = '18'
     UPDATEPERSONALINFORMATIONRET = '18r'
     UPDATESESSIONINFORMATION = '19'
@@ -57,6 +58,8 @@ class RequestType():
     SEARCHBYNICKNAMERET = '20r'
     SEARCHBYUSERNAME = '21'
     SEARCHBYUSERNAMERET = '21r'
+    KICKOUT = '22'
+    KICKOUTRET = '22r'
 
 
 class MessageType():
@@ -74,10 +77,12 @@ class MessageType():
     GETFRIENDREGISTERRESULTRETLISTRET = '14r'
     DELETEFRIENDRET = '15r'
     BEDELETEDFRIENDRET = '16r'
+    EXITSESSIONRET = '17r'
     UPDATEPERSONALINFORMATIONRET = '18r'
     UPDATESESSIONINFORMATIONRET = '19r'
     SEARCHBYNICKNAMERET = '20r'
     SEARCHBYUSERNAMERET = '21r'
+    KICKOUTRET = '22r'
 
 
 class BackEndThread(threading.Thread):
@@ -514,6 +519,8 @@ class BackEndThread(threading.Thread):
             thread.start()
             self.task.append(thread)
             self.process.requestQueue.put({'messageNumber': '5'})
+        elif messageNumber == RequestType.EXITSESSIONRET:
+            pass
 
         # 更改个人信息 {'messageNumber':'18'}
         elif messageNumber == RequestType.UPDATEPERSONALINFORMATION:
@@ -551,6 +558,9 @@ class BackEndThread(threading.Thread):
             thread.start()
             self.task.append(thread)
             self.process.requestQueue.put({'messageNumber': '5'})
+
+        elif messageNumber == RequestType.UPDATESESSIONINFORMATIONRET:
+            pass
 
         # 通过nickname搜索 {'messageNumber':'20'}
         # requset
@@ -620,6 +630,16 @@ class BackEndThread(threading.Thread):
             lockData(self.data)
             writeData(self.data, data)
             unlockData(self.data)
+
+        # 群主踢人 {'messageNumber':'22'}
+        elif messageNumber == RequestType.KICKOUT:
+            thread = KickOut(self.client, request)
+            thread.setDaemon(True)
+            thread.start()
+            self.task.append(thread)
+            self.process.requestQueue.put({'messageNumber': '5'})
+        elif messageNumber == RequestType.KICKOUTRET:
+            pass
         else:
             self.stop()
 

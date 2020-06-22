@@ -294,3 +294,23 @@ class SearchByUsername(threading.Thread):
         data = {'messageField1': self.username,
                 'messageNumber': '21'}
         self.client.sendMessage(data)
+
+
+class KickOut(threading.Thread):
+    # 群主踢人
+    def __init__(self, client, request):
+        threading.Thread.__init__(self)
+        self.client = client
+        self.sessionId = request.get('messageField1', None)
+        if self.sessionId is None:
+            self.sessionId = request.get('sessionId', None)
+            if self.sessionId is None:
+                self.sessionId = request.get('sessionID', None)
+        self.username = request.get('messageField2', None)
+        if self.username is None:
+            self.username = request.get('username', None)
+
+    def run(self):
+        data = {'messageField1': self.sessionId, 'messageField2': self.username,
+                'messageNumber': '22'}
+        self.client.sendMessage(data)
