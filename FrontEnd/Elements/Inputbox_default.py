@@ -3,8 +3,8 @@ from Common.base import *
 class Inputbox_default(Inputbox):
     image = pygame.transform.smoothscale(pygame.image.load('./resources/LoginWindowUI/username_inputbox.png'),(320,55))   
     font = pygame.font.SysFont('simhei',30)
-    def __init__(self,process,location):
-        Inputbox.__init__(self,process,location,Inputbox_default.image,Inputbox_default.font,(50,13))
+    def __init__(self,process,location,text_bias=(50,13)):
+        Inputbox.__init__(self,process,location,self.image,self.font,text_bias)
         #surface = pygame.Surface((300,50))
         #surface.fill((255,255,255))                
         #Inputbox.__init__(self,process,location,surface,Inputbox_default.font,(0,0))

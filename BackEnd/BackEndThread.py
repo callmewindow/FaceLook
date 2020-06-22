@@ -367,8 +367,8 @@ class BackEndThread(threading.Thread):
                                 'avatarAddress': register.get('avatarAddress', None),
                                 'time': time}
                         result.append(temp)
-                data['receiverList']['version'] += 1
-                data['receiverList']['list'] = result
+                data['requestorList']['version'] += 1
+                data['requestorList']['list'] = result
             except KeyError as e:
                 print('key error in 8r:')
                 print(e)
@@ -438,8 +438,10 @@ class BackEndThread(threading.Thread):
         # request无
         # message格式如下
         elif messageNumber == RequestType.GETFRIENDREGISTERRESULTRET:
-            result = request.get('messageField1', None)
-            if result == '1':
+            dataj = request.get('messageField1', None)
+            result = json.loads(dataj)
+            flag = result.get("result", "0")
+            if flag == '1':
                 self.requestQueue.put({'messageNumber': '4'})
             try:
                 data = readData(self.data)
@@ -480,7 +482,7 @@ class BackEndThread(threading.Thread):
                                 'time': time}
                         result.append(temp)
                 data['receiverList']['version'] += 1
-                data['receiverList'] = result
+                data['receiverList']['list'] = result
             except KeyError as e:
                 print('key error in 14r:')
                 print(e)

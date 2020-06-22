@@ -10,11 +10,6 @@ class LoginWindowProcess(WindowProcessWithoutQueue):
             bg = self.window.bg
             username = bg.usernameInputbox.text
             password = bg.passwordInputbox.text
-            data = readData(self.data)
-            data['user']['username']=username
-            data['user']['password']=password
-            data['user']['state'] = UserStateType.OFFLINE
-            writeData(self.data,data)
             self.login(username,password)
             self.window.bg.set_loading()
             return

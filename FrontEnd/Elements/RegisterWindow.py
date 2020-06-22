@@ -1,7 +1,7 @@
 from FrontEnd.Elements.Window import Window
-from FrontEnd.Elements.LoginWindowBackgrond import LoginWindowBackground as lwb
+from FrontEnd.Elements.RegisterWindowBackground import RegisterWindowBackground as RWBG
 from Common.base import *
-class LoginWindow(Window):
+class RegisterWindow(Window):
     def DragFilesCallback(self,filePaths):
         print('在这里拖放文件{}是无效的。'.format(filePaths))
 
@@ -9,7 +9,7 @@ class LoginWindow(Window):
     def __init__(self,process):
         Window.__init__(self,process,'Login',(600,450),(255,255,255),True)
         self.set_rounded_rectangle(40)
-        self.bg = self.createChild(lwb)
+        self.bg = self.createChild(RWBG)
         self.setDragFilesCallback(self.DragFilesCallback)
     def getMessage(self,message):
         self.bg.getMessage(message)

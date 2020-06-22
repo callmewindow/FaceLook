@@ -122,6 +122,8 @@ if __name__ == '__main__':
     lwp.close()
     
     if data['inner']['user']['login_result']!='1':
+        bet.stop()
+        bet.join()
         exit()
     #test_data(data)
 
