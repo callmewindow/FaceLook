@@ -1,4 +1,5 @@
 from FrontEnd.Elements.Element import Element
+from FrontEnd.Elements.Hinter import createHinter
 from Common.base import *
 class CandyButton(Element):
     source_img = pygame.image.load('./resources/LoginWindowUI/login_button.png')
