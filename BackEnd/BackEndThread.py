@@ -367,8 +367,8 @@ class BackEndThread(threading.Thread):
                                 'avatarAddress': register.get('avatarAddress', None),
                                 'time': time}
                         result.append(temp)
-                data['receiverList']['version'] += 1
-                data['receiverList']['list'] = result
+                data['requestorList']['version'] += 1
+                data['requestorList']['list'] = result
             except KeyError as e:
                 print('key error in 8r:')
                 print(e)
@@ -480,7 +480,7 @@ class BackEndThread(threading.Thread):
                                 'time': time}
                         result.append(temp)
                 data['receiverList']['version'] += 1
-                data['receiverList'] = result
+                data['receiverList']['list'] = result
             except KeyError as e:
                 print('key error in 14r:')
                 print(e)

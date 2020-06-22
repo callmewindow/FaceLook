@@ -13,7 +13,7 @@ class FriendApplyWindowProcess(WindowProcessWithoutQueue):
 
         bet = None
         self.data = data
-        WindowProcess.__init__(self, data, RQ, MQ, bet, FriendApplyWindow(self))
+        WindowProcessWithoutQueue.__init__(self, data, RQ, MQ, bet, FriendApplyWindow(self))
         self.friend()
 
     def friend(self):

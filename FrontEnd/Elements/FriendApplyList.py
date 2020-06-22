@@ -30,16 +30,27 @@ class ReceiverList(Element):
         # 注意 在这之前要发一次14号/8号消息 目前不知道放到哪里去
         # 窗口刚打开时readData一次 这是深拷贝
 
+        # try:
+        #     data = readData(self.process.data)
+        #
+        #     n = len(data[self.list_name])
+        #     for i in range(len(data[self.list_name])):
+        #         receiverMessage = data[self.list_name][n-1-i]
+        #         self.createChild(ReceiverBlock, (0, i * 130), receiverMessage)
+        # except KeyError:
+        #     print('key error in FriendApplyList-ReceiverList')
         try:
             data = readData(self.process.data)
-
-            n = len(data[self.list_name])
-            for i in range(len(data[self.list_name])):
-                receiverMessage = data[self.list_name][n-1-i]
+            # print('receiverList:')
+            # print(data[self.list_name])
+            receiverList = data['receiverList']['list']
+            # print(receiverList)
+            n = len(receiverList)
+            for i in range(n):
+                receiverMessage = receiverList[n-1-i]
                 self.createChild(ReceiverBlock, (0, i * 130), receiverMessage)
         except KeyError:
             print('key error in FriendApplyList-ReceiverList')
-
 
     def display(self):
         surface = self.surface.copy()
@@ -217,12 +228,24 @@ class RequestorList(Element):
         # 注意 在这之前要发一次14号/8号消息 目前不知道放到哪里去
         # 窗口刚打开时readData一次 这是深拷贝
 
+        # try:
+        #     data = readData(self.process.data)
+        #
+        #     n = len(data[self.list_name])
+        #     for i in range(len(data[self.list_name])):
+        #         requestorMessage = data[self.list_name][n-1-i]
+        #         self.createChild(RequestorBlock, (0, i * 130), requestorMessage)
+        # except KeyError:
+        #     print('key error in FriendApplyList-RequestorList')
         try:
             data = readData(self.process.data)
-
-            n = len(data[self.list_name])
-            for i in range(len(data[self.list_name])):
-                requestorMessage = data[self.list_name][n-1-i]
+            # print('requestorList:')
+            # print(data[self.list_name])
+            requestorList = data['requestorList']['list']
+            # print(requestorList)
+            n = len(requestorList)
+            for i in range(n):
+                requestorMessage = requestorList[n-1-i]
                 self.createChild(RequestorBlock, (0, i * 130), requestorMessage)
         except KeyError:
             print('key error in FriendApplyList-RequestorList')
