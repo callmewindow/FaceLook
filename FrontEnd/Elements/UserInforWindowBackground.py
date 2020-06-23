@@ -12,7 +12,7 @@ from FrontEnd.Elements.Button import UserCloseButton
 from FrontEnd.Elements.SingleInputBox import InputBox
 from FrontEnd.Elements.AddCheckMessage import AddCheckMessage
 from FrontEnd.Elements.Alert import Alert
-from Common.base import readData
+from Common.dataFunction import *
 
 class UserInforWindowBackground(Element):
     # state == 0 本人
@@ -31,7 +31,7 @@ class UserInforWindowBackground(Element):
         self.state = -1
         self.tempUser = self.process.userShow
         data = readData(self.process.data)
-        friends = data["friendList"]
+        friends = data["friendList"]['list']
         self.username = data["user"]["username"]
         if self.tempUser.get("username") == self.username:
             self.state = 0
@@ -84,6 +84,19 @@ class UserInforWindowBackground(Element):
         self.showAlert = False
         self.deleteAlert = self.createChild(Alert, (75,200), "此举将会删除双方的好友关系，如果确认请再次点击删除按钮")
 
+        # 判断是否是自己
+        if self.state == 0:
+            self.addButton.disable()
+            self.deleteButton.disable()
+        else:
+            # 判断是否是好友
+            if self.state == 1:
+                self.editButton.disable()
+                self.addButton.disable()
+            else:
+                self.editButton.disable()
+                self.deleteButton.disable()
+        
     def editInfor(self):
         self.nickname1.disable()
         self.nickname2.disable()
@@ -220,19 +233,6 @@ class UserInforWindowBackground(Element):
             self.returnInit(True)
 
     def update(self):
-        # 判断是否是自己
-        if self.state == 0:
-            self.addButton.disable()
-            self.deleteButton.disable()
-        else:
-            # 判断是否是好友
-            if self.state == 1:
-                self.editButton.disable()
-                self.addButton.disable()
-            else:
-                self.editButton.disable()
-                self.deleteButton.disable()
-        
         for child in self.childs:
             if child.active:
                 child.update()

@@ -15,7 +15,7 @@ class SessionWindow(Window):
         if len(urls)>=1 and urls[0]!=None:
             request = {
                 'messageNumber':'9',
-                'sessionId':self.process.sessionID,
+                'sessionId':self.process.sessionId,
                     'content':{
                         'from':self.bg.username,
                         'to':None,
@@ -24,14 +24,12 @@ class SessionWindow(Window):
                         'kind':'1',
                     }
             }
-            print(request)
-            # self.process.requestQueue.put(request)
+            self.process.requestQueue.put(request)
 
     
     def __init__(self,process):
         Window.__init__(self,process,'Untitled',(900,750),(255,255,255),True)
         # 从自己的process中获取id，然后在background中获取完整session
-        pygame.display.set_caption('Session:'+str(self.process.sessionID))
         self.set_rounded_rectangle(10)
         self.bg = self.createChild(SessionWindowBackground)
         self.setDragFilesCallback(self.DragFilesCallback)

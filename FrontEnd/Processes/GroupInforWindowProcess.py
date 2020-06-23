@@ -1,6 +1,7 @@
 import pygame
 from FrontEnd.Elements.GroupInforWindow import GroupInforWindow
 from FrontEnd.Processes.WindowProcess import WindowProcess
+from FrontEnd.Processes.UserInforWindowProcess import createUserInfor
 import multiprocessing
 from Common.base import *
 from queue import Queue
@@ -12,11 +13,14 @@ class GroupInforWindowProcess(WindowProcess):
     def __init__(self,groupShow,data,RQ,MQ):
         bet = None
         self.data = data
-        temp = {'username': 'MinatoAqu', 'nickname': 'kotori', 'invitee': 1, 'avatarAddress': 'cd37c244-6558-42de-8fd4-770f75d1be8e', 'phoneNumber': '114514', 'email': '1919810', 'occupation': 'senpai', 'location': 'Japan'}
-        self.groupShow = temp # 传一个完整的user对象即可
+        # temp = 	{'sessionId': 11, 'numOfMessage': 0, 'sessionName': 'zyxandzyx3', 'managerUsername': 'zyx', 'sessionMembers': ['zyx', 'zyx3'], 'contents': [{'kind': '0', 'from': 'zyx', 'time': '2020-06-17-22-22-04', 'to': 'null', 'content': '阿萨德'}, {'kind': '0', 'from': 'zyx', 'time': '2020-06-17-22-22-32', 'to': 'null', 'content': '张宇轩nb'}, {'kind': '0', 'from': 'zyx', 'time': '2020-06-17-22-22-42', 'to': 'null', 'content': '最后一个测试消息'}, {'kind': '0', 'from': 'zyx', 'time': '2020-06-18-23-26-30', 'to': 'null', 'content': '阿萨德'}, {'kind': '0', 'from': 'zyx', 'time': '2020-06-18-23-26-51', 'to': 'null', 'content': '再次测试'}]}
+        self.groupShow = groupShow
         WindowProcess.__init__(self,data,RQ,MQ,bet,GroupInforWindow(self))
-        # 只有这里需要调用init函数，历史遗留内容
-        self.window.bg.init()
+
+    def createUserInforWindow(self, user):
+        proc = multiprocessing.Process(target=createUserInfor,
+                                       args=(user, self.data, self.requestQueue, self.messageQueue))
+        proc.start()
 
     def run(self):
         while self.go:
@@ -50,5 +54,5 @@ class GroupInforWindowProcess(WindowProcess):
             self.window.FPSClock.tick(self.FPS)
 
 def createGroupInfor(groupShow,data,RQ,MQ):
-    uiwp = GroupInforWindowProcess(groupShow,data,RQ,MQ)
-    uiwp.run()
+    giwp = GroupInforWindowProcess(groupShow,data,RQ,MQ)
+    giwp.run()

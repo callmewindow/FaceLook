@@ -42,7 +42,7 @@ class FriendMessage(Element):
         if self.kind == '0':
             self.message = self.createChild(TextAreaVariable,(0,26),850,0,'./resources/SessionWinUI/bg/transparent_bg.png','simhei',20,self.content,(0,0,0))
         elif self.kind == '1':
-            self.message = self.createChild(Image,(0,26),(50,50),self.content)
+            self.message = self.createChild(Image,(0,26),(100,100),self.content)
         else:
             pass
         self.bg = pygame.Surface((900,32+self.message.surface.get_size()[1]))
