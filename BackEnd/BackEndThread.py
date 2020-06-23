@@ -266,6 +266,7 @@ class BackEndThread(threading.Thread):
             dataj = request.get('messageField2', None)
             try:
                 data = readData(self.data)
+                self.localStorage.clearGroups()
                 resultlist = []
                 sessionlist = json.loads(dataj)
                 if type(sessionlist) == list and sessionNum != '0' and self.localStorage is not None:
@@ -507,10 +508,19 @@ class BackEndThread(threading.Thread):
             thread.start()
             self.task.append(thread)
             self.requestQueue.put({'messageNumber': '4'})
+            username = request.get('username', None)
+            self.localStorage.delFriendForeignKey(username)
 
         # 删除好友回复
         # request格式：{'username': 'hamzy', 'messageNumber':'16r'}
         elif messageNumber == RequestType.BEDELETEDFRIENDRET:
+            dataj = request.get('messageField2', None)
+            if dataj is not None:
+                data = json.loads(dataj)
+            if data is list:
+                for user in data:
+                    username = user.get('username', None)
+                    self.localStorage.delFriendForeignKey(username)
             self.requestQueue.put({'messageNumber': '4'})
 
         # 退出群聊 {'messageNumber':'17'}

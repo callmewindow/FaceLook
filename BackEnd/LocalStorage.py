@@ -81,7 +81,7 @@ class LocalStorage(object):
             self.friendTable[username] = sessionID
 
     def delFriendForeignKey(self, username):
-        if self.friendTable.get(username, None) is not None:
+        if username is not None and self.friendTable.get(username, None) is not None:
             self.friendTable['num'] = self.friendTable['num'] - 1
             self.friendTable.pop(username)
 
@@ -209,6 +209,9 @@ class LocalStorage(object):
             return result
         else:
             return  None
+
+    def clearGroups(self):
+        self.groupList = {}
 
     def getGroups(self):
         result = []
