@@ -345,6 +345,7 @@ class BackEndThread(threading.Thread):
         elif messageNumber == RequestType.JOINSESSIONRET:
             if request.get('messageField1', None) != '1':
                 print("邀请加入失败")
+            self.requestQueue.put({'messageNumber': '5'})
 
         # 获取好友请求列表
         # request格式：{"messageNumber": "8"}
@@ -518,6 +519,7 @@ class BackEndThread(threading.Thread):
             thread.setDaemon(True)
             thread.start()
             self.task.append(thread)
+            self.requestQueue.put({'messageNumber': '5'})
         elif messageNumber == RequestType.EXITSESSIONRET:
             self.requestQueue.put({'messageNumber': '5'})
 
