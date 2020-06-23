@@ -211,7 +211,9 @@ class LocalStorage(object):
             return  None
 
     def clearGroups(self):
-        self.groupList = {}
+        self.groupList.clear()
+        self.groupList['num'] = 0
+        self.groupList['list'] = []
 
     def getGroups(self):
         result = []
