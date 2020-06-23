@@ -160,6 +160,19 @@ class UserInforWindowBackground(Element):
             self.editButton.enable()
             self.addButton.enable()
             self.deleteButton.enable()
+        # 更新按钮
+        # 判断是否是自己
+        if self.state == 0:
+            self.addButton.disable()
+            self.deleteButton.disable()
+        else:
+            # 判断是否是好友
+            if self.state == 1:
+                self.editButton.disable()
+                self.addButton.disable()
+            else:
+                self.editButton.disable()
+                self.deleteButton.disable()
 
     def getEvent(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
