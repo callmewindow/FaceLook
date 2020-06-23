@@ -30,25 +30,21 @@ class SessionWindowBackground(Element):
             if session['sessionId'] == self.sessionId:
                 self.sessionCon = session
                 break
-        try:
-            # 如果是好友则在这里直接获取好友信息
-            if self.sessionCon['sessionName'] == None:
-                self.type = 1
-                print(self.sessionCon['sessionId'])
-                print(self.sessionId)
-                if self.sessionCon['sessionMembers'][0] == self.username:
-                    tempUsername = self.sessionCon['sessionMembers'][1]
-                else:
-                    tempUsername = self.sessionCon['sessionMembers'][0]
-                for friend in friends:
-                    if tempUsername == friend["username"]:
-                        self.sessionFriend = friend
-                self.title = self.sessionFriend['nickname']
+
+        # 如果是好友则在这里直接获取好友信息
+        if self.sessionCon['sessionName'] == None:
+            self.type = 1
+            if self.sessionCon['sessionMembers'][0] == self.username:
+                tempUsername = self.sessionCon['sessionMembers'][1]
             else:
-                self.type = 2
-                self.title = self.sessionCon['sessionName']
-        except KeyError:
-            pass
+                tempUsername = self.sessionCon['sessionMembers'][0]
+            for friend in friends:
+                if tempUsername == friend["username"]:
+                    self.sessionFriend = friend
+            self.title = self.sessionFriend['nickname']
+        else:
+            self.type = 2
+            self.title = self.sessionCon['sessionName']
         
         self.location = (0,0)
         self.surface = pygame.Surface((900,750))
@@ -198,7 +194,6 @@ class SessionWindowBackground(Element):
                         'kind':'0',
                     }
                 }
-                print(request)
                 self.process.requestQueue.put(request)
                 # 输入框置空
                 self.InputArea.text = ''
