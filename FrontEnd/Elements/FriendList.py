@@ -22,7 +22,10 @@ class FriendBlock(Element):
         try:
             self.avatar = self.createChild(Avatar, (20, 20), (60, 60), user['avatarAddress'])
             self.nickname = self.createChild(CustomText, (100, 20), 'simhei', 20, (0, 0, 0), user['nickname'], 190)
-            self.last_message = self.createChild(CustomText, (100, 56), 'simhei', 18, (128, 128, 128), '暂无消息' if user['latestMessage']['content'] == '' else user['latestMessage']['content'], 190)
+            if user['latestMessage']['kind'] == '0':
+                self.last_message = self.createChild(CustomText, (100, 56), 'simhei', 18, (128, 128, 128), '暂无消息' if user['latestMessage']['content'] == '' else user['latestMessage']['content'], 260)
+            else:
+                self.last_message = self.createChild(CustomText, (100, 56), 'simhei', 18, (128, 128, 128), '暂无消息' if user['latestMessage']['content'] == '' else '[图片]', 260)
             self.last_date = self.createChild(CustomText, (300, 40), 'simhei', 16, (128, 128, 128), ' ' if user['latestMessage']['time'] == '' else user['latestMessage']['time'][5:10])
             self.last_time = self.createChild(CustomText, (300, 60), 'simhei', 16, (128, 128, 128), ' ' if user['latestMessage']['time'] == '' else user['latestMessage']['time'][11:13] + ':' + user['latestMessage']['time'][14:16])
             self.compared_time = '0' if user['latestMessage']['time'] == '' else user['latestMessage']['time']
@@ -76,7 +79,7 @@ class FriendBlock(Element):
                         if self.doubleclick_start:
                             self.doubleclick_start = False
                             self.doubleclick_counter = 0
-                            self.process.createSessionWindow(233)
+                            self.process.createSessionWindow(self.user['sessionId'])
                         elif not self.doubleclick_start:
                             self.doubleclick_start = True
                 else:
@@ -135,7 +138,10 @@ class GroupBlock(Element):
         self.group = group
         try:
             self.nickname = self.createChild(CustomText, (25, 24), 'simhei', 20, (0, 0, 0), group['sessionName'], 260)
-            self.last_message = self.createChild(CustomText, (25, 56), 'simhei', 18, (128, 128, 128), '暂无消息' if group['latestMessage']['content'] == '' else group['latestMessage']['content'], 260)
+            if group['latestMessage']['kind'] == '0':
+                self.last_message = self.createChild(CustomText, (25, 56), 'simhei', 18, (128, 128, 128), '暂无消息' if group['latestMessage']['content'] == '' else group['latestMessage']['content'], 260)
+            else:
+                self.last_message = self.createChild(CustomText, (25, 56), 'simhei', 18, (128, 128, 128), '暂无消息' if group['latestMessage']['content'] == '' else '[图片]', 260)
             self.last_date = self.createChild(CustomText, (300, 40), 'simhei', 16, (128, 128, 128), ' ' if group['latestMessage']['time'] == '' else group['latestMessage']['time'][5:10])
             self.last_time = self.createChild(CustomText, (300, 60), 'simhei', 16, (128, 128, 128), ' ' if group['latestMessage']['time'] == '' else group['latestMessage']['time'][11:13] + ':' + group['latestMessage']['time'][14:16])
             self.compared_time = '0' if group['latestMessage']['time'] == '' else group['latestMessage']['time']
@@ -173,7 +179,7 @@ class GroupBlock(Element):
                     if self.doubleclick_start:
                         self.doubleclick_start = False
                         self.doubleclick_counter = 0
-                        self.process.createSessionWindow(233)
+                        self.process.createSessionWindow(self.group['sessionId'])
                     elif not self.doubleclick_start:
                         self.doubleclick_start = True
                 else:

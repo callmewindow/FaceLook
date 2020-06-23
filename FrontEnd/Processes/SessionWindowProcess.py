@@ -11,7 +11,7 @@ class SessionWindowProcess(WindowProcess):
         bet = None
         self.localStorage = ls
         self.data = data
-        self.sessionId = '11'
+        self.sessionId = sessionId
         WindowProcess.__init__(self, data, RQ, MQ, bet, SessionWindow(self))
     
     # 去除不必要的方法，请求均在window或者background中发出
