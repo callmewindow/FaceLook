@@ -35,12 +35,17 @@ class GroupMemberList(Element):
             self.manager_username = self.group_show['managerUsername']
             data = readData(self.process.data)
             self.sessionVer = data['sessionList']['version']
-            users = data['usernameResult']['list']
+            searchUsers = data['usernameResult']['list']
+            friendUsers = data['friendList']['list']
             n = len(self.session_members)
             for i in range(n):
                 session_member = self.session_members[i]
                 tempUser = {}
-                for user in users:
+                tempUser = data['user']
+                for user in searchUsers:
+                    if session_member == user['username']:
+                        tempUser = user
+                for user in friendUsers:
                     if session_member == user['username']:
                         tempUser = user
                 if session_member == self.manager_username:
@@ -48,7 +53,7 @@ class GroupMemberList(Element):
                 else:
                     self.createChild(GroupMemberBlock, (19, i * 40), session_member, 0, tempUser)
         except KeyError:
-            print('key error in GroupMemberList')
+            print('key error in GroupMemberList', KeyError)
 
     def display(self):
         surface = self.surface.copy()
@@ -148,8 +153,8 @@ class GroupMemberBlock(Element):
                 'username': self.usernameShow,
                 'sessionId': self.process.groupShow['sessionId'],
             }
+            self.process.requestQueue.put(request)
             print(request)
-            # self.process.requestQueue.put(request)
 
     def update(self):
         for child in self.childs:

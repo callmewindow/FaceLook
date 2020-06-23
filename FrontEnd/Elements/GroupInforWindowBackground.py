@@ -91,21 +91,14 @@ class GroupInforWindowBackground(Element):
         # 添加警示框
         self.showAlert = False
         self.quitAlert = self.createChild(Alert, (285,180), "此举将确定退出群聊，如确认进行操作请再次退出。注：群主退出群聊将解散")
+        self.leaveAlert = self.createChild(Alert, (285,180), "退出成功，请自行关闭窗口")
+
+        self.tempCounter = 0
 
         if self.state != 0:
             self.editButton.disable()
             self.inviteBg.disable()
             self.inviteButton.disable()
-        
-        
-        for tempName in self.groupShow['sessionMembers']:
-            request = {
-                'messageNumber': '21',
-                'keyword': tempName,
-            }
-            # self.process.requestQueue.put(request)
-        print(data['usernameResult']['list'])
-
 
     def editInfor(self):
         self.groupName.disable()
@@ -143,17 +136,21 @@ class GroupInforWindowBackground(Element):
         if self.quitButton.state == 2 and self.quitButton.isClick == False:
             self.quitButton.isClick = True
             self.quitButton.setState(0)
-            self.counter += 1
-            if self.counter == 1:
+            self.tempCounter += 1
+            if self.tempCounter == 1:
                 self.quitAlert.enable()
                 self.showAlert = True
+                self.quitButton.isClick = False
             else:
-                self.counter = 0
+                self.tempCounter = 0
                 request = {
                     'messageNumber': '17',
                     'sessionId': self.groupShow['sessionId'],
                 }
                 self.process.requestQueue.put(request)
+                self.leaveAlert.enable()
+                self.showAlert = True
+                self.quitButton.isClick = False
 
         
         # 准备修改信息
@@ -168,24 +165,10 @@ class GroupInforWindowBackground(Element):
                 'sessionId':self.groupShow['sessionId'],
                 'sessionName':self.groupNameM.inputBox.get_text(),
             }
-            print(request)
-            # self.process.requestQueue.put(request)
+            self.process.requestQueue.put(request)
             self.saveInfor()
 
     def update(self):
-        # # 这里群聊需要判断是不是群主，类似设定状态即可
-        # # 判断是否是自己
-        # if self.state == 0:
-        #     self.addButton.disable()
-        #     self.deleteButton.disable()
-        # else:
-        #     # 判断是否是好友
-        #     if self.state == 1:
-        #         self.editButton.disable()
-        #         self.addButton.disable()
-        #     else:
-        #         self.editButton.disable()
-        #         self.deleteButton.disable()
         for child in self.childs:
             if child.active:
                 child.update()

@@ -54,6 +54,7 @@ class RightClickMenuBlock(Element):
             if self.pos_in(event.pos):
                 print(self.text)
                 if self.text == '发送消息':
+                    # 右键菜单再见
                     self.process.createSessionWindow(233)
 
                 # do something

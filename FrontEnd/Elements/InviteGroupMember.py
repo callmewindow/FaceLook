@@ -57,7 +57,6 @@ class InviteGroupMember(Element):
                     'sessionID':self.process.sessionId,
                     'username':tempUsername
                 }
-                print(request)
                 self.process.requestQueue.put(request)
                 
                 self.input.text = ''
